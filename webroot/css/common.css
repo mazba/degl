@@ -1,0 +1,19 @@
+/*
+* mazba
+* 07-11-15
+*/
+#loader{
+    width: 100%;
+    height: 100%;
+    background: #9adad6;
+    position: fixed;
+    top: 1px;
+    opacity: .55;
+    display: none;
+}
+#loader img {
+    position: fixed;
+    top: 314px;
+    left: 737px;
+    z-index: 9999;
+}
