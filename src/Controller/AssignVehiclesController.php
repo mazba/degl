@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
 
 /**
  * AssignVehicles Controller
@@ -91,8 +92,15 @@ class AssignVehiclesController extends AppController
 
 
         }
+
+        //update by Antu Rozario(5/10/2016)
         $offices = $this->AssignVehicles->Offices->find('list', ['conditions' =>['id' => $user['office_id']]]);
-        $vehicles = $this->AssignVehicles->Vehicles->find('list', ['conditions' =>['office_id' => $user['office_id']]]);
+
+        $vehicleTbl = TableRegistry::get('vehicles')->find('all')
+                                                        ->where(['office_id' => $user['office_id'],'status'=>1]);
+        foreach($vehicleTbl as $vehicle)
+            $vehicles[$vehicle['id']] = $vehicle['title'].' -'.'('.$vehicle['registration_no'].')';
+
         $employees = $this->AssignVehicles->Employees->find('list')
             ->innerJoin('designations', 'designations.id = Employees.designation_id')
             ->where(['designations.office_id'=>$user['office_id'],'Employees.office_id'=>$user['office_id'],'designations.name_en'=>'Driver']);

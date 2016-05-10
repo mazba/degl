@@ -32,7 +32,7 @@ class VehicleServicingsController extends AppController
     public function view($id = null)
     {
         $vehicleServicing = $this->VehicleServicings->get($id, [
-            'contain' => ['Offices', 'Vehicles', 'CreatedUser', 'UpdatedUser']
+            'contain' => ['Offices', 'Vehicles', 'CreatedUser', 'UpdatedUser'],
         ]);
         $this->set('vehicleServicing', $vehicleServicing);
         $this->set('_serialize', ['vehicleServicing']);
@@ -133,7 +133,9 @@ class VehicleServicingsController extends AppController
         $vehicles = $this->VehicleServicings->Vehicles->find()
             ->select(['id', 'title', 'registration_no', 'type', 'equipment_id_no', 'equipment_category'])
             ->where(['office_id' => $user['office_id']])
+            ->where(['status' => 1])
             ->where('(vehicle_status ="READY" OR vehicle_status ="IN_USE")');
+
         $this->set(compact('vehicleServicing', 'offices', 'vehicles'));
         $this->set('_serialize', ['vehicleServicing']);
     }
@@ -195,13 +197,15 @@ class VehicleServicingsController extends AppController
             if ($user['user_group_id'] == 1) {
                 $vehicleServicings = $this->VehicleServicings->find('all', [
                     'conditions' => ['VehicleServicings.status' => 1],
-                    'contain' => ['Offices', 'Vehicles']
+                    'contain' => ['Offices', 'Vehicles'],
+                    'order' => ['VehicleServicings.id' => 'ASC']
+
                 ])->toArray();
             } else {
                 $vehicleServicings = $this->VehicleServicings->find('all', [
                     'conditions' => ['VehicleServicings.status' => 1, 'VehicleServicings.office_id' => $user['office_id']],
                     'contain' => ['Offices', 'Vehicles'],
-                    'order' => ['VehicleServicings.id' => 'desc']
+                    'order' => ['VehicleServicings.id' => 'ASC']
                 ])->toArray();
             }
             foreach ($vehicleServicings as &$vehicleServicing) {

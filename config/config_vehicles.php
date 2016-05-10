@@ -6,5 +6,5 @@
  * Time: 5:31 PM
  */
 return [
-    'vehicle_status'=>['READY' => 'Ready', 'IN_USE' => 'In-Use','SERVICING'=>'Servicing']
+    'vehicle_status'=>['READY' => 'Ready', 'IN_USE' => 'In-Use','SERVICING'=>'Servicing','REPAIR' => 'Repair',]
 ];
