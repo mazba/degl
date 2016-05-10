@@ -1,0 +1,72 @@
+<?php
+use Cake\Core\Configure;
+
+?>
+<div class="breadcrumb-line">
+    <ul class="breadcrumb">
+        <li><a href="<?= $this->Url->build(('/Dashboard'), true); ?>">Dashboard</a></li>
+        <li><?= $this->Html->link(__('Allotment Registers'), ['action' => 'index']) ?></li>
+        <li class="active">New Allotment Register</li>
+
+    </ul>
+</div>
+<div class="tabbable page-tabs">
+    <ul class="nav nav-tabs">
+        <li><?= $this->Html->link(__('List of Allotment Registers'), ['action' => 'index']) ?></li>
+        <li class="active"><?= $this->Html->link(__('New Allotment Register'), ['action' => 'add']) ?></li>
+
+
+    </ul>
+</div>
+
+
+<?= $this->Form->create($allotmentRegister, ['class' => 'form-horizontal', 'role' => 'form']); ?>
+<div class="row panel panel-default">
+
+    <div class="panel-heading"><h6 class="panel-title"><i
+                class="icon-paragraph-right2"></i><?= __('Add Allotment Register') ?>
+        </h6>
+    </div>
+    <?php
+    if(isset($purto_bill))
+    {
+        ?>
+        <div class="col-md-12" style="margin-top: 10px">
+            <div class="callout callout-info fade in">
+                <b><?= __('Scheme') ?></b> : <span><?= $purto_bill['scheme']['name_en'] ?></span>
+                <br>
+                <b><?= __('Financial Year Estimate') ?></b> : <span><?= $purto_bill['financial_year_estimate']['name'] ?></span>
+                <br>
+                <b><?= __('Bill Type') ?></b> : <span><?= $purto_bill['bill_type'] ?></span>
+                <br>
+                <b><?= __('Net Taka') ?></b> : <span><?= $purto_bill['net_taka'] ?></span>
+            </div>
+        </div>
+        <?php
+    }
+    ?>
+    <div class="panel-body col-sm-6 col-md-offset-2">
+        <?php
+        if(isset($projects))
+        {
+            echo $this->Form->input('project_id');
+        }
+        else
+        {
+           ?>
+           <input type="hidden" name="scheme_id" value="<?= $purto_bill['scheme_id'] ?>"/>
+           <input type="hidden" name="project_id" value="<?= $purto_bill['project_id'] ?>"/>
+           <?php
+        }
+        echo $this->Form->input('allotment_date',['class'=>'form-control hasdatepicker','type'=>'text']);
+        echo $this->Form->input('allotment_amount');
+        echo $this->Form->input('particulars');
+        echo $this->Form->input('remarks');
+        ?>
+    </div>
+    <div class="col-sm-12 form-actions text-right">
+        <input type="submit" value="Save" class="btn btn-primary">
+    </div>
+</div>
+<?= $this->Form->end() ?>
+

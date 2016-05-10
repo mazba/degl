@@ -1,0 +1,30 @@
+msgid "SELECT_DIVISION"
+msgstr "Select a Division"
+msgid "DIVISION"
+msgstr "Division"
+
+msgid "SELECT_ZONE"
+msgstr "Select a Zone"
+msgid "ZONE"
+msgstr "Zone"
+
+msgid "SELECT_DISTRICT"
+msgstr "Select a District"
+msgid "DISTRICT"
+msgstr "District"
+
+msgid "SELECT_UPAZILA"
+msgstr "Select a Upazila"
+msgid "UPAZILA"
+msgstr "Upazila"
+
+msgid "NAME_EN"
+msgstr "English Name"
+msgid "NAME_BN"
+msgstr "Bangla Name"
+
+msgid "SELECT_PARENT_DESIGNATION"
+msgstr "Select Superior Designation"
+msgid "PARENT_DESIGNATION"
+msgstr "Superior Designation"
+
