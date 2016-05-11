@@ -130,12 +130,13 @@ class VehiclesController extends AppController
                 ])->toArray();
             } else {
                 $vehicles = $this->Vehicles->find('all', [
-                    'conditions' => ['Vehicles.status !=' => 99, 'Vehicles.office_id' => $user['office_id']]
+                    'conditions' => ['Vehicles.status' => 1, 'Vehicles.office_id' => $user['office_id']]
                 ])->toArray();
             }
             foreach ($vehicles as &$vehicle) {
                 if ($vehicle['type'] != 'vehicles') {
-                    $vehicle['title'] = $vehicle['equipment_id_no'];
+
+                    $vehicle['title'] = $vehicle['title'].' ('.$vehicle['equipment_id_no'].')';
                     $vehicle['serial_no'] = $vehicle['equipment_category'];
                     $vehicle['registration_no'] = $vehicle['equipment_brand'];
                     $vehicle['load_capacity'] = $vehicle['equipment_capacity'];

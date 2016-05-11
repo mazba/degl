@@ -42,7 +42,7 @@ use Cake\Core\Configure;
                             } else {
                                 ?>
                                 <option
-                                    value="<?= $vehicle['id']; ?>"><?= $vehicle['equipment_id_no'] . ' [' . $vehicle['equipment_category'] . ']'; ?>  </option>
+                                    value="<?= $vehicle['id']; ?>"><?= $vehicle['title'] . ' [' . $vehicle['equipment_id_no'] . ']'; ?>  </option>
                                 <?php
                             }
                         }

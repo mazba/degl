@@ -96,11 +96,17 @@ class AssignVehiclesController extends AppController
         //update by Antu Rozario(5/10/2016)
         $offices = $this->AssignVehicles->Offices->find('list', ['conditions' =>['id' => $user['office_id']]]);
 
+
+
         $vehicleTbl = TableRegistry::get('vehicles')->find('all')
                                                         ->where(['office_id' => $user['office_id'],'status'=>1]);
-        foreach($vehicleTbl as $vehicle)
+        foreach($vehicleTbl as $vehicle){
+            if($vehicle['type']=='vehicles'){
             $vehicles[$vehicle['id']] = $vehicle['title'].' -'.'('.$vehicle['registration_no'].')';
-
+            }else{
+                $vehicles[$vehicle['id']] = $vehicle['title'].' -'.'('.$vehicle['equipment_id_no'].')';
+            }
+        }
         $employees = $this->AssignVehicles->Employees->find('list')
             ->innerJoin('designations', 'designations.id = Employees.designation_id')
             ->where(['designations.office_id'=>$user['office_id'],'Employees.office_id'=>$user['office_id'],'designations.name_en'=>'Driver']);
