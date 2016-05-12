@@ -34,18 +34,18 @@ class VehicleStatusReportsController extends AppController
             {
                 $vehicles = TableRegistry::get('vehicles')
                     ->find()
-                    ->select(['vehicles.title','vehicles.load_capacity','vehicles.vehicle_location','vehicles.serial_no','vehicles.vehicle_status','employees.name_en'])
+                    ->select(['vehicles.title','vehicles.type','vehicles.load_capacity','vehicles.registration_no','vehicles.vehicle_location','vehicles.serial_no','vehicles.vehicle_status','employees.name_en'])
 
-                    ->leftJoin('assign_vehicles','assign_vehicles.vehicle_id = vehicles.id')
+                    ->leftJoin('assign_vehicles','assign_vehicles.vehicle_id = vehicles.id AND assign_vehicles.status = 1')
                     ->leftJoin('employees','employees.id = assign_vehicles.employee_id');
             }
             else
             {
                 $query = TableRegistry::get('vehicles')->find();
-                $vehicles = $query->select(['message_registers.work_description','schemes.name_bn','vehicles.id','vehicles.title','vehicles.load_capacity','vehicles.vehicle_location','vehicles.serial_no','vehicles.vehicle_status','employees.name_en'])
+                $vehicles = $query->select(['message_registers.work_description','schemes.name_bn','vehicles.id','vehicles.type','vehicles.registration_no','vehicles.title','vehicles.load_capacity','vehicles.vehicle_location','vehicles.serial_no','vehicles.vehicle_status','employees.name_en'])
                     ->hydrate(false)
                     ->where(['vehicles.office_id'=>$user['office_id']])
-                    ->leftJoin('assign_vehicles','assign_vehicles.vehicle_id = vehicles.id')
+                    ->leftJoin('assign_vehicles','assign_vehicles.vehicle_id = vehicles.id AND assign_vehicles.status = 1')
                     ->leftJoin('employees','employees.id = assign_vehicles.employee_id')
                     ->leftJoin('vehicle_hire','vehicle_hire.vehicle_id = vehicles.id')
                     ->leftJoin('vehicle_hire_letter_registers','vehicle_hire_letter_registers.id = vehicle_hire.letter_id')

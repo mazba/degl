@@ -99,7 +99,7 @@ class AssignVehiclesController extends AppController
 
 
         $vehicleTbl = TableRegistry::get('vehicles')->find('all')
-                                                        ->where(['office_id' => $user['office_id'],'status'=>1]);
+                    ->where(['office_id' => $user['office_id'],'status'=>1,'vehicle_status'=>'READY']);
         foreach($vehicleTbl as $vehicle){
             if($vehicle['type']=='vehicles'){
             $vehicles[$vehicle['id']] = $vehicle['title'].' -'.'('.$vehicle['registration_no'].')';
