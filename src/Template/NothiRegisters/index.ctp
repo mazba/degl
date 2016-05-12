@@ -75,7 +75,6 @@
                 <th><?= __('id') ?></th>
                 <th><?= __('Nothi No') ?></th>
                 <th><?= __('Nothi Date') ?></th>
-                <th><?= __('Nothi Label') ?></th>
                 <?php
                 if (($user_roles['view'] == 1) || ($user_roles['edit'] == 1) || ($user_roles['delete'] == 1)) {
                     ?>
@@ -93,7 +92,6 @@
                     <td><?= $this->Number->format($key + 1) ?></td>
                     <td><?= h($nothiRegister->nothi_no) ?></td>
                     <td><?= $this->System->display_date($nothiRegister->nothi_date) ?></td>
-                    <td><?= h($nothiRegister->remarks) ?></td>
                     <td class="actions">
                         <?php
                         if ($user_roles['view'] == 1) {

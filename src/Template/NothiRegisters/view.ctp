@@ -78,12 +78,7 @@
                             <?= h($nothiRegister->nothi_no) ?>
                         </td>
                     </tr>
-                    <tr>
-                        <th><?= __('Remarks') ?> :</th>
-                        <td>
-                            <?= h($nothiRegister->remarks) ?>
-                        </td>
-                    </tr>
+
 
 
                     <tr>
