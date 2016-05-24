@@ -18,6 +18,7 @@ class DetermineTestNumberController extends AppController
      */
     public function index()
     {
+
         $this->loadModel('LabTestGroup');
         $this->loadModel('LabTestLists');
         $labTestGroups = $this->LabTestGroup->find('list', ['limit' => 200]);
@@ -36,7 +37,17 @@ class DetermineTestNumberController extends AppController
                 $arr['test_needed'] = $labTestFrequency->test_no;
                 $arr['test_no_type'] = $labTestFrequency->test_no_type ? $labTestFrequency->test_no_type : 0;
             } else {
-                $arr['test_needed'] = round($inputs['work_done_quantity'] / $labTestFrequency->per_unit);
+                $test_needed = round($inputs['work_done_quantity'] / $labTestFrequency->per_unit);
+
+
+                $whole = (int) $test_needed;  // 5
+                $frac  = $test_needed - (int) $test_needed;  // .7
+                if($frac>.2){
+                 $test=   $whole+1;
+                }else{
+                    $test= $whole;
+                }
+                $arr['test_needed'] = $test;
                 $arr['test_no_type'] = $labTestFrequency->test_no_type ? $labTestFrequency->test_no_type : 0;
             }
 
