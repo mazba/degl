@@ -44,12 +44,18 @@
         <input type="hidden" id="lab_test_full_name" name="lab_test_full_name[]" value="">
         <?php
         echo $this->Form->input('rate[]', ['label' => 'Rate', 'id' => 'testRate']);
-        echo $this->Form->input('number_of_test[]', ['label' => 'Number Of Test',]);
+        echo $this->Form->input('work_done_quantity',['class'=>'form-control work-done-quantity']);
+        ?>
+        <div class="text-right" style="margin-bottom: 10px;">
+            <input type="button" class="btn btn-primary calculate" id="calculate" value="<?= __('Calculate') ?>" >
+        </div>
+        <?php
+        echo $this->Form->input('number_of_test[]', ['class'=>'number_of_test form-control','label' => 'Number Of Test','readonly']);
         ?>
     </div>
 </div>
 
-<?= $this->Form->create($labTest, ['class' => 'form-horizontal', 'role' => 'form']); ?>
+<?= $this->Form->create($labTest, ['class' => 'form-horizontal','id'=>'form', 'role' => 'form']); ?>
 <div class="row panel panel-default">
     <input type="hidden" name="lab_letter_registers_id" value="<?= $labLetterRegister->id ?>">
     <input type="hidden" name="scheme_id" value="<?= $labLetterRegister->scheme_id ?>">
@@ -64,7 +70,7 @@
 
                 <div class="col-sm-7 box" style="border: 1px solid #50626D;padding-top:30px;margin-bottom: 20px ">
                     <?php
-                        echo $this->Form->input('lab_test_group_id', ['class'=>'form-control lab_test_group','label'=>__('Item of Works'),'options'=>$labTestGroups,'empty' => __('Select')]);
+                    echo $this->Form->input('lab_test_group_id', ['class'=>'form-control lab_test_group','label'=>__('Item of Works'),'options'=>$labTestGroups,'empty' => __('Select')]);
                     ?>
                     <div class="form-group input select">
                         <div class="col-sm-3 control-label text-right">
@@ -88,7 +94,13 @@
                     <input type="hidden" id="lab_test_full_name" name="lab_test_full_name[]" value="">
                     <?php
                     echo $this->Form->input('rate[]', ['label' => 'Rate', 'id' => 'testRate']);
-                    echo $this->Form->input('number_of_test[]', ['label' => 'Number Of Test',]);
+                    echo $this->Form->input('work_done_quantity',['class'=>'form-control work-done-quantity']);
+                    ?>
+                    <div class="text-right" style="margin-bottom: 10px;">
+                        <input type="button" class="btn btn-primary calculate" id="calculate" value="<?= __('Calculate') ?>" >
+                    </div>
+                    <?php
+                    echo $this->Form->input('number_of_test[]', ['class'=>'form-control number_of_test','label' => 'Number Of Test','readonly']);
                     ?>
                 </div>
             </div>
@@ -106,8 +118,44 @@
 <?= $this->Form->end() ?>
 
 <script>
-
     $(document).ready(function () {
+
+        $(document).on('click', '.calculate', function () {
+            var lab_test_group = $(this).closest('.box').find('.lab_test_group').val();
+            var testList = $(this).closest('.box').find('.testList').val();
+            var work_done_quantity = $(this).closest('.box').find('.work-done-quantity').val();
+            var test=$(this);
+
+            $.ajax({
+                type: 'POST',
+                url: '<?= $this->request->webroot ?>AddNewLabTests/getTestNumber',
+                data: {
+                    lab_test_group :lab_test_group,
+                    testList:testList,
+                    work_done_quantity:work_done_quantity
+                },
+                success: function (data, status) {
+                    data = JSON.parse(data);
+                    console.log();
+                    if (data.test_no_type == 0) {
+                        test.closest('.box').find('.number_of_test').val(data.test_needed);
+
+                    } else if (data.test_no_type == 1) {
+                        test.val(data.test_needed);
+
+
+                    }
+
+
+                },
+                error: function (xhr, desc, err) {
+
+                }
+
+            });
+        });
+
+
         var lab_test_id="";
         $(document).on("change", ".testList", function (event) {
             var test_id = $(this).val();

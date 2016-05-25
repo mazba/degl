@@ -313,4 +313,36 @@ class AddNewLabTestsController extends AppController
         $this->set('_serialize', ['labTestList']);
     }
 
+
+    public function getTestNumber()
+    {
+        $inputs = $this->request->data;
+      //  print_r($inputs);die();
+        $this->loadModel('LabTestFrequency');
+        $labTestFrequency = $this->LabTestFrequency->find('all', ['conditions' => ['lab_test_group_id' => $inputs['lab_test_group'], 'lab_test_list_id' => $inputs['testList']]])->first();
+
+        $arr = [];
+        if ($labTestFrequency) {
+            if ($inputs['work_done_quantity'] <= $labTestFrequency->per_unit) {
+                $arr['test_needed'] = $labTestFrequency->test_no;
+                $arr['test_no_type'] = $labTestFrequency->test_no_type ? $labTestFrequency->test_no_type : 0;
+            } else {
+                $test_needed = $inputs['work_done_quantity'] / $labTestFrequency->per_unit;
+                $whole = (int) $test_needed;
+                $frac  = $test_needed - (int) $test_needed;
+                if($frac>.2){
+                    $test=   $whole+1;
+                }else{
+                    $test= $whole;
+                }
+                $arr['test_needed'] = $test;
+                $arr['test_no_type'] = $labTestFrequency->test_no_type ? $labTestFrequency->test_no_type : 0;
+            }
+
+        }
+
+        $this->response->body(json_encode($arr));
+        return $this->response;
+    }
+
 }
