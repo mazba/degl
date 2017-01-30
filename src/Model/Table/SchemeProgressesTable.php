@@ -58,8 +58,8 @@ class SchemeProgressesTable extends Table
             ->notEmpty('progress_value');
             
         $validator
-            ->requirePresence('remarks', 'create')
-            ->notEmpty('remarks');
+
+            ->allowEmpty('remarks');
 
         return $validator;
     }

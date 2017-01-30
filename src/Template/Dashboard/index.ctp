@@ -1,4 +1,9 @@
-<?php use Cake\Routing\Router; ?>
+<?php
+use Cake\Routing\Router;
+use Cake\Core\Configure;
+//echo "<pre>";print_r($user_info);die();
+
+?>
 <!-- Page header -->
 <div class="page-header">
     <div class="page-title">
@@ -12,7 +17,6 @@
                 height="21"></iframe>
     </div>
 </div>
-
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">

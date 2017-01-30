@@ -22,6 +22,7 @@
         <?php echo $this->Form->input('parent_id', ['required', 'options' => $nothiRegisters, 'empty' => __('Select'), 'templates' => ['inputContainer' => '<div class="form-group nothi_register {{type}}{{required}}">{{content}}</div>']]); ?>
         <div class="form-group">
             <label class="col-sm-3 control-label text-right"><?= __('Scheme: ') ?></label>
+
             <div class="col-sm-9">
                 <select data-placeholder="Choose a Scheme" class="chosen-select" id="scheme-id" name="scheme_id"
                         class="form-control scheme_id" required="required">
@@ -41,22 +42,14 @@
         ?>
     </div>
     <div class="row show-grid">
-        <div class="col-xs-4">
-            <label class="control-label pull-right"><?= __('Item Code') ?></label>
-        </div>
-        <div class="col-xs-4">
-            <input type="text" value="" class="form-control" id="input_item_add">
-        </div>
-        <div class="col-xs-1">
-            <button type="button" class="btn btn-danger" id="button_item_add"><?= __('Add') ?></button>
-        </div>
-        <div class="col-xs-3">
+
+        <div class="col-xs-12">
             <div class="alert alert-warning fade in block-inner" id="add_item_noti" style="display: none">
-                <i class="icon-warning"></i> <?= __('No Previous Charges found for this Scheme. Please Add.') ?>
+                <i class="icon-warning"></i> <?= __('No measurement found for this Scheme. Please add measurement first.') ?>
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" style="display: none" id="table_row">
         <div class="col-md-12">
             <table class="table table-responsive table-bordered" style="border: 1px solid #eee; margin: 5px 5px">
                 <thead>
@@ -69,15 +62,15 @@
                     <th><?= __('Total Amount(Tk.)') ?></th>
                     <th><?= __('Delete') ?></th>
                 </tr>
-                <tr style="background: #f0fafb">
-                    <th class="text-center"><?= __('1') ?></th>
-                    <th class="text-center"><?= __('2') ?></th>
-                    <th class="text-center"><?= __('3') ?></th>
-                    <th class="text-center"><?= __('4') ?></th>
-                    <th class="text-center"><?= __('5') ?></th>
-                    <th class="text-center"><?= __('6') ?></th>
-                    <th class="text-center"><?= __('7') ?></th>
-                </tr>
+                <!--                <tr style="background: #f0fafb">-->
+                <!--                    <th class="text-center">--><? //= __('1') ?><!--</th>-->
+                <!--                    <th class="text-center">--><? //= __('2') ?><!--</th>-->
+                <!--                    <th class="text-center">--><? //= __('3') ?><!--</th>-->
+                <!--                    <th class="text-center">--><? //= __('4') ?><!--</th>-->
+                <!--                    <th class="text-center">--><? //= __('5') ?><!--</th>-->
+                <!--                    <th class="text-center">--><? //= __('6') ?><!--</th>-->
+                <!--                    <th class="text-center">--><? //= __('7') ?><!--</th>-->
+                <!--                </tr>-->
                 </thead>
                 <tbody id="container_items_input" data-current-row="0">
 
@@ -100,36 +93,37 @@
                 </tfoot>
             </table>
         </div>
-    </div>
-    <div class="col-sm-6 user">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h6 class="panel-title">
-                    <a id="collapsed_click" href="#colorOne" data-parent="#accordion-color" data-toggle="collapse"
-                       class="collapsed"><?= __('Send to Users') ?></a>
-                </h6>
-            </div>
-            <div class="panel-collapse collapse" id="colorOne">
-                <div class="panel-body">
-                    <select id="user" class="form-control multi-select" multiple="multiple" name="user[]">
-                        <?php foreach ($departments as $department) { ?>
-                            <optgroup label="<?= $department->name_bn ?>">
-                                <?php foreach ($department['users'] as $user) { ?>
-                                    <option
-                                        value="<?= $user['id'] ?>"><?= $user['name_bn'] . " (" . $user['designation']['name_bn'] . ")" ?></option>
-                                <?php } ?>
-                            </optgroup>
-                        <?php } ?>
-                    </select>
-                    <?= $this->Form->input('subject', ['style' => 'margin-top:10px;']); ?>
-                    <?= $this->Form->input('message', ['type' => 'textarea']) ?>
+        <hr/>
+        <div class="col-sm-6 user">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">
+                        <a id="collapsed_click" href="#colorOne" data-parent="#accordion-color" data-toggle="collapse"
+                           class="collapsed"><?= __('Send to Users') ?></a>
+                    </h6>
+                </div>
+                <div class="panel-collapse collapse" id="colorOne">
+                    <div class="panel-body">
+                        <select id="user" class="form-control multi-select" multiple="multiple" name="user[]">
+                            <?php foreach ($departments as $department) { ?>
+                                <optgroup label="<?= $department->name_bn ?>">
+                                    <?php foreach ($department['users'] as $user) { ?>
+                                        <option
+                                            value="<?= $user['id'] ?>"><?= $user['name_bn'] . " (" . $user['designation']['name_bn'] . ")" ?></option>
+                                    <?php } ?>
+                                </optgroup>
+                            <?php } ?>
+                        </select>
+                        <?= $this->Form->input('subject', ['style' => 'margin-top:10px;']); ?>
+                        <?= $this->Form->input('message', ['type' => 'textarea']) ?>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-12 form-actions text-right">
-        <input id="save" type="submit" value="<?= __('Save') ?>" class="btn btn-primary">
-        <input id="save_and_send" type="submit" value="<?= __('Save & Send') ?>" class="btn btn-danger">
+        <div class="col-sm-12 form-actions text-right">
+            <input id="save" type="submit" value="<?= __('Save') ?>" class="btn btn-primary">
+            <input id="save_and_send" type="submit" value="<?= __('Save & Send') ?>" class="btn btn-danger">
+        </div>
     </div>
 </div>
 <?= $this->Form->end() ?>
@@ -138,6 +132,7 @@
         $(document).on("change", "#scheme-id", function (event) {
             var scheme_id = $(this).val();
             $('#add_item_noti').hide()
+            $('#table_row').hide()
             $('#container_items_input').html('');
             $('#previous_bill').val('');
             $('#net_payable').val('');
@@ -149,9 +144,11 @@
                     data: {scheme_id: scheme_id},
                     success: function (data, status) {
                         if (data.trim() != 'NOT_FOUND') {
+                            $('#table_row').show();
                             $('#container_items_input').html(data);
                             $('#previous_bill').val($('#old_bill').val());
                             cal_total();
+
                         }
                         else {
                             $('#add_item_noti').show()

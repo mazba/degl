@@ -1,8 +1,14 @@
 <?php
+
 namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\ORM\TableRegistry;
+
+//use App\Controller\LabBillsController;
+
+//App::import('Controller','LabBills');
+
 
 /**
  * HireCharges Controller
@@ -31,9 +37,87 @@ class HireChargesController extends AppController
      */
     public function view($id = null)
     {
+        $user = $user = $this->Auth->user();
+        $office_id = $this->Auth->user('office_id');
         $hireCharge = $this->HireCharges->get($id, [
             'contain' => ['Schemes', 'Contractors', 'HireChargeDetails', 'FinancialYearEstimates','Offices']
         ]);
+        //echo "<pre>";print_r($hireCharge);die();
+        $this->loadModel('hire_charge_details');
+
+
+        $hire_charge_details = $this->hire_charge_details->find()
+            ->select(['item_code' => 'schemes_items.item_display_code', 'description' => 'schemes_items.description', 'unit' => 'schemes_items.unit', 'rate' => 'schemes_items.rate', 'quantity_done' => 'hire_charge_details.quantity','item_total' => 'hire_charge_details.item_total'])
+            ->where(['hire_charge_details.hire_charge_id' => $id])
+            ->leftJoin('schemes_items', 'schemes_items.item_display_code=hire_charge_details.item_code')
+            ->where(['schemes_items.scheme_id' => $hireCharge->scheme_id])
+            ->toArray();
+
+    //   echo "<pre>";print_r($hire_charge_details);die();
+        if ($this->request->is('post') ) {
+
+
+            $inputs = $this->request->data;
+            $arr = array();
+            $arr['sender_id'] = $user['id'];
+            $arr['subject'] = $inputs['subject'];
+            $arr['message_text'] = $inputs['message'];
+            $arr['resource_id'] = $id;
+            $arr['msg_type'] = 'hireCharges';
+            $arr['created_date'] = time();
+            $arr['created_by'] = $user['id'];
+            $arr['status'] = 1;
+            $this->loadModel('MessageRegisters');
+            $messageRegisters = $this->MessageRegisters->newEntity();
+            $messageRegisters = $this->MessageRegisters->patchEntity($messageRegisters, $arr);
+            if ($msg = $this->MessageRegisters->save($messageRegisters)){
+
+                foreach ($inputs['user'] as $user_id) {
+
+                    $this->loadModel('users');
+                    $user_info = $this->users->get($user_id);
+                    if($user_info->user_group_id ==7 ){
+
+                        $lab_bills = TableRegistry::get('hire_charges');
+                        $query = $lab_bills->query();
+                        $query->update()
+                            ->set(['is_sent_to_accounts' => 1])
+                            ->where(['id' => $id])
+                            ->execute();
+                    }
+                    //  echo "<pre>";print_r($user_info);die();
+
+                    $recipient_data['message_register_id'] = $msg['id'];
+                    $recipient_data['user_id'] = $user_id;
+                    $recipient_data['created_date'] = time();
+                    $recipient_data['created_by'] = $user['id'];
+                    $recipient_data['status'] = 1;
+
+                    $this->loadModel('Recipients');
+                    $recipients = $this->Recipients->newEntity();
+                    $recipients = $this->Recipients->patchEntity($recipients, $recipient_data);
+                    $result= $this->Recipients->save($recipients);
+                    // die();
+                }
+            }
+            if($result){
+                $this->Flash->success('Bill sent and save successfully.');
+                return $this->redirect(['action' => 'index']);
+            }else{
+                $this->Flash->error('Bill can not save. Please try again');
+                return $this->redirect(['action' => 'index']);
+            }
+
+        }
+
+        $this->loadModel('Departments');
+
+        $departments = $this->Departments->find()->hydrate(false)
+            ->select(['designations.name_bn', 'users.id', 'users.name_bn', 'Departments.name_bn'])
+            ->where(['Departments.office_id' => $office_id])
+            ->leftJoin('users', 'users.department_id=Departments.id and users.status=1')
+            ->leftJoin('designations', 'designations.id=users.designation_id')
+            ->order(['Departments.order_no' => 'asc', 'designations.order_no' => 'asc']);
 
 //        echo '<pre>';
 //        print_r($hireCharge);
@@ -41,6 +125,9 @@ class HireChargesController extends AppController
 //        die;
         $this->set('hireCharge', $hireCharge);
         $this->set('_serialize', ['hireCharge']);
+        $this->set('id',$id);
+        $this->set('departments',$departments);
+        $this->set('hire_charge_details',$hire_charge_details);
     }
 
     /**
@@ -64,6 +151,12 @@ class HireChargesController extends AppController
                 $this->Flash->error(__('Items can not be null'));
                 return $this->redirect(['action' => 'add']);
             }
+
+            if($inputs['net_payable']<=0)
+            {
+                $this->Flash->error(__('No update there!! '));
+                return $this->redirect(['action' => 'add']);
+            }
             $hireChargeData['scheme_id'] = $inputs['scheme_id'];
             $hireChargeData['office_id'] = $user['office_id'];
             $hireChargeData['financial_year_id'] = $inputs['financial_year_id'];
@@ -82,9 +175,12 @@ class HireChargesController extends AppController
                 $this->loadModel('nothi_assigns');
                 $nothi_data = array();
                 $nothi_data['nothi_register_id'] = $inputs['parent_id'];
-                $nothi_data['mechanical_bill_id'] = $hireCharge['id'];
+                $nothi_data['hire_charge_id'] = $hireCharge['id'];
+                //echo "<pre>";print_r($nothi_data);die();
                 $new_nothi = $this->nothi_assigns->newEntity();
+               // echo "<pre>";print_r($new_nothi);die();
                 $nothi = $this->nothi_assigns->patchEntity($new_nothi, $nothi_data);
+              //  echo "<pre>";print_r($nothi);die();
                 $this->nothi_assigns->save($nothi);
             }
 
@@ -92,6 +188,10 @@ class HireChargesController extends AppController
             {
                 foreach($inputs['items'] as $item)
                 {
+                    unset($item['rate']);
+                    unset($item['description']);
+                    unset($item['item_unit']);
+
                     $item['hire_charge_id'] = $hireCharge['id'];
                     $item['created_by'] = $this->Auth->user(['id']);
                     $item['created_date'] = time();
@@ -106,6 +206,10 @@ class HireChargesController extends AppController
                     $hireChargeDetails->values($data);
                 }
                 $hireChargeDetails->execute();
+
+
+
+
                 if(isset($inputs['user']))
                 {
                     $arr = array();
@@ -172,17 +276,18 @@ class HireChargesController extends AppController
             $item_table='';
 
             //Check the additional_items::
-            $additional_items = TableRegistry::get('additional_items');
+            $additional_items = TableRegistry::get('schemes_items');
             $query = $additional_items->find();
-            $query->where(['item_display_code'=>$item_code]);
+            $query->where(['item_display_code'=>$item_code,'scheme_id'=>$scheme_id]);
             $additional_item_table = $query->first();
+          //  echo "<pre>";print_r($additional_item_table);die();
             if($additional_item_table)
             {
                 $item_unit = $additional_item_table['unit'];
                 $item_rate = $additional_item_table['rate'];
                 $item_id = $additional_item_table['id'];
                 $description = $additional_item_table['description'];
-                $item_table = 'additional_items';
+               // $item_table = 'additional_items';
                 $financial_year_estimate_id = $financial_year_id;
             }
             //Check the item_rates::
@@ -274,16 +379,38 @@ class HireChargesController extends AppController
         elseif($action == 'get_scheme_wise_items')
         {
             $this->view = 'get_old_item';
+            $last_hire_charge=TableRegistry::get('measurements')->find()
+                ->where(['scheme_id'=>$this->request->data(['scheme_id'])])
+                ->order(['id'=>'DESC'])
+                ->first();
+
+
+            $data=TableRegistry::get('measurements')->find()
+                ->select(['quantity'=>'measurements.quantity_of_work_done',
+                    'item_code'=>'schemes_items.item_display_code',
+                    'description'=>'schemes_items.description',
+                    'item_unit'=>'schemes_items.unit',
+                    'rate'=>'schemes_items.rate'
+                  ])
+
+                ->where(['measurements.scheme_id'=>$this->request->data(['scheme_id']),'measurements.measurement_no'=>$last_hire_charge['measurement_no']])
+                ->leftJoin('schemes_items', 'schemes_items.id=measurements.item_id');
+
+            $last_hire_charge_details= $data->toArray();
+               //->autoFields(true);
+
+          //  echo "<pre>";print_r($last_hire_charge_details->toArray());die();
+
             $last_hire_charge = $this->HireCharges->find('all')
                 ->where(['scheme_id'=>$this->request->data(['scheme_id'])])
                 ->order(['id'=>'DESC'])
                 ->first();
-            if($last_hire_charge)
-            {
-                $hire_charge_items = $this->HireCharges->HireChargeDetails->find('all')
-                    ->where(['hire_charge_id'=>$last_hire_charge['id']]);
-            }
-            $this->set(compact('hire_charge_items','last_hire_charge'));
+//            if($last_hire_charge)
+//            {
+//                $hire_charge_items = $this->HireCharges->HireChargeDetails->find('all')
+//                    ->where(['hire_charge_id'=>$last_hire_charge['id']]);
+//            }
+          $this->set(compact('hire_charge_items','last_hire_charge_details','last_hire_charge'));
         }
         elseif($action == 'grid')
         {

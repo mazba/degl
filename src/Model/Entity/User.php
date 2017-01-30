@@ -31,6 +31,7 @@ class User extends Entity
         'national_id_no' => true,
         'present_address' => true,
         'permanent_address' => true,
+        'signature' => true,
         'picture' => true,
         'birth_date' => true,
         'created_by' => true,

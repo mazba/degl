@@ -35,6 +35,7 @@
     </div>
 
     <div class="modal_view"></div>
+    <div class="modal_view_for_bill"></div>
 </div>
 
 
@@ -84,6 +85,27 @@
                 success: function (data, status) {
                     $('.modal_view').html(data)
                     $('#myModal').modal('show');
+                },
+                error: function (xhr, desc, err) {
+
+                }
+            })
+        });
+
+
+        $(document).on('click', '.send_bill', function () {
+            var obj = $(this);
+            var bill_id = obj.closest('tr').find('.bill_id').val();
+            var type = obj.closest('tr').find('.type').val();
+            var reference_id = obj.closest('tr').find('.reference_id').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '<?= $this->request->webroot ?>LabBills/sendLabBill',
+                data: {bill_id: bill_id, type: type, reference_id: reference_id},
+                success: function (data, status) {
+                    $('.modal_view').html(data)
+                    $('#send_Modal').modal('show');
                 },
                 error: function (xhr, desc, err) {
 

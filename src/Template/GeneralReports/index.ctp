@@ -2,6 +2,8 @@
 use Cake\Core\Configure;
 
 ?>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
         <li><a href="<?= $this->Url->build(('/Dashboard'), true); ?>"><?= __('Dashboard') ?></a></li>
@@ -39,14 +41,38 @@ use Cake\Core\Configure;
 
 <div class="row">
     <?= $this->Form->create() ?>
-    <div class="col-sm-offset-2 col-sm-6">
+
+    <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
+        <?= $this->Form->input('project_id', ['required'=>'required','options' => $projects, 'empty' => __('Select')]) ?>
+    </div>
+    <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
+        <?=  $this->Form->input('category_name', ['options' => Configure::read('scheme_category'), 'empty' => __('Select')]); ?>
+    </div>
+    <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
+        <?=  $this->Form->input('financial_year_estimate_id', ['options' => $financialYearEstimates,'empty'=>__('Select')]); ?>
+    </div>
+
+    <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
+        <?= $this->Form->input('upazila_id', ['options' => $upazilas, 'empty' => __('Select')]);
+        ?>
+    </div>
+    <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
+        <div class="form-group input text">
+            <label class="col-sm-3 control-label text-right" for="amount">Progress range:</label>
+            <div class="col-sm-9 container_form_date">
+                <input type="text" name="progress" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                <div id="slider-range"></div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
         <?= $this->Form->input('form_date', ['type' => 'text', 'class' => 'form-control hasdatepicker']) ?>
     </div>
     <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
         <?= $this->Form->input('to_date', ['type' => 'text', 'class' => 'form-control hasdatepicker']) ?>
-    </div>
-    <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
-        <?= $this->Form->input('project_id', ['options' => $projects, 'empty' => __('Select')]) ?>
     </div>
     <!--<div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
         <? /*= $this->Form->input('group_by', ['options' => Configure::read('general_report_group_by'), 'empty' => __('Select')]) */ ?>
@@ -123,7 +149,7 @@ use Cake\Core\Configure;
                 <p class="text-right"><?= __('Month: ') . date('M/Y') ?></p>
             </div>
             <div class="col-sm-12 report-table">
-                <table  class="table table-bordered">
+                <table   class="table table-bordered">
                     <thead>
                     <tr style="border-top: 5px solid #ddd">
                         <th contenteditable="true"><?= __('SL No.') ?></th>
@@ -133,8 +159,24 @@ use Cake\Core\Configure;
                                 <th contenteditable="true"><?= __('Total Fund Receive') ?></th>
                                 <?php continue;
                             } ?>
+
+
+
                             <?php if (array_key_exists($key, $schemes[0])): ?>
-                                <th contenteditable="true"><?= $field ?></th>
+                                <?php if($field== "Scheme Name"){
+                                ?>
+
+                                    <th contenteditable="true" width="20%"><?= $field ?></th>
+                                <?php
+                                }
+                                else{
+                                    ?>
+                                    <th contenteditable="true" width="10%"><?= $field ?></th>
+                                    <?php
+                                }
+                                ?>
+
+
                             <?php endif; ?>
                         <?php endforeach; ?>
                         <th contenteditable="true"><?= __('Remarks') ?></th>
@@ -351,4 +393,19 @@ use Cake\Core\Configure;
         });
         $("#sortable").disableSelection();
     });
+</script>
+<script>
+    $( function() {
+        $( "#slider-range" ).slider({
+            range: true,
+            min: 0,
+            max: 100,
+            values: [ 0, 100 ],
+            slide: function( event, ui ) {
+                $( "#amount" ).val(  ui.values[ 0 ] + "%  - " + ui.values[ 1 ]+"%" );
+            }
+        });
+        $( "#amount" ).val( $( "#slider-range" ).slider( "values", 0 )+'%' +
+            " - " + $( "#slider-range" ).slider( "values", 1 )+"%" );
+    } );
 </script>

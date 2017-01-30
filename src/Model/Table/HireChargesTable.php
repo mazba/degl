@@ -43,6 +43,10 @@ class HireChargesTable extends Table
         $this->hasMany('HireChargeDetails', [
             'foreignKey' => 'hire_charge_id'
         ]);
+
+        $this->hasOne('NothiAssigns', [
+            'foreignKey' => 'hire_charge_id'
+        ]);
     }
 
     /**

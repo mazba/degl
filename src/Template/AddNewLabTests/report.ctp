@@ -40,11 +40,10 @@
             </div>
             <div class="col-sm-10 scheme_info" style="margin-bottom: 30px">
                 <span><b>Memo No:</b> LGED/XEN/Gazi/<?= date('Y') ?></span><br><br>
-                <span><b>Name of
-                        Project:</b> <?= $scheme ? $scheme[0]['projects']['name_bn'] : "" ?> </span><br>
+                <span><b>Subject:</b><?=$labLetterRegister['subject'] ?></span><br/>
+                <span><b>Name of Project:</b> <?= $scheme ? $scheme[0]['projects']['name_bn'] : "" ?> </span><br>
                 <span><b>Name of Work:</b> <?= $scheme ? $scheme[0]['name_bn'] : "" ?></span><br>
-                <span><b>Name of
-                        Contractor:</b> <?= $scheme ? $scheme[0]['contractors']['contractor_title'] : "" ?> </span><br>
+                <span><b>Name of Contractor:</b> <?= $scheme ? $scheme[0]['contractors']['contractor_title'] : "" ?> </span><br>
                 <span><b>Package No:</b> </span><br>
             </div>
             <div class="col-sm-2 date">
@@ -64,7 +63,7 @@
                     foreach ($tests as $test): ?>
                         <tr>
                             <td><?= $i++ ?></td>
-                            <td><?= $test->lab_test_short_name ?></td>
+                            <td><?php echo $test->lab_test_group?$test->lab_test_group." / ":''; echo $test->lab_test_short_name ?></td>
                             <td><?= $test->number_of_test ?></td>
                             <td><?= $test->rate ?></td>
                             <td><?= ($test->number_of_test * $test->rate) ?></td>

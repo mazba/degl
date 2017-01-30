@@ -38,11 +38,11 @@ class DetermineTestNumberController extends AppController
                 $arr['test_no_type'] = $labTestFrequency->test_no_type ? $labTestFrequency->test_no_type : 0;
             } else {
                 $test_needed = $inputs['work_done_quantity'] / $labTestFrequency->per_unit;
-
-                $whole = (int) $test_needed;
-                $frac  = $test_needed - (int) $test_needed;
+		
+                $whole = (int) $test_needed; 
+                $frac  = $test_needed - (int) $test_needed;  
                 if($frac>.2){
-                    $test=   $whole+1;
+                 $test=   $whole+1;
                 }else{
                     $test= $whole;
                 }

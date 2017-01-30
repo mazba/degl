@@ -17,9 +17,12 @@ class GeneralReportsController extends AppController
 
         if ($this->request->is(['post'])) {
             $inputs = $this->request->data;
+            $inputs['progress'] = str_replace('%','',$inputs['progress']);
+            $inputs['progress'] = explode('-',$inputs['progress']);
             $user = $this->Auth->user();
-            $start_date = strtotime($inputs['form_date']);
-            $end_date = strtotime($inputs['to_date']);
+            $start_date = $inputs['form_date'] ? strtotime($inputs['form_date']." 00:00:00"): null;
+            $end_date = $inputs['to_date'] ? strtotime($inputs['to_date'].' 23.59.59') : null;
+
             $physical_progress = false;
             $total_fund_receive = false;
             $this->loadModel('Schemes');
@@ -104,7 +107,7 @@ class GeneralReportsController extends AppController
                 array_push($scheme_select_fields, 'Schemes.work_order_date');
             }
             if (isset($inputs['field']['Work Completion Date'])) {
-                array_push($scheme_select_fields, 'Schemes.expected_complete_date');
+                array_push($scheme_select_fields, 'Schemes.actual_complete_date');
             }
             if (isset($inputs['field']['Payment (Road)'])) {
                 array_push($scheme_select_fields, 'Schemes.payment_road');
@@ -131,14 +134,19 @@ class GeneralReportsController extends AppController
                 $this->loadModel('AllotmentRegisters');
                 $total_fund_receive = $this->AllotmentRegisters->find()->hydrate(false);
                 $total_fund_receive->select(['total_fund_receive' => $total_fund_receive->func()->sum('allotment_amount')]);
-                $total_fund_receive->where(['AllotmentRegisters.project_id' => $inputs['project_id'], 'AllotmentRegisters.dr_cr' => "Debit"]);
+
+                if(!empty($inputs['project_id'])) {
+                    $total_fund_receive->where(['AllotmentRegisters.project_id' => $inputs['project_id'], 'AllotmentRegisters.dr_cr' => "Debit"]);
+                }
                 $total_fund_receive = $total_fund_receive->toArray();
             }
             if (isset($inputs['field']['Fund Received This Year'])) {
                 $this->loadModel('AllotmentRegisters');
                 $fund_received_this_year = $this->AllotmentRegisters->find()->hydrate(false);
                 $fund_received_this_year->select(['fund_received_this_year' => $fund_received_this_year->func()->sum('allotment_amount')]);
-                $fund_received_this_year->where(['AllotmentRegisters.project_id' => $inputs['project_id'], 'AllotmentRegisters.dr_cr' => "Debit", 'AllotmentRegisters.allotment_date >=' => $receive_start_date, 'AllotmentRegisters.allotment_date <=' => $receive_end_date]);
+               if(!empty($inputs['project_id'])) {
+                   $fund_received_this_year->where(['AllotmentRegisters.project_id' => $inputs['project_id'], 'AllotmentRegisters.dr_cr' => "Debit", 'AllotmentRegisters.allotment_date >=' => $receive_start_date, 'AllotmentRegisters.allotment_date <=' => $receive_end_date]);
+               }
                 $fund_received_this_year = $fund_received_this_year->toArray();
             }
 
@@ -157,7 +165,10 @@ class GeneralReportsController extends AppController
             $schemes = $this->Schemes->find()->hydrate(false);
             $schemes->select($scheme_select_fields);
             if ($physical_progress) {
-                $schemes->select(['physical_progress' => $schemes->func()->max('scheme_progresses.progress_value')]);
+               // $schemes->select(['physical_progress' => $schemes->func()->max('scheme_progresses.progress_value')]);
+                $schemes->select(['physical_progress' => 'scheme_progresses.progress_value']);
+
+
             }
 
             if (isset($inputs['field']['Total Fund Spend'])) {
@@ -176,11 +187,33 @@ class GeneralReportsController extends AppController
                 $schemes->leftJoin('allotment_registers', 'allotment_registers.scheme_id=Schemes.id and allotment_registers.dr_cr="Credit" and allotment_registers.allotment_date >=' . $receive_start_date, 'allotment_registers.allotment_date <=' . $receive_end_date);
             }
 
-            $schemes->where(['Schemes.project_id' => $inputs['project_id'],'Schemes.status'=>1]);
-            if (!empty($start_date)) {
-                $schemes->where(['Schemes.created_date >=' => $start_date]);
+            if (!empty($inputs['project_id'])) {
+                $schemes->where(['Schemes.project_id' => $inputs['project_id'], 'Schemes.status' => 1]);
             }
-            $schemes->where(['Schemes.created_date <=' => $end_date]);
+            if (!empty($inputs['category_name'])) {
+                $schemes->where(['Schemes.category_name' => $inputs['category_name']]);
+            }
+
+            if (!empty($inputs['financial_year_estimate_id'])) {
+                $schemes->where(['Schemes.financial_year_estimate_id' => $inputs['financial_year_estimate_id']]);
+            }
+
+            if (!empty($inputs['upazila_id'])) {
+                $schemes->where(['Schemes.upazila_id' => $inputs['upazila_id']]);
+            }
+            if (!empty($start_date)) {
+                $schemes->where(['Schemes.contract_date >=' => $start_date]);
+            }
+            if(!empty($end_date)) {
+                $schemes->where(['Schemes.contract_date <=' => $end_date]);
+            }
+            if (!empty($inputs['progress'])) {
+                $schemes->where(['scheme_progresses.progress_value >=' => $inputs['progress'][0], 'scheme_progresses.status' => 1]);
+            }
+            if(!empty($inputs['progress'])) {
+                $schemes->where(['scheme_progresses.progress_value <=' => $inputs['progress'][1], 'scheme_progresses.status' => 1]);
+            }
+
             $schemes->leftJoin('packages', 'packages.id=Schemes.package_id');
             $schemes->leftJoin('districts', 'districts.id=Schemes.district_id');
             $schemes->leftJoin('upazilas', 'upazilas.id=Schemes.upazila_id');
@@ -189,12 +222,14 @@ class GeneralReportsController extends AppController
             $schemes->leftJoin('scheme_progresses', 'scheme_progresses.scheme_id=Schemes.id');
             $schemes->leftJoin('financial_year_estimates', 'financial_year_estimates.id=Schemes.financial_year_estimate_id');
 
+            //$schemes->order('scheme_progresses.id DESC');
             $schemes->group(['Schemes.id']);
             if (!empty($scheme_sort_by)) {
                 $schemes->order($scheme_sort_by);
             }
 
             $schemes = $schemes->toArray();
+          //  echo "<pre>";print_r($schemes);die();
             $fields = array_flip($inputs['field']);
 
             foreach ($schemes as & $scheme) {
@@ -263,7 +298,6 @@ class GeneralReportsController extends AppController
 
             }
 
-
            /* echo "<pre>";
 //            print_r($summery);
              print_r($fields);
@@ -282,8 +316,13 @@ class GeneralReportsController extends AppController
 
 
         $this->loadModel('Projects');
-        $projects = $this->Projects->find('list');
+        $this->loadModel('FinancialYearEstimates');
+        $this->loadModel('Upazilas');
 
-        $this->set(compact('projects', 'total_fund_receive', 'fund_received_this_year'));
+        $projects = $this->Projects->find('list');
+        $financialYearEstimates = $this->FinancialYearEstimates->find('list');
+        $upazilas = $this->Upazilas->find('list', ['conditions' => ['district_id' => 33]]);
+
+        $this->set(compact('projects','upazilas','financialYearEstimates', 'total_fund_receive', 'fund_received_this_year'));
     }
 }

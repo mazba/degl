@@ -24,6 +24,7 @@ class ProposedRaBillsTable extends Table
         $this->table('proposed_ra_bills');
         $this->displayField('ra_bill_no');
         $this->primaryKey('id');
+
         $this->belongsTo('Offices', [
             'foreignKey' => 'office_id',
             'joinType' => 'INNER'
@@ -32,10 +33,10 @@ class ProposedRaBillsTable extends Table
             'foreignKey' => 'scheme_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('MeasurementBooks', [
-            'foreignKey' => 'measurement_book_id',
-            'joinType' => 'INNER'
-        ]);
+//        $this->belongsTo('MeasurementBooks', [
+//            'foreignKey' => 'measurement_book_id',
+//            'joinType' => 'INNER'
+//        ]);
         $this->belongsTo('CreatedUser', [
             'className' => 'Users',
             'foreignKey' => 'created_by',
@@ -80,8 +81,8 @@ class ProposedRaBillsTable extends Table
             
         $validator
             ->add('bill_amount', 'valid', ['rule' => 'numeric'])
-            ->requirePresence('bill_amount', 'create')
-            ->notEmpty('bill_amount');
+          //  ->requirePresence('bill_amount', 'create')
+            ->allowEmpty('bill_amount');
             
         $validator
             ->add('status', 'valid', ['rule' => 'numeric'])
@@ -101,7 +102,7 @@ class ProposedRaBillsTable extends Table
     {
         $rules->add($rules->existsIn(['office_id'], 'Offices'));
         $rules->add($rules->existsIn(['scheme_id'], 'Schemes'));
-        $rules->add($rules->existsIn(['measurement_book_id'], 'MeasurementBooks'));
+     //   $rules->add($rules->existsIn(['measurement_book_id'], 'MeasurementBooks'));
         return $rules;
     }
 }

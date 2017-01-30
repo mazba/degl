@@ -45,6 +45,10 @@ class NothiRegistersTable extends Table
             'foreignKey' => 'parent_id',
             'joinType' => 'INNER'
         ]);
+
+        $this->hasMany('NothiAssigns', [
+            'foreignKey' => 'nothi_register_id'
+        ]);
     }
 
     /**

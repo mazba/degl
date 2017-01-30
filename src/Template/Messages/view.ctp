@@ -91,6 +91,12 @@ use Cake\Routing\Router;
                      disabled><?= $messages->message_text ?></div>
             </div>
 
+            <?php if ($messages->msg_type == 'Approve_raBill') { ?>
+                 <a class="btn btn-danger" href="<?= $this->Url->build(('/ProposedRaBills'), true); ?>/view/<?= $messages->resource_id; ?>">View RA Bill</a>
+                 <a class="btn btn-warning" href="<?= $this->Url->build(('/processed_ra_bills'), true); ?>/add/<?= $messages->resource_id; ?>">Create Purto Bill</a>
+
+            <?php } ?>
+
             <?php if ($messages->msg_type == 'labBill') { ?>
                  <a href="<?= $this->Url->build(('/LabBills'), true); ?>/view/<?= $messages->resource_id; ?>">View Report</a>
 

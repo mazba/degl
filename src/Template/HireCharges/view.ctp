@@ -1,3 +1,7 @@
+<?php
+use Cake\Core\Configure;
+use Cake\Routing\Router;
+?>
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
         <li><a href="<?= $this->Url->build(('/Dashboard'), true); ?>"><?= __('Dashboard') ?></a></li>
@@ -50,15 +54,15 @@
         </thead>
         <tbody>
         <?php
-            foreach($hireCharge->hire_charge_details as $item)
+            foreach($hire_charge_details as $item)
             {
                ?>
                 <tr>
                     <td><?= $item['item_code'] ?></td>
                     <td><?= $item['description'] ?></td>
-                    <td style="text-align: justify;"><?= $item['description'] ?></td>
-                    <td><?= $item['quantity'] ?></td>
-                    <td><?= $item['rate'] ?></td>
+                    <td style="text-align: justify;"><?= $item['unit'] ?></td>
+                    <td><?= $item['quantity_done'] ?></td>
+                    <td><?= $item['item_total']/$item['quantity_done'] ?></td>
                     <td><?= $item['item_total'] ?></td>
                 </tr>
                 <?php
@@ -68,11 +72,23 @@
         <tfoot>
             <tr>
                  <td colspan="1"></td>
-                 <td colspan="4" style="text-align: right; font-weight: bold">Total Amount= </td>
+                 <td colspan="4" style="text-align: right; font-weight: bold">So Far Payable </td>
                  <td colspan="1"><?= $hireCharge->total_amount; ?></td>
+            </tr>
+
+            <tr>
+                 <td colspan="1"></td>
+                 <td colspan="4" style="text-align: right; font-weight: bold">Fees paidd upto previous bill </td>
+                 <td colspan="1"><?= $hireCharge->total_amount - $hireCharge->net_payable ; ?></td>
+            </tr><tr>
+                 <td colspan="1"></td>
+                 <td colspan="4" style="text-align: right; font-weight: bold">This bill Amount </td>
+                 <td colspan="1"><?= $hireCharge->net_payable; ?></td>
             </tr>
         </tfoot>
     </table>
+
+
     <b><span style="margin-left:100px; margin-right: 500px">Taka in word: (</span><span> ....)</span></b>
 
     <table class="table" style="margin-top: 100px;margin-left: 35px">
@@ -84,6 +100,43 @@
         </tr>
     </table>
 
+</div>
+
+
+<div class="row">
+
+    <div class="col-sm-6 col-sm-offset-3 ">
+        <form class="form-horizontal" role="role" method="post" action="<?php echo Router::url('/',true); ?>HireCharges/view/<?php echo $id; ?>" enctype="multipart/form-data">
+
+            <div class="form-group input select">
+                <label for="user" class="col-sm-3 control-label text-right"><?= __('User') ?></label>
+                <div class="col-sm-9 container_subject">
+                    <select id="user" class="form-control multi-select" multiple="multiple" name="user[]" required>
+                        <?php
+                        $dept = "";
+                        foreach ($departments as $department) { ?>
+                        <?php if ($department['name_bn'] != $dept) { ?>
+                        <optgroup label="<?= $department['name_bn'] ?>">
+                            <?php $dept = $department['name_bn'];
+                            } ?>
+                            <?php if (isset($department['users']['name_bn'])) { ?>
+                                <option
+                                    value="<?= $department['users']['id'] ?>"><?= $department['users']['name_bn'] . " (" . $department['designations']['name_bn'] . ")" ?></option>
+                            <?php }
+                            } ?>
+                    </select>
+                </div>
+            </div>
+            <div style="margin-top: 15px"></div>
+            <?= $this->Form->input('subject') ?>
+            <div style="margin-top: 15px"></div>
+            <?= $this->Form->input('message', ['type' => 'textarea']) ?>
+            <div class="col-sm-12 form-actions text-center">
+                <input type="submit" value="Send" class="btn btn-primary">
+            </div>
+            <?= $this->Form->end() ?>
+
+    </div>
 </div>
 <style>
     @media print {
@@ -100,4 +153,11 @@
         eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=yes,scrollbars=yes ,location=0,statusbar=0 ,menubar=yes,resizable=1,width=880,height=600,left = 20,top = 50');");
     }
 
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".multi-selects").select2();
+
+    });
 </script>

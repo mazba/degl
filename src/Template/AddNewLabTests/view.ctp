@@ -39,7 +39,6 @@
                 <th><?= __('Name of Test') ?></th>
                 <th><?= __('Financial Year') ?></th>
                 <th><?= __('Rate') ?></th>
-                <th><?= __('N0. of Test') ?></th>
                 <th><?= __('Upload Test Report') ?></th>
                 <th><?= __('Is Ok ?') ?></th>
             </tr>
@@ -53,7 +52,6 @@
                         <td><?= $test->lab_test_short_name ?></td>
                         <td><?= $test->financial_year ?></td>
                         <td><?= $test->rate ?></td>
-                        <td><?= $test->number_of_test ?></td>
                         <td>
                             <?php if (empty($test->file_path)) {
                                 echo $this->Form->input('report[' . $test->id . '][]', ['label' => '', 'type' => 'file', 'multiple' => 'multiple']) ?>

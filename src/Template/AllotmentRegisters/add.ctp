@@ -28,18 +28,18 @@ use Cake\Core\Configure;
         </h6>
     </div>
     <?php
-    if(isset($purto_bill))
+    if(isset($scheme_info))
     {
         ?>
         <div class="col-md-12" style="margin-top: 10px">
             <div class="callout callout-info fade in">
-                <b><?= __('Scheme') ?></b> : <span><?= $purto_bill['scheme']['name_en'] ?></span>
+                <b><?= __('Scheme') ?></b> : <span><?= $scheme_info->name_bn ?></span>
                 <br>
-                <b><?= __('Financial Year Estimate') ?></b> : <span><?= $purto_bill['financial_year_estimate']['name'] ?></span>
+                <b><?= __('Financial Year Estimate') ?></b> : <span><?= $scheme_info->financial_year_estimate->name ?></span>
                 <br>
-                <b><?= __('Bill Type') ?></b> : <span><?= $purto_bill['bill_type'] ?></span>
+                <b><?= __('RA Bill No') ?></b> : <span><?= $proposed_ra_bill->ra_bill_no ?></span>
                 <br>
-                <b><?= __('Net Taka') ?></b> : <span><?= $purto_bill['net_taka'] ?></span>
+                <b><?= __('Net Taka') ?></b> : <span><?= $processed_ra_bill_info->net_payable ?></span>
             </div>
         </div>
         <?php
@@ -55,9 +55,9 @@ use Cake\Core\Configure;
         else
         {
            ?>
-           <input type="hidden" name="financial_year_id" value="<?= $purto_bill['financial_year_estimate_id'] ?>"/>
-           <input type="hidden" name="scheme_id" value="<?= $purto_bill['scheme_id'] ?>"/>
-           <input type="hidden" name="project_id" value="<?= $purto_bill['project_id'] ?>"/>
+           <input type="hidden" name="financial_year_id" value="<?= $scheme_info->financial_year_estimate->id ?>"/>
+           <input type="hidden" name="scheme_id" value="<?= $scheme_info->id?>"/>
+           <input type="hidden" name="project_id" value="<?= $scheme_info->project_id ?>"/>
 
            <?php
         }

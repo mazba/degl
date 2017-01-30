@@ -34,6 +34,10 @@ class EmployeesTable extends Table
         $this->hasMany('AssignVehicles', [
             'foreignKey' => 'employee_id'
         ]);
+
+        $this->hasOne('VehiclesStatus', [
+            'foreignKey' => 'employee_id'
+        ]);
         $this->belongsTo('CreatedUser', [
             'className' => 'Users',
             'foreignKey' => 'created_by',
@@ -43,6 +47,9 @@ class EmployeesTable extends Table
             'className' => 'Users',
             'foreignKey' => 'updated_by',
             'joinType' => 'LEFT'
+        ]);
+        $this->hasOne('NothiAssigns', [
+            'foreignKey' => 'employee_id'
         ]);
         $this->addBehavior('FileUpload',['upload_path'=>'users','field'=>'picture']);
     }

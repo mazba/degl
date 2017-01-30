@@ -8,6 +8,7 @@
                 <th><?= __('Up to Last Bill') ?></th>
                 <th><?= __('This Bill') ?></th>
                 <th><?= __('Action') ?></th>
+
             </tr>
             </thead>
             <tbody>
@@ -22,7 +23,7 @@
                         <td><?= date('d-m-Y', $labBill->created_date) ?></td>
                         <td><?= $labBill->total_amount - $labBill->net_payable ?></td>
                         <td><?= $labBill->net_payable ?></td>
-                        <td> <span class="btn btn-info view_detail"><?= __('View') ?></span> </td>
+                        <td> <span class="btn btn-info view_detail"><?= __('View') ?></span>  <span class="btn btn-success send_bill"><?= __('Send Bill') ?></span> </td>
                         <input type="hidden" class="bill_id"  value="<?= $labBill->id ?>">
                         <input type="hidden" class="type"  value="<?= $labBill->type ?>">
                         <input type="hidden" class="reference_id"  value="<?= $labBill->reference_id ?>">

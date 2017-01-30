@@ -68,8 +68,12 @@ use Cake\Core\Configure;
         echo $this->Form->input('present_address');
         echo $this->Form->input('permanent_address');
         echo $this->Form->input('picture', ['type' => 'file','data-preview-container'=>'#profile_image_preview']);
+        echo $this->Form->input('signature', ['type' => 'file','data-preview-container'=>'#signature_image_preview']);
         ?>
         <div id="profile_image_preview" class="col-sm-offset-3">
+
+        </div>
+        <div id="signature_image_preview" class="col-sm-offset-3">
 
         </div>
     </div>

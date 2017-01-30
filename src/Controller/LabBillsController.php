@@ -85,6 +85,7 @@ class LabBillsController extends AppController
                             $labBillDetail = $this->LabBillDetails->newEntity();
                             $labBillDetail->lab_bill_id = $bill['id'];
                             $labBillDetail->lab_actual_test_id = $test['id'];
+                            $labBillDetail->lab_test_group_id = $test['lab_test_group_id'];
                             if (!$this->LabBillDetails->save($labBillDetail)) {
                                 throw new \Exception();
                             }
@@ -284,7 +285,10 @@ class LabBillsController extends AppController
         if ($this->request->data('type') == 'letter') {
             $letter_id = $this->request->data('scheme_id');
             $this->loadModel('LabActualTests');
-            $tests = $this->LabActualTests->find()->where(['lab_letter_registers_id' => $letter_id]);
+            $tests = $this->LabActualTests->find()
+                ->where(['lab_letter_registers_id' => $letter_id])
+                ->group(['lab_test_group_id','lab_test_list_id','created_date']);
+
 
             $labTests = [];
             foreach ($tests as $key => $test) {
@@ -330,7 +334,9 @@ class LabBillsController extends AppController
         } elseif ($this->request->data('type') == 'scheme') {
             $id = $this->request->data['scheme_id'];
             $this->loadModel('LabActualTests');
-            $tests = $this->LabActualTests->find()->where(['scheme_id' => $id]);
+            $tests = $this->LabActualTests->find()->where(['scheme_id' => $id])
+                ->group(['lab_test_group_id','lab_test_list_id','created_date']);
+
 
             $this->loadModel('Schemes');
             $scheme = $this->Schemes->find()
@@ -413,6 +419,7 @@ class LabBillsController extends AppController
     public function getLabBillLists()
     {
         $type = $this->request->data['related_to'];
+
         if (isset($this->request->data['letter_id'])) {
             $reference_id = $this->request->data['letter_id'];
         } elseif (isset($this->request->data['scheme_id'])) {
@@ -466,9 +473,18 @@ class LabBillsController extends AppController
 
         $this->loadModel('LabBills');
         $labBills = $this->LabBills->find()->hydrate(false)
-            ->where(['LabBills.id <=' => $bill_id, 'LabBills.type' => $type, 'LabBills.reference_id' => $reference_id])
-            ->contain('LabBillDetails.LabActualTests')
+            ->where(['LabBills.id <= ' => $bill_id, 'LabBills.type' => $type, 'LabBills.reference_id' => $reference_id])
+            ->contain(['LabBillDetails'=>
+                function ($q) {
+                    return $q->group(['LabBillDetails.lab_test_group_id','LabBillDetails.lab_bill_id'])
+                        ->contain(['LabActualTests'])
+                        ->autoFields(true);
+                }
+            ])
+//            ->group(['LabBillDetails.lab_bill_id'])
             ->order(['LabBills.id' => 'desc']);
+
+      // echo "<pre>";print_r($labBills->toArray());die();
 
         if ($type == 'letter') {
             $this->loadModel('LabLetterRegisters');
@@ -479,14 +495,14 @@ class LabBillsController extends AppController
             $this->loadModel('Schemes');
             $scheme = $this->Schemes->find()
                 ->select(['contractors.contractor_title', 'projects.name_bn', 'Schemes.id', 'Schemes.name_bn'])
-                ->where(['Schemes.id' => $reference_id])
+                ->where(['Schemes.id ' => $reference_id])
                 ->leftJoin('projects', 'projects.id=Schemes.project_id')
                 ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id=Schemes.id and scheme_contractors.is_lead=1')
                 ->leftJoin('contractors', 'contractors.id=scheme_contractors.contractor_id')
                 ->toArray();
             $this->set(compact('scheme'));
         }
-
+       // echo "<pre>";print_r($labBills->toArray());die();
         $labTests = [];
         $i = 0;
         foreach ($labBills as $labBill) {
@@ -498,12 +514,178 @@ class LabBillsController extends AppController
                     $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['rate'] = $bill_detail['lab_actual_test']['rate'];
                     $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['total'] = 0;
                     $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_total'] = $bill_detail['lab_actual_test']['rate'] * $bill_detail['lab_actual_test']['number_of_test'];
+
                 } else {
+                    $lab_bill_id_test=0;
                     $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['lab_test_short_name'] = $bill_detail['lab_actual_test']['lab_test_short_name'];
                     $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['number_of_test'] = isset($labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['number_of_test']) ? $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['number_of_test'] + $bill_detail['lab_actual_test']['number_of_test'] : $bill_detail['lab_actual_test']['number_of_test'];
+                    //$labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['number_of_test'] =  $bill_detail['lab_actual_test']['number_of_test'];
+                    $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_number_of_test'] = isset($labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_number_of_test']) ? $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_number_of_test'] : 0;
+                    $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['rate'] = $bill_detail['lab_actual_test']['rate'];
+                   $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['total'] = isset($labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['total']) ? $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['total'] + $bill_detail['lab_actual_test']['rate'] * $bill_detail['lab_actual_test']['number_of_test'] : $bill_detail['lab_actual_test']['rate'] * $bill_detail['lab_actual_test']['number_of_test'];
+                   // $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['total'] =  $bill_detail['lab_actual_test']['rate'] * $bill_detail['lab_actual_test']['number_of_test'];
+                    $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_total'] = isset($labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_total']) ? $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_total'] : 0;
+                }
+            }
+
+            $i++;
+        }
+
+        /*echo "<pre>";
+        print_r($labTests);
+        echo "</pre>";
+        die;*/
+
+        $this->set(compact('labTests'));
+
+
+    }
+
+    public function sendLabBill($id=null){
+        $user = $user = $this->Auth->user();
+
+
+            $this->layout = 'ajax';
+            $bill_id = $this->request->data('bill_id');
+        $office_id = $this->Auth->user('office_id');
+        $this->loadModel('Departments');
+
+        if ($this->request->is('post') && !$this->request->is('ajax')) {
+
+          //  echo "<pre>";print_r($id);die();
+            $inputs = $this->request->data;
+           // echo "<pre>";print_r($inputs);die();
+            $arr = array();
+            $arr['sender_id'] = $user['id'];
+            $arr['subject'] = $inputs['subject'];
+            $arr['message_text'] = $inputs['message'];
+            $arr['resource_id'] = $id;
+            $arr['msg_type'] = 'labBill';
+            $arr['created_date'] = time();
+            $arr['created_by'] = $user['id'];
+            $arr['status'] = 1;
+            $this->loadModel('MessageRegisters');
+            $messageRegisters = $this->MessageRegisters->newEntity();
+           $messageRegisters = $this->MessageRegisters->patchEntity($messageRegisters, $arr);
+            if ($msg = $this->MessageRegisters->save($messageRegisters)){
+            foreach ($inputs['user'] as $user_id) {
+
+
+                $this->loadModel('users');
+                $user_info = $this->users->get($user_id);
+                if($user_info->user_group_id ==7 ){
+
+                    $lab_bills = TableRegistry::get('lab_bills');
+                    $query = $lab_bills->query();
+                    $query->update()
+                        ->set(['is_sent_to_accounts' => 1])
+                        ->where(['id' => $id])
+                        ->execute();
+                }
+              //  echo "<pre>";print_r($user_info);die();
+
+                $recipient_data['message_register_id'] = $msg['id'];
+                $recipient_data['user_id'] = $user_id;
+                $recipient_data['created_date'] = time();
+                $recipient_data['created_by'] = $user['id'];
+                $recipient_data['status'] = 1;
+
+                $this->loadModel('Recipients');
+                $recipients = $this->Recipients->newEntity();
+                $recipients = $this->Recipients->patchEntity($recipients, $recipient_data);
+               $result= $this->Recipients->save($recipients);
+               // die();
+            }
+        }
+          if($result){
+              $this->Flash->success('Bill sent and save successfully.');
+              return $this->redirect(['action' => 'lists']);
+          }else{
+              $this->Flash->error('Bill can not save. Please try again');
+              return $this->redirect(['action' => 'lists']);
+          }
+        }
+
+        $departments = $this->Departments->find()->hydrate(false)
+            ->select(['designations.name_bn', 'users.id', 'users.name_bn', 'Departments.name_bn'])
+            ->where(['Departments.office_id' => $office_id])
+            ->leftJoin('users', 'users.department_id=Departments.id and users.status=1')
+            ->leftJoin('designations', 'designations.id=users.designation_id')
+            ->order(['Departments.order_no' => 'asc', 'designations.order_no' => 'asc']);
+
+            //echo "<pre>";print_r($bill_id);die();
+            $this->set(compact('bill_id','departments'));
+
+
+    }
+
+//    public  function  test(){
+//      return   "it's ok";
+//    }
+    public function labBillDetails($bill_id = null, $type = null, $reference_id = null)
+    {
+        if ($this->request->is('ajax')) {
+            $this->layout = 'ajax';
+            $bill_id = $this->request->data('bill_id');
+            $type = $this->request->data('type');
+            $reference_id = $this->request->data('reference_id');
+        } else {
+            $this->view = 'get_lab_bill_detail';
+        }
+
+        $this->loadModel('LabBills');
+        $labBills = $this->LabBills->find()->hydrate(false)
+            ->where(['LabBills.id <=' => $bill_id, 'LabBills.type' => $type, 'LabBills.reference_id' => $reference_id])
+            ->contain(['LabBillDetails'=>
+                function ($q) {
+                    return $q->group(['LabBillDetails.lab_test_group_id','LabBillDetails.lab_bill_id'])
+                        ->contain(['LabActualTests'])
+                        ->autoFields(true);
+                }
+            ])
+//            ->group(['LabBillDetails.lab_bill_id'])
+            ->order(['LabBills.id' => 'desc']);
+
+       // echo "<pre>";print_r($labBills->toArray());die();
+
+        if ($type == 'letter') {
+            $this->loadModel('LabLetterRegisters');
+            $labLetter = $this->LabLetterRegisters->get($reference_id);
+            $this->set(compact('labLetter'));
+
+        } elseif ($type == 'scheme') {
+            $this->loadModel('Schemes');
+            $scheme = $this->Schemes->find()
+                ->select(['contractors.contractor_title', 'projects.name_bn', 'Schemes.id', 'Schemes.name_bn'])
+                ->where(['Schemes.id ' => $reference_id])
+                ->leftJoin('projects', 'projects.id=Schemes.project_id')
+                ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id=Schemes.id and scheme_contractors.is_lead=1')
+                ->leftJoin('contractors', 'contractors.id=scheme_contractors.contractor_id')
+                ->toArray();
+            $this->set(compact('scheme'));
+        }
+        // echo "<pre>";print_r($labBills->toArray());die();
+        $labTests = [];
+        $i = 0;
+        foreach ($labBills as $labBill) {
+            foreach ($labBill['lab_bill_details'] as $bill_detail) {
+                if ($i == 0) {
+                    $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['lab_test_short_name'] = $bill_detail['lab_actual_test']['lab_test_short_name'];
+                    $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['number_of_test'] = 0;
+                    $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_number_of_test'] = $bill_detail['lab_actual_test']['number_of_test'];
+                    $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['rate'] = $bill_detail['lab_actual_test']['rate'];
+                    $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['total'] = 0;
+                    $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_total'] = $bill_detail['lab_actual_test']['rate'] * $bill_detail['lab_actual_test']['number_of_test'];
+
+                } else {
+                    $lab_bill_id_test=0;
+                    $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['lab_test_short_name'] = $bill_detail['lab_actual_test']['lab_test_short_name'];
+                    $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['number_of_test'] = isset($labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['number_of_test']) ? $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['number_of_test'] + $bill_detail['lab_actual_test']['number_of_test'] : $bill_detail['lab_actual_test']['number_of_test'];
+                    //$labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['number_of_test'] =  $bill_detail['lab_actual_test']['number_of_test'];
                     $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_number_of_test'] = isset($labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_number_of_test']) ? $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_number_of_test'] : 0;
                     $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['rate'] = $bill_detail['lab_actual_test']['rate'];
                     $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['total'] = isset($labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['total']) ? $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['total'] + $bill_detail['lab_actual_test']['rate'] * $bill_detail['lab_actual_test']['number_of_test'] : $bill_detail['lab_actual_test']['rate'] * $bill_detail['lab_actual_test']['number_of_test'];
+                    // $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['total'] =  $bill_detail['lab_actual_test']['rate'] * $bill_detail['lab_actual_test']['number_of_test'];
                     $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_total'] = isset($labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_total']) ? $labTests[$bill_detail['lab_actual_test']['lab_test_list_id']]['latest_total'] : 0;
                 }
             }

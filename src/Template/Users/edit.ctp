@@ -99,13 +99,15 @@ use Cake\Routing\Router;
     <div class="panel-body col-sm-6">
         <?php
         echo $this->Form->input('username');
-        echo $this->Form->input('password');
+        echo $this->Form->input('new_password',['label' => __('Password')]);
         echo $this->Form->input('name_en', ['label' => __('NAME_EN')]);
         echo $this->Form->input('name_bn', ['label' => __('NAME_BN')]);
         echo $this->Form->input('national_id_no');
         echo $this->Form->input('present_address');
         echo $this->Form->input('permanent_address');
         echo $this->Form->input('picture', ['type' => 'file','data-preview-container'=>'#profile_image_preview']);
+        echo $this->Form->input('signature', ['type' => 'file','data-preview-container'=>'#signature_image_preview']);
+
         ?>
         <div id="profile_image_preview" class="col-sm-offset-3">
             <?php
@@ -115,6 +117,17 @@ use Cake\Routing\Router;
                     <img src="<?php echo Router::url('/',true).'img/'.$user['picture']; ?>" height="200">
                     <?php
                 }
+            ?>
+        </div>
+
+        <div id="signature_image_preview" class="col-sm-offset-3">
+            <?php
+            if($user['signature'])
+            {
+                ?>
+                <img src="<?php echo Router::url('/',true).'img/signature/'.$user['signature']; ?>" height="200">
+                <?php
+            }
             ?>
         </div>
     </div>

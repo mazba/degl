@@ -70,12 +70,12 @@
 	<!-- Login wrapper -->
 	<div class="login-wrapper">
         <?php echo $this->fetch('content'); ?>
-	</div>  
+	</div>
 	<!-- /login wrapper -->
 
 
     <!-- Footer -->
-    <div class="footer clearfix">
+    <div class="footer ">
         <div class="pull-left">&copy; 2007-2015 Developed by <a href="http://softbdltd.com">Softbd</a></div>
     	<div class="pull-right icons-group">
             <p style="color: #cf2a0e"><?= __('তদন্ত প্রতিবেদন দাখিলের জন্য অ্যাপস') ?> <a class="btn btn-warning" style="float: none;color: #ffffff;padding: 3px 10px" href="<?= $this->request->webroot; ?>LGED_APK_SOFTBD.apk"><i style="color: #008a00" class="icon-android"></i>Download </a></p>

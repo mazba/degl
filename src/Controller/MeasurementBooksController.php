@@ -91,6 +91,7 @@ class MeasurementBooksController extends AppController
                     $data['work_completion_date']=0;
                 }
                 $measurementBook = $this->MeasurementBooks->patchEntity($measurementBook, $data);
+              //  echo "<pre>";print_r($measurementBook);die();
                 if ($this->MeasurementBooks->save($measurementBook))
                 {
                     $this->Flash->success(__('The measurement book has been saved.'));

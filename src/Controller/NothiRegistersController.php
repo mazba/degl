@@ -44,13 +44,145 @@ class NothiRegistersController extends AppController
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
+//    public function view($id = null)
+//    {
+//        $this->loadModel('NothiAssigns');
+//
+//        $query = $this->NothiAssigns->find('all')
+//            ->where(['NothiAssigns.nothi_register_id =' => $id])
+//            ->contain(['NothiRegisters', 'Schemes']);
+//        $nothiRegister=$query->first();
+    //echo "<pre>";print_r($nothiRegister);die();
+//        $this->set('nothiRegister', $nothiRegister);
+//        $this->set('_serialize', ['nothiRegister']);
+//    }
+
     public function view($id = null)
     {
+        ini_set('max_execution_time', 300);
+        $this->loadModel('SchemeProgresses');
+        $schemeProgress = $this->SchemeProgresses->newEntity();
+        $user=$this->Auth->user();
+        if ($this->request->is('post'))
+        {
+
+            $data=$this->request->data;
+          //  echo "<pre>";print_r($data);die();
+            $data['office_id']=$user['office_id'];
+            $data['created_by']=$user['id'];
+            $data['created_date']=time();
+            $scheme=TableRegistry::get('SchemeProgresses');
+            $query=$scheme->query();
+            $query->update()
+                ->set(['status'=>0])
+                ->where(['scheme_id'=>$data['scheme_id']])
+                ->execute();
+
+            $schemeProgress = $this->SchemeProgresses->patchEntity($schemeProgress, $data);
+            if ($this->SchemeProgresses->save($schemeProgress))
+            {
+                $this->Flash->success(__('The scheme progress has been saved.'));
+                return $this->redirect(['action' => 'view',$id]);
+            }
+            else
+            {
+                $this->Flash->error(__('The scheme progress could not be saved. Please, try again.'));
+            }
+        }
+        $this->loadModel('NothiAssigns');
+
         $nothiRegister = $this->NothiRegisters->get($id, [
-            'contain' => ['Offices', 'Projects', 'Schemes', 'NothiRegister']
+            'contain' => ['Offices', 'Projects', 'NothiRegister']
         ]);
 
-        $this->set('nothiRegister', $nothiRegister);
+        $query = $this->NothiAssigns->find('all')
+            ->where(['NothiAssigns.nothi_register_id =' => $id])
+            ->contain(
+                [
+                    'Schemes' => [
+                        'Packages',
+                        'Upazilas',
+                        'FinancialYearEstimates',
+                        'SchemeProgresses' =>
+                            function ($q) {
+                                return $q
+                                    ->where(['SchemeProgresses.status' => 1])
+                                    ->limit(1);
+                            }
+                    ]]);
+
+        $nothiNothiAssigns = $query->first();
+
+
+        $asset_list=$this->NothiAssigns->find('all')
+            ->where(['nothi_register_id ' => $id])
+            ->contain('Assets')
+            ->toArray();
+
+//10-nov-2016 by Sylvester Antu Rozario
+
+        $nothi_related_scheme=$this->NothiAssigns->find('all')
+            ->where(['nothi_register_id ' => $id,'scheme_id >'=> 0])
+            ->toArray();
+
+        $nothi_related_dake_file=$this->NothiAssigns->find('all')
+            ->where(['nothi_register_id ' => $id,'receive_file_register_id >'=> 0])
+            ->toArray();
+
+        $nothi_related_project=$this->NothiAssigns->find('all')
+            ->where(['nothi_register_id ' => $id,'project_id >'=> 0])
+            ->toArray();
+
+        $nothi_related_lab_bill=$this->NothiAssigns->find('all')
+            ->where(['nothi_register_id ' => $id,'lab_bill_id >'=> 0])
+            ->toArray();
+
+        $nothi_related_hire_charge=$this->NothiAssigns->find('all')
+            ->where(['nothi_register_id ' => $id,'hire_charge_id >'=> 0])
+            ->toArray();
+
+        $nothi_related_purto_bill=$this->NothiAssigns->find('all')
+            ->where(['nothi_register_id ' => $id,'purto_bill_id >'=> 0])
+            ->toArray();
+        $nothi_related_allotment_registe=$this->NothiAssigns->find('all')
+            ->where(['nothi_register_id ' => $id,'allotment_register_id >'=> 0])
+            ->toArray();
+
+
+     //  echo "<pre>";print_r($nothi_related_scheme);die();
+        //echo "<pre>";print_r($nothiNothiAssigns);die();
+        // Investigation report part
+        $project_images = TableRegistry::get('project_images')->find('all');
+        $project_images->select(['users.name_bn', 'users.picture']);
+        $project_images->autoFields(true);
+
+            $project_images->where(['project_images.scheme_id' => $nothiNothiAssigns['scheme']['id']]);
+
+        //  $project_images->where(['project_images.project_id'=>$input['project_id']]);
+        $project_images->leftJoin('users', 'users.id=project_images.created_by');
+        $project_images = $project_images->toArray();
+        // echo "<pre>";print_r($project_images);die();
+        $project_videos = TableRegistry::get('project_videos')->find('all');
+        $project_videos->select(['users.name_bn', 'users.picture']);
+        $project_videos->autoFields(true);
+            $project_videos->where(['project_videos.scheme_id' => $nothiNothiAssigns['scheme']['id']]);
+
+        // $project_videos->where(['project_videos.project_id'=>$input['project_id']]);
+        $project_videos->leftJoin('users', 'users.id=project_videos.created_by');
+        $project_videos = $project_videos->toArray();
+
+        //get employee details
+        $employee_details= $this->NothiAssigns->find('all');
+        $employee_details->select(['employees.id', 'employees.name_en','employees.name_bn','designations.name_bn','offices.name_bn']);
+        $employee_details->where(['NothiAssigns.nothi_register_id' => $id]);
+        $employee_details->innerJoin('employees', 'employees.id = NothiAssigns.employee_id');
+        $employee_details->innerJoin('designations', 'designations.id = employees.designation_id');
+        $employee_details->innerJoin('offices', 'offices.id = employees.office_id');
+        $employee_details=$employee_details->toArray();
+
+        //echo "<pre>";print_r($employee_details);die();
+        $this->set(compact('nothi_related_scheme','nothi_related_dake_file','nothi_related_project','nothi_related_lab_bill','nothi_related_hire_charge','nothi_related_purto_bill','nothi_related_allotment_registe','asset_list','nothiRegister', 'nothiNothiAssigns', 'project_images', 'project_videos','schemeProgress','employee_details'));
+        //$this->set('nothiRegister', $nothiRegister);
         $this->set('_serialize', ['nothiRegister']);
     }
 
@@ -96,7 +228,6 @@ class NothiRegistersController extends AppController
                 ->innerJoin('project_offices', 'project_offices.project_id = Schemes.project_id')
                 ->leftJoin('projects', 'projects.id = Schemes.project_id')
                 ->where(['project_offices.office_id' => $user['office_id']]);
-
         }
 
         $nothiRegisters = $this->NothiRegisters->find('list', ['conditions' => ['parent_id' => 0, 'status !=' => 99], 'fields' => ['id', 'nothi_no']]);
@@ -280,7 +411,7 @@ class NothiRegistersController extends AppController
             }
 
             $querys = $this->nothi_assigns->find()
-                ->select(['lab_bills.total_amount', 'lab_bills.net_payable', 'lab_bills.type','lab_bills.id','lab_bills.reference_id', 'schemes.name_bn', 'schemes.id'])
+                ->select(['lab_bills.total_amount', 'lab_bills.net_payable', 'lab_bills.type', 'lab_bills.id', 'lab_bills.reference_id', 'schemes.name_bn', 'schemes.id'])
                 ->where(['nothi_assigns.nothi_register_id' => $id, 'nothi_assigns.lab_bill_id IS NOT' => NULL])
                 ->leftJoin('lab_bills', 'lab_bills.id=nothi_assigns.lab_bill_id')
                 ->where(['lab_bills.type' => 'scheme'])
@@ -289,7 +420,7 @@ class NothiRegistersController extends AppController
 
             foreach ($querys as $key => $query) {
 
-                $arr['action'] = '<a target="_blank" class="icon-newspaper" href="' . $this->request->webroot . 'lab_bills/getLabBillDetails/' . $query['lab_bills']['id'] .'/'.$query['lab_bills']['type'].'/'.$query['lab_bills']['reference_id'].'" ><a>';
+                $arr['action'] = '<a target="_blank" class="icon-newspaper" href="' . $this->request->webroot . 'lab_bills/getLabBillDetails/' . $query['lab_bills']['id'] . '/' . $query['lab_bills']['type'] . '/' . $query['lab_bills']['reference_id'] . '" ><a>';
                 $arr['total_amount'] = $query['lab_bills']['total_amount'];
                 $arr['net_payable'] = $query['lab_bills']['net_payable'];
                 $arr['type'] = $query['lab_bills']['type'];
@@ -304,8 +435,8 @@ class NothiRegistersController extends AppController
             $this->loadModel('nothi_assigns');
             $querys = $this->nothi_assigns->find()
                 ->select(['hire_charges.total_amount', 'hire_charges.net_payable', 'hire_charges.id', 'schemes.name_bn'])
-                ->where(['nothi_assigns.nothi_register_id' => $id, 'nothi_assigns.mechanical_bill_id IS NOT' => NULL])
-                ->leftJoin('hire_charges', 'hire_charges.id=nothi_assigns.mechanical_bill_id')
+                ->where(['nothi_assigns.nothi_register_id' => $id, 'nothi_assigns.hire_charge_id IS NOT' => NULL])
+                ->leftJoin('hire_charges', 'hire_charges.id=nothi_assigns.hire_charge_id')
                 ->leftJoin('schemes', 'schemes.id=hire_charges.scheme_id')
                 ->order(['hire_charges.id' => 'desc']);
 
@@ -343,7 +474,7 @@ class NothiRegistersController extends AppController
 
             $this->response->body(json_encode($my_files));
             return $this->response;
-        }elseif ($action == 'get_allotments') {
+        } elseif ($action == 'get_allotments') {
 
             $this->loadModel('nothi_assigns');
             $querys = $this->nothi_assigns->find()
@@ -384,6 +515,8 @@ class NothiRegistersController extends AppController
             ->leftJoin('recipients', 'recipients.message_register_id=MessageRegisters.id')
             ->leftJoin('users', 'users.id=MessageRegisters.sender_id')
             ->leftJoin('designations', 'designations.id=users.designation_id')
+            ->order(['MessageRegisters.id' => 'desc'])
+
             ->toArray();
         $i = 0;
         foreach ($history as $data) {

@@ -27,6 +27,7 @@
     <table class="table table-bordered">
         <tr>
             <td><?= __('Vehilce Title') ?></td>
+            <td><?= __('Vehilce Location') ?></td>
         </tr>
         <?php
         foreach($vehicles as $vehicle)
@@ -35,6 +36,7 @@
             ?>
             <tr>
                 <td><?=$vehicle['title']?></td>
+                <td><?=$vehicle['location']?></td>
             </tr>
             <?php
         }

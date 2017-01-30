@@ -104,7 +104,8 @@ class ProjectOfficesController extends AppController
         }
         else
         {
-            $offices = $this->ProjectOffices->Offices->find('list', ['conditions' => ['id'=>$user['office_id']]]);
+           // $offices = $this->ProjectOffices->Offices->find('list', ['conditions' => ['id'=>$user['office_id']]]);
+            $offices = $this->ProjectOffices->Offices->find('list');
         }
         $financialYearEstimates = $this->ProjectOffices->FinancialYearEstimates->find('list');
         $this->set(compact('projectOffice', 'project_id', 'offices', 'financialYearEstimates','assigned_offices','project'));

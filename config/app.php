@@ -220,7 +220,7 @@ return [
              */
             //'port' => 'nonstandard_port_number',
             'username' => 'root',
-            'password' => 'vertrigo',
+            'password' => '',
             'database' => 'lged',
             'encoding' => 'utf8',
             'timezone' => 'UTC',

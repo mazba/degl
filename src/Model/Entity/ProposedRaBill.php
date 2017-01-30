@@ -30,7 +30,9 @@ class ProposedRaBill extends Entity
         'status' => true,
         'office' => true,
         'scheme' => true,
-        'measurement_book' => true,
+        'bill_type' => true,
+        'measurement_no' => true,
         'latest_measurement_no' => true,
+        'this_bill_amount'=>true
     ];
 }

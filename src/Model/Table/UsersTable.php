@@ -47,7 +47,18 @@ class UsersTable extends Table
             'foreignKey' => 'updated_by',
             'joinType' => 'LEFT'
         ]);
-        $this->addBehavior('FileUpload',['upload_path'=>'users','field'=>'picture']);
+    $this->addBehavior('FileUpload',['upload_path'=>'users','field'=>'picture']);
+//        $this->addBehavior('FileUpload',['upload_path'=>'signature','field'=>'signature']);
+
+//        $this->addBehavior('Josegonzalez/Upload.Upload', [
+//            'signature'=> [
+//                'path' => 'webroot{DS}img{DS}signature{DS}',
+//                'nameCallback'=>function($data,$settings){
+//                    return isset($data['name_en']) && $data['name_en'] ? time().'_'.$data['name_en']:'';
+//                }
+//            ]
+//
+//        ]);
     }
 
     /**

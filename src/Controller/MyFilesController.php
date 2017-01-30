@@ -35,6 +35,13 @@ class MyFilesController extends AppController
             ->find()
             ->where(['table_key' => $my_file['resource_id'], 'table_name' => 'receive_file_registers'])
             ->toArray();
+        $query = TableRegistry::get('Files');
+        $attach2 = $query
+            ->find()
+            ->where(['table_key' => $my_file['id'], 'table_name' => 'message_registers'])
+            ->toArray();
+        foreach($attach2 as $dd)
+            $attach[] = $dd;
         if ($my_file->msg_type == "reply") {
 
             $query = TableRegistry::get('Files');
@@ -696,7 +703,7 @@ class MyFilesController extends AppController
                 $data['description'] = $my_file['work_description'];
             }
 
-            $data['is_attached'] = 0;
+            $data['is_attached'] = (isset($this->request->data['attachments'][0]) && !empty($this->request->data['attachments'][0])) ? 1 : 0;
 
 
             $data['attachment_type'] = Configure::read('attachment_type.4');
@@ -726,7 +733,48 @@ class MyFilesController extends AppController
             $messageRegisters = $this->MessageRegisters->patchEntity($messageRegisters, $data);
 
             if ($msg = $this->MessageRegisters->save($messageRegisters)) {
+                /*
+                 * added by mazba 24-07-16
+                 * requirement: omi vai!
+                 */
+                $files = array();
+                $file_upload_complete = true;
+                $has_file = false;
 
+                $base_upload_path = WWW_ROOT . 'files/receive_files';
+                for ($i = 0; $i < sizeof($_FILES['attachments']['name']); $i++) {
+                    $tmp_name = $_FILES['attachments']['tmp_name'][$i];
+                    //Get the temp file path
+                    if ($tmp_name) {
+
+                        $name = time() . '_' . str_replace(' ', '_', $_FILES['attachments']['name'][$i]);
+                        if (move_uploaded_file($tmp_name, $base_upload_path . '/' . $name)) {
+                            $files[]['file_path'] = $name;
+                            $has_file = true;
+
+                        } else {
+                            $file_upload_complete = false;
+                            break;
+                        }
+                    }
+                }
+                if ($has_file) {
+                    $files_table = TableRegistry::get('files');
+                    foreach ($files as $file) {
+                        $file_data = array();
+                        $file_data['file_path'] = $file['file_path'];
+                        $file_data['table_name'] = 'message_registers';
+                        $file_data['table_key'] = $msg['id'];
+                        $file_data['created_by'] = $user['id'];
+                        $file_data['created_date'] = time();
+                        $file_data['status'] = 1;
+                        $file_query = $files_table->query();
+                        $file_query->insert(array_keys($file_data))
+                            ->values($file_data)
+                            ->execute();
+                    }
+                }
+                /* end the last requiremt */
 
                 if (isset($inputs['reply_deadline'])) {
                     $task_data = array();

@@ -24,6 +24,11 @@ class VehiclesTable extends Table
         $this->table('vehicles');
         $this->displayField('title');
         $this->primaryKey('id');
+
+        $this->hasMany('VehiclesStatus', [
+            'foreignKey' => 'vehicle_id'
+        ]);
+
         $this->belongsTo('Offices', [
             'foreignKey' => 'office_id',
             'joinType' => 'INNER'

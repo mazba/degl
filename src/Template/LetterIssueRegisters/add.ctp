@@ -163,7 +163,8 @@ Configure::load('config_receive_file_registers', 'default');
             </div>
         </div>
 
-        <?= $this->Form->input('nothi_register_id',['options'=>$nothi,'empty'=>'Select Nothi']); ?>
+        <?php echo $this->Form->input('parent_id', ['label' => __('Nothi'), 'options' => $nothiRegisters, 'empty' => __('Select'), 'required', 'templates' => ['inputContainer' => '<div class="form-group nothi_register {{type}}{{required}}">{{content}}</div>']]); ?>
+
     </div>
     <div class="panel-body col-sm-12">
         <div class="form-group input">
@@ -211,6 +212,30 @@ Configure::load('config_receive_file_registers', 'default');
             }
 
         });
+
+        $(document).on('change', '#parent-id', function () {
+            var parent_id = $(this).val();
+            var obj = $(this);
+            obj.closest('#container_parent_id').find('.child').remove()
+            $.ajax({
+                type: 'POST',
+                url: '<?= $this->Url->build("/LetterIssueRegisters/getSubNothi")?>',
+                data: {parent_id: parent_id},
+                dataType: 'json',
+                success: function (data, status) {
+                    if(Object.keys(data).length){
+                        var childSelect = $('<select class="child form-control"></select>');
+                        childSelect.append($('<option></option>').text("নির্বাচন করুন").val(""));
+                        $.each(data,function(i,v){
+                            childSelect.append($('<option></option>').text(v).val(i));
+                        });
+                        obj.closest('#container_parent_id').append(childSelect)
+                    }
+                }
+            });
+
+        });
+
     });
 
     CKEDITOR.replace('ckeditor');

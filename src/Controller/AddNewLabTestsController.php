@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\Controller\AppController;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -29,31 +28,38 @@ class AddNewLabTestsController extends AppController
         $this->loadModel('LabActualTests');
 
         if ($this->request->is('post')) {
+
+
             $inputs = $this->request->data;
-            $i = 0;
+            //  echo "<pre>";print_r($inputs);die();
+           // $i = 0;
             $flag = 0;
-            for ($i; $i < count($inputs['rate']); $i++) {
-                $data = array();
-                $data['lab_letter_registers_id'] = $inputs['lab_letter_registers_id'];
-                if(!empty($inputs['scheme_id'])){
-                    $data['scheme_id'] = $inputs['scheme_id'];
-                }
-                $data['office_id'] = $user['office_id'];
-                $data['lab_test_list_id'] = $inputs['lab_test_list_id'][$i];
-                $data['financial_year'] = $inputs['financial_year'][$i];
-                $data['lab_test_short_name'] = $inputs['lab_test_short_name'][$i];
-                $data['lab_test_full_name'] = $inputs['lab_test_full_name'][$i];
-                $data['rate'] = $inputs['rate'][$i];
-                $data['number_of_test'] = $inputs['number_of_test'][$i];
-                $data['created_by'] = $user['id'];
-                $data['created_date'] = time();
-                $data['status'] = 1;
-                $labTest = $this->LabActualTests->newEntity();
-                $labTest = $this->LabActualTests->patchEntity($labTest, $data);
-                if ($this->LabActualTests->save($labTest)) {
-                    $flag = 1;
-                } else {
-                    $flag = 0;
+            for ($i=0; $i < count($inputs['rate']); $i++) {
+            $time= time();
+                for ($j = 1; $j <= $inputs['number_of_test'][$i]; $j++) {
+                    $data = array();
+                    $data['lab_letter_registers_id'] = $inputs['lab_letter_registers_id'];
+                    if (!empty($inputs['scheme_id'])) {
+                        $data['scheme_id'] = $inputs['scheme_id'];
+                    }
+                    $data['office_id'] = $user['office_id'];
+                    $data['lab_test_group_id'] = $inputs['lab_test_group_id'][$i];
+                    $data['lab_test_list_id'] = $inputs['lab_test_list_id'][$i];
+                    $data['financial_year'] = $inputs['financial_year'][$i];
+                    $data['lab_test_short_name'] = $inputs['lab_test_short_name'][$i];
+                    $data['lab_test_full_name'] = $inputs['lab_test_full_name'][$i];
+                    $data['rate'] = $inputs['rate'][$i];
+                    $data['number_of_test'] = $inputs['number_of_test'][$i];
+                    $data['created_by'] = $user['id'];
+                    $data['created_date'] = $time;
+                    $data['status'] = 1;
+                    $labTest = $this->LabActualTests->newEntity();
+                    $labTest = $this->LabActualTests->patchEntity($labTest, $data);
+                    if ($this->LabActualTests->save($labTest)) {
+                        $flag = 1;
+                    } else {
+                        $flag = 0;
+                    }
                 }
 
             }
@@ -72,7 +78,7 @@ class AddNewLabTestsController extends AppController
         ]);
 
         $this->loadModel('LabTestGroup');
-        $labTestGroups = $this->LabTestGroup->find('list', ['conditions' => ['status'=>1]]);
+        $labTestGroups = $this->LabTestGroup->find('list', ['conditions' => ['status' => 1]]);
         $labTest = $this->LabActualTests->newEntity();
         $this->set(compact(['labTest', 'labLetterRegister', 'labTestGroups']));
         $this->set('_serialize', ['labTestList']);
@@ -93,9 +99,9 @@ class AddNewLabTestsController extends AppController
         $this->loadModel('LabActualTests');
         $tests = $this->LabActualTests->find()
             ->autoFields(true)
-            ->select(['file_path'=>'lab_test_reports.file_path'])
+            ->select(['file_path' => 'lab_test_reports.file_path'])
             ->where(['LabActualTests.lab_letter_registers_id' => $id])
-            ->leftJoin('lab_test_reports','lab_test_reports.lab_actual_test_id=LabActualTests.id')
+            ->leftJoin('lab_test_reports', 'lab_test_reports.lab_actual_test_id=LabActualTests.id')
             ->toArray();
 
         $this->set(compact(['labLetterRegister', 'tests']));
@@ -108,14 +114,11 @@ class AddNewLabTestsController extends AppController
     {
         $user = $user = $this->Auth->user();
         $inputs = $this->request->data;
-        $i=0;
-        foreach($inputs['report'] as $value)
-        {
+        $i = 0;
+        foreach ($inputs['report'] as $value) {
             $files = array();
-            foreach($value as $image)
-            {
-                if($image['tmp_name'])
-                {
+            foreach ($value as $image) {
+                if ($image['tmp_name']) {
                     $base_upload_path = WWW_ROOT . 'files/lab_test_files';
                     $name = time() . '_' . str_replace(' ', '_', $image['name']);
                     if (move_uploaded_file($image['tmp_name'], $base_upload_path . '/' . $name)) {
@@ -138,9 +141,9 @@ class AddNewLabTestsController extends AppController
                     ->execute();
             }
             $this->loadModel('LabActualTests');
-            $labTest=$this->LabActualTests->get($inputs['test_id'][$i]);
-            $data['is_ok']=$inputs['is_ok'][$i];
-            $labTest=$this->LabActualTests->patchEntity($labTest,$data);
+            $labTest = $this->LabActualTests->get($inputs['test_id'][$i]);
+            $data['is_ok'] = $inputs['is_ok'][$i];
+            $labTest = $this->LabActualTests->patchEntity($labTest, $data);
             $this->LabActualTests->save($labTest);
 
 
@@ -266,6 +269,46 @@ class AddNewLabTestsController extends AppController
 
     }
 
+    public function get_previous_number_of_test(){
+        $this->loadModel('LabActualTests');
+        $data=$this->request->data;
+       if($data['scheme_id']){
+           $tests = $this->LabActualTests->find()
+               ->select(['test_number' => 'number_of_test'])
+               ->autoFields(false)
+               ->where(['scheme_id'=>$data['scheme_id'],'lab_test_group_id'=>$data['lab_test_group'],'lab_test_list_id' => $data['test_list_id']])
+               ->group(['lab_test_group_id','lab_test_list_id','created_date'])
+               ->toArray();
+         //  echo "<pre>";print_r($tests);die();
+
+           $total=0;
+           foreach($tests as $test){
+               $total+= $test['test_number'];
+           }
+          // echo $total;die();
+           $this->response->body(json_encode($total));
+           return $this->response;
+
+       }else{
+           $tests = $this->LabActualTests->find()
+               ->select(['test_number' => 'number_of_test'])
+               ->autoFields(false)
+               ->where(['lab_letter_registers_id'=>$data['lab_letter_registers_id'],'lab_test_group_id'=>$data['lab_test_group'],'lab_test_list_id' => $data['test_list_id']])
+               ->group(['lab_test_group_id','lab_test_list_id','created_date'])
+               ->toArray();
+           //  echo "<pre>";print_r($tests);die();
+
+           $total=0;
+           foreach($tests as $test){
+               $total+= $test['test_number'];
+           }
+         //  echo $total;die();
+           $this->response->body(json_encode($total));
+           return $this->response;
+
+       }
+    }
+
     public function getRate()
     {
         $financial_year_id = $this->request->data['financial_year_id'];
@@ -273,7 +316,7 @@ class AddNewLabTestsController extends AppController
         $this->loadModel('LabTestRates');
         $results = $this->LabTestRates->find()
             ->select(['financial_year_estimates.name', 'lab_test_lists.test_short_name_en', 'lab_test_lists.test_full_name_en', 'LabTestRates.rate'])
-            ->where(['LabTestRates.financial_year_estimate_id' => $financial_year_id,'LabTestRates.lab_test_list_id' => $lab_test_id])
+            ->where(['LabTestRates.financial_year_estimate_id' => $financial_year_id, 'LabTestRates.lab_test_list_id' => $lab_test_id])
             ->leftJoin('lab_test_lists', 'lab_test_lists.id=LabTestRates.lab_test_list_id')
             ->leftJoin('financial_year_estimates', 'financial_year_estimates.id=LabTestRates.financial_year_estimate_id')
             ->first()
@@ -287,37 +330,54 @@ class AddNewLabTestsController extends AppController
 
     public function report($id = null)
     {
-
-
         $this->loadModel('LabLetterRegisters');
         $labLetterRegister = $this->LabLetterRegisters->get($id, [
             'contain' => ['Offices', 'Schemes', 'CreatedUser', 'UpdatedUser']
         ]);
+        if ($labLetterRegister->scheme_id) {
+            $this->loadModel('Schemes');
+            $scheme = $this->Schemes->find()
+                ->select(['contractors.contractor_title', 'projects.name_bn', 'Schemes.id', 'Schemes.name_bn'])
+                ->where(['Schemes.id' => $labLetterRegister->scheme_id])
+                ->leftJoin('projects', 'projects.id=Schemes.project_id')
+                ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id=Schemes.id and scheme_contractors.is_lead=1')
+                ->leftJoin('contractors', 'contractors.id=scheme_contractors.contractor_id')
+                // ->group(['Articles.id'])
+                ->toArray();
 
-        $this->loadModel('Schemes');
-        $scheme = $this->Schemes->find()
-            ->select(['contractors.contractor_title', 'projects.name_bn', 'Schemes.id', 'Schemes.name_bn'])
-            ->where(['Schemes.id' => $labLetterRegister->scheme_id])
-            ->leftJoin('projects', 'projects.id=Schemes.project_id')
-            ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id=Schemes.id and scheme_contractors.is_lead=1')
-            ->leftJoin('contractors', 'contractors.id=scheme_contractors.contractor_id')
-            ->toArray();
+            $this->loadModel('LabActualTests');
+            $tests = $this->LabActualTests->find()
+                ->select(['LabActualTests' => 'lab_test_short_name', 'lab_test_group' => 'name_en'])
+                ->autoFields(true)
+                ->where(['LabActualTests.lab_letter_registers_id' => $id,'LabActualTests.scheme_id' => $labLetterRegister->scheme_id])
+                ->leftJoin('lab_test_group', 'lab_test_group.id=LabActualTests.lab_test_group_id')
+                ->group(['LabActualTests.lab_test_list_id','LabActualTests.created_date'])
+                ->toArray();
+        } else {
+            $scheme = "";
 
-        $this->loadModel('LabActualTests');
-        $tests = $this->LabActualTests->find()
-            ->autoFields(true)
-            ->where(['LabActualTests.lab_letter_registers_id' => $id])
-            ->toArray();
+            $this->loadModel('LabActualTests');
+            $tests = $this->LabActualTests->find()
+                ->select(['LabActualTests' => 'lab_test_short_name', 'lab_test_group' => 'name_en'])
+                ->autoFields(true)
+                ->where(['LabActualTests.lab_letter_registers_id' => $id])
+                ->where(function ($exp, $q) {
+                    return $exp->isNull('LabActualTests.scheme_id');
+                })
+                ->leftJoin('lab_test_group', 'lab_test_group.id=LabActualTests.lab_test_group_id')
+                ->group(['LabActualTests.lab_test_list_id','LabActualTests.created_date'])
+                ->toArray();
+        }
 
-        $this->set(compact(['labLetterRegister', 'tests','scheme']));
+
+        $this->set(compact(['labLetterRegister', 'tests', 'scheme']));
         $this->set('_serialize', ['labTestList']);
     }
-
 
     public function getTestNumber()
     {
         $inputs = $this->request->data;
-      //  print_r($inputs);die();
+        //  print_r($inputs);die();
         $this->loadModel('LabTestFrequency');
         $labTestFrequency = $this->LabTestFrequency->find('all', ['conditions' => ['lab_test_group_id' => $inputs['lab_test_group'], 'lab_test_list_id' => $inputs['testList']]])->first();
 
@@ -328,12 +388,12 @@ class AddNewLabTestsController extends AppController
                 $arr['test_no_type'] = $labTestFrequency->test_no_type ? $labTestFrequency->test_no_type : 0;
             } else {
                 $test_needed = $inputs['work_done_quantity'] / $labTestFrequency->per_unit;
-                $whole = (int) $test_needed;
-                $frac  = $test_needed - (int) $test_needed;
-                if($frac>.2){
-                    $test=   $whole+1;
-                }else{
-                    $test= $whole;
+                $whole = (int)$test_needed;
+                $frac = $test_needed - (int)$test_needed;
+                if ($frac > .2) {
+                    $test = $whole + 1;
+                } else {
+                    $test = $whole;
                 }
                 $arr['test_needed'] = $test;
                 $arr['test_no_type'] = $labTestFrequency->test_no_type ? $labTestFrequency->test_no_type : 0;

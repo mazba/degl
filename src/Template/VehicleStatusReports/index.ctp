@@ -37,11 +37,8 @@
             dataFields: [
                 { name: 'id', type: 'int' },
                 { name: 'title', type: 'string' },
-                { name: 'type', type: 'string' },
-                { name: 'registration_no', type: 'string' },
                 { name: 'vehicle_status', type: 'string' },
                 { name: 'vehicle_location', type: 'string' },
-//                { name: 'work_description', type: 'string' },
                 { name: 'vehicle_status', type: 'string' },
                 { name: 'employees', type: 'string' }
             ],
@@ -69,13 +66,10 @@
 
                 columns: [
                     { text: '<?= __('#') ?>',cellsalign: 'center', dataField: 'id',width:'5%'},
-                    { text: '<?= __('Title') ?>', dataField: 'title',width:'20%'},
-                    { text: '<?= __('Type') ?>', dataField: 'type',width:'10%'},
-                    { text: '<?= __('Registration No') ?>', dataField: 'registration_no',width:'20%'},
-                    { text: '<?= __('Present Location') ?>',dataField: 'vehicle_location',width:'15%'},
-//                    { text: '<?//= __('Work Description') ?>//', dataField: 'work_description',width:'15%'},
-                    { text: '<?= __('Driver') ?>', dataField: 'employees',width:'20%'},
-                    { text: '<?= __('Vehicle Status') ?>', dataField: 'vehicle_status',width:'10%'}
+                    { text: '<?= __('Title') ?>', dataField: 'title',width:'22%'},
+                    { text: '<?= __('Present Location') ?>',dataField: 'vehicle_location',width:'22%'},
+                    { text: '<?= __('Driver') ?>', dataField: 'employees',width:'31%'},
+                    { text: '<?= __('Vehicle Status') ?>', dataField: 'vehicle_status',width:'20%'}
                 ]
             });
 

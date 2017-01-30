@@ -32,8 +32,9 @@ class VehicleServicingsController extends AppController
     public function view($id = null)
     {
         $vehicleServicing = $this->VehicleServicings->get($id, [
-            'contain' => ['Offices', 'Vehicles', 'CreatedUser', 'UpdatedUser'],
+            'contain' => ['Offices', 'Vehicles','VehicleServicingDetails'],
         ]);
+       // echo "<pre>";print_r($vehicleServicing);die();
         $this->set('vehicleServicing', $vehicleServicing);
         $this->set('_serialize', ['vehicleServicing']);
     }
@@ -49,10 +50,10 @@ class VehicleServicingsController extends AppController
         $user = $this->Auth->user();
         $vehicleServicing = $this->VehicleServicings->newEntity();
         if ($this->request->is('post')) {
-            /* echo "<pre>";
-             print_r($this->request->data);
-             echo "</pre>";
-             die;*/
+//            echo "<pre>";
+//             print_r($this->request->data);
+//             echo "</pre>";
+//             die;
             $time = time();
 
             $data = $this->request->data;
@@ -151,8 +152,13 @@ class VehicleServicingsController extends AppController
     {
         $user = $this->Auth->user();
         $vehicleServicing = $this->VehicleServicings->get($id, [
-            'contain' => []
+            'contain' => ['Vehicles']
         ]);
+
+        $vehicleServicing['vehicle_location']=$vehicleServicing['vehicle']['vehicle_location'];
+        $vehicleServicing['vehicle_place_of_user']=$vehicleServicing['vehicle']['vehicle_place_of_user'];
+
+       // echo "<pre>";print_r($vehicleServicing);die();
         if ($this->request->is(['patch', 'post', 'put'])) {
             $time = time();
             $data = $this->request->data;
@@ -184,7 +190,12 @@ class VehicleServicingsController extends AppController
             }
         }
 
-        $vehicles = $this->VehicleServicings->Vehicles->find('list', ['condition' => ['office_id' => $user['office_id']]]);
+        $vehicles = $this->VehicleServicings->Vehicles->find()
+            ->select(['id', 'title', 'registration_no', 'type', 'equipment_id_no', 'equipment_category'])
+            ->where(['office_id' => $user['office_id']])
+            ->where(['status' => 1])
+            ->where('(vehicle_status ="READY" OR vehicle_status ="IN_USE")');
+
         $this->set(compact('vehicleServicing', 'offices', 'vehicles'));
         $this->set('_serialize', ['vehicleServicing']);
     }

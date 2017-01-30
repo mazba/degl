@@ -1,4 +1,4 @@
-<div class="breadcrumb-line">
+<div class="breadcrumb-line" xmlns="http://www.w3.org/1999/html">
     <ul class="breadcrumb">
         <li><a href="<?= $this->Url->build(('/Dashboard'), true); ?>"><?= __('Dashboard') ?></a></li>
         <li><?= $this->Html->link(__('Vehicle Servicings'), ['action' => 'index']) ?> </li>
@@ -9,19 +9,17 @@
     <ul class="nav nav-tabs">
         <li><?= $this->Html->link(__('List of Vehicle Servicings'), ['action' => 'index']) ?> </li>
         <?php
-        if ($user_roles['add'] == 1)
-        {
+        if ($user_roles['add'] == 1) {
             ?>
             <li><?= $this->Html->link(__('New Vehicle Servicing'), ['action' => 'add']) ?></li>
-        <?php
+            <?php
         }
         ?>
         <?php
-        if ($user_roles['edit'] == 1)
-        {
+        if ($user_roles['edit'] == 1) {
             ?>
             <li><?= $this->Html->link(__('Edit Vehicle Servicing'), ['action' => 'edit', $vehicleServicing->id]) ?></li>
-        <?php
+            <?php
         }
         ?>
         <li class="active"><?=
@@ -30,88 +28,96 @@
         </li>
     </ul>
 </div>
-<div class="row">
-    <div class="col-md-6">
 
-        <div class="panel panel-default">
-            <div class="panel-heading"><h6
-                    class="panel-title"><?= __('Office') ?></h6>
-            </div>
-            <div class="panel-body"><?=
-                $vehicleServicing->has('office') ?
-                    $this->Html->link($vehicleServicing->office
-                        ->name_en, ['controller' => 'Offices',
-                        'action' => 'view', $vehicleServicing->office
-                            ->id]) : '' ?>
-            </div>
+<div class="row panel panel-default">
+
+    <div class="panel-heading"><h6 class="panel-title"><i class="icon-paragraph-right2"></i>যানবাহন মেরামত যোগ করুন</h6>
+        <button class="btn btn-success" style="float: right" onclick="print_rpt()">Print</button>
+
+    </div>
+    <div class="panel-body" id="PrintArea">
+
+
+        <h3 style="text-align: center">JOB CARD</h3>
+
+        <div class="" style="margin: 0px">
+
+            <p><strong>Name of Vehicle :</strong><?= $vehicleServicing->vehicle->title ?></p>
+
+            <p><strong>Model/Brand :</strong><?= $vehicleServicing->vehicle->make_and_model ?></p>
+
+            <p><strong>User :</strong></p>
+
+            <p><strong>Name of Operator :</strong></p>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading"><h6
-                    class="panel-title"><?= __('Vehicle') ?></h6>
-            </div>
-            <div class="panel-body"><?=
-                $vehicleServicing->has('vehicle') ?
-                    $this->Html->link($vehicleServicing->vehicle
-                        ->title, ['controller' => 'Vehicles',
-                        'action' => 'view', $vehicleServicing->vehicle
-                            ->id]) : '' ?>
-            </div>
+
+
+        <div class="col-sm-12" data-index_no="0"><br/><br/>
+            <table class="table table-bordered">
+                <tr>
+                    <td>SL No</td>
+                    <td>Date of Breakdown</td>
+                    <td>Name of Spare Parts</td>
+                    <td>Quantity</td>
+                    <td>Rate</td>
+                    <td>Total</td>
+                </tr>
+                <?php foreach ($vehicleServicing->vehicle_servicing_details as $key => $row): ?>
+                    <tr>
+                        <td><?= $key + 1 ?></td>
+                        <td></td>
+                        <td><?= $row['name'] ?></td>
+                        <td><?= $row['quantity'] ?></td>
+                        <td><?= $row['rate'] ?></td>
+                        <td><?= $row['total'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                <tr>
+                    <td colspan="4">&nbsp;</td>
+                    <td colspan="">Other Charge</td>
+                    <td><?= $vehicleServicing->other_charge ?></td>
+                </tr>
+
+                <tr>
+                    <td colspan="4">&nbsp;</td>
+                    <td colspan="">Total</td>
+                    <td><?= $vehicleServicing->service_charge ?></td>
+                </tr>
+
+            </table>
+
+
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading"><h6
-                    class="panel-title"><?= __('Defects') ?></h6></div>
-            <div class="panel-body"><?= h($vehicleServicing->defects) ?></div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading"><h6
-                    class="panel-title"><?= __('Job Card') ?></h6></div>
-            <div class="panel-body"><?= h($vehicleServicing->job_card) ?></div>
+        <div style="margin-top:100px;display: inline-block;width: 100%;text-align: center">
+            <div class="col-sm-3 sign">
+                <span>Mechanical: Foreman</span><br>
+                <span>LGED, Gazipur</span><br>
+            </div>
+            <div class="col-sm-3 sign">
+                <span>Assistant Engineer</span><br>
+                <span>LGED, Gazipur</span><br>
+            </div>
+            <div class="col-sm-3 sign">
+                <span>Sr. Assistant Engineer</span><br>
+                <span>LGED, Gazipur</span><br>
+            </div>
+            <div class="col-sm-3 sign">
+                <span>Executive Engineer</span><br>
+                <span>LGED, Gazipur</span><br>
+            </div>
         </div>
 
     </div>
-    <div class="col-md-6">
 
-        <div class="panel panel-default">
-            <div class="panel-heading"><h6
-                    class="panel-title"><?= __('Breakdown Date') ?></h6></div>
-            <div class="panel-body"><?=
-                $this->System->display_date($vehicleServicing->breakdown_date)
-                ?>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading"><h6
-                    class="panel-title"><?= __('Km Hr') ?></h6></div>
-            <div class="panel-body"><?= $this->Number->format($vehicleServicing->km_hr) ?></div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading"><h6
-                    class="panel-title"><?= __('Is Periodic Maintenance') ?></h6></div>
-            <div class="panel-body"><?= $this->Number->format($vehicleServicing->is_periodic_maintenance) ?></div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading"><h6
-                    class="panel-title"><?= __('Servicing Start Date') ?></h6></div>
-            <div class="panel-body"><?=
-                $this->System->display_date($vehicleServicing->servicing_start_date)
-                ?>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading"><h6
-                    class="panel-title"><?= __('Servicing End Date') ?></h6></div>
-            <div class="panel-body"><?=
-                $this->System->display_date($vehicleServicing->servicing_end_date)
-                ?>
-            </div>
-        </div>
-        <div class="panel panel-default">
-            <div class="panel-heading"><h6
-                    class="panel-title"><?= __('Service Charge') ?></h6></div>
-            <div class="panel-body"><?= $this->Number->format($vehicleServicing->service_charge) ?></div>
-        </div>
-
-
-
-    </div>
 </div>
+
+
+<script>
+    function print_rpt() {
+        URL = "<?php echo $this->request->webroot; ?>page/Print_a4_Eng.php?selLayer=PrintArea";
+        day = new Date();
+        id = day.getTime();
+        eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=yes,scrollbars=yes ,location=0,statusbar=0 ,menubar=yes,resizable=1,width=880,height=600,left = 20,top = 50');");
+    }
+
+</script>

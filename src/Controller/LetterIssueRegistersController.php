@@ -163,7 +163,10 @@ class LetterIssueRegistersController extends AppController
         $this->loadModel('Offices');
         $offices = $this->Offices->find('list');
         $this->loadModel('NothiRegisters');
-        $nothi = $this->NothiRegisters->find('list');
+        $nothiRegisters = $this->NothiRegisters->find('list')
+            ->select(['id', 'nothi_no'])
+            ->where(['parent_id' => 0, 'status' => 1])
+            ->toArray();
 
         $this->set(compact('letterIssueRegister', 'nothiRegisters', 'projects', 'schemes', 'offices', 'nothi'));
         $this->set('_serialize', ['letterIssueRegister']);
@@ -370,5 +373,13 @@ class LetterIssueRegistersController extends AppController
             ->where(['id' => $user['office_id']])
             ->first();
         $this->set(compact('letterIssueRegisters', 'office'));
+    }
+
+    public function getSubNothi()
+    {
+        $this->loadModel('NothiRegisters');
+        $nothiRegisters = $this->NothiRegisters->find('list', ['conditions' => ['parent_id' => $this->request->data('parent_id'), 'status !=' => 99]])->toArray();
+        $this->response->body(json_encode($nothiRegisters));
+        return $this->response;
     }
 }

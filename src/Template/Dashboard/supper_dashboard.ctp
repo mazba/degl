@@ -1,4 +1,3 @@
-<?php use Cake\Routing\Router; ?>
 <!-- Page header -->
 <div class="page-header">
     <div class="page-title">
@@ -14,6 +13,21 @@
 </div>
 <div class="row">
     <div class="col-md-6">
+        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default">Todays
+                    Total <?= $details_file_info['todays_total'] ?></button>
+            </div>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default">Todays
+                    Unread <?= $details_file_info['todays_unread'] ?></button>
+            </div>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default">Todays
+                    Forward <?= $details_file_info['todays_forward'] ?></button>
+            </div>
+        </div>
+
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h6 class="panel-title">
@@ -27,6 +41,15 @@
         </div>
     </div>
     <div class="col-md-6">
+        <div class="btn-group btn-group-justified" role="group" aria-label="...">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default">Total Task <?= $details_task_info['total'] ?></button>
+            </div>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default">Total Active
+                    Task <?= $details_task_info['total_active'] ?></button>
+            </div>
+        </div>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h6 class="panel-title">
@@ -39,7 +62,101 @@
             </div>
         </div>
     </div>
-</div>
+
+    <hr/>
+    <div class="col-md-12">
+
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h6 class="panel-title">
+                            <i class="icon-wand2"></i>
+                            <?= __('RA Bill Applications') ?>
+                        </h6>
+                    </div>
+                    <div id="dataTable_application" style="margin-top:5px ">
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h6 class="panel-title">
+                            <i class="icon-wand2"></i>
+                            <?= __('Task Calendar') ?>
+                        </h6>
+                    </div>
+                    <div id='calendar'></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var url = "<?php echo $this->request->webroot; ?>RaBillApplication/ajax/get_grid_data";
+
+        // prepare the data
+        var source =
+        {
+            dataType: "json",
+            dataFields: [
+                {name: 'id', type: 'int'},
+
+                {name: 'subject', type: 'string'},
+                {name: 'message_text', type: 'string'},
+                {name: 'created_date', type: 'string'},
+                {name: 'action', type: 'string'},
+
+            ],
+            id: 'id',
+            url: url
+        };
+
+        var dataAdapter = new $.jqx.dataAdapter(source);
+
+        $("#dataTable_application").jqxGrid(
+            {
+                width: '100%',
+                source: dataAdapter,
+                pageable: true,
+                filterable: true,
+                sortable: true,
+                showfilterrow: true,
+                columnsresize: true,
+                rowsheight: 40,
+                pagesize: 10,
+                pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
+//                selectionmode: 'checkbox',
+                altrows: true,
+                autoheight: true,
+
+
+                columns: [
+                    {text: '<?= __('#') ?>', cellsalign: 'center', dataField: 'id', width: '5%'},
+                    {text: '<?= __('Subject') ?>', dataField: 'subject', width: '30%'},
+                    {text: '<?= __('Message') ?>', dataField: 'message_text', width: '42%'},
+                    {text: '<?= __('Date') ?>', dataField: 'created_date', width: '15%'},
+                    {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
+                ]
+            });
+
+
+    });
+</script>
 
 
 <script type="text/javascript">
@@ -75,7 +192,7 @@
                 showfilterrow: true,
                 columnsresize: true,
                 rowsheight: 40,
-                pagesize: 15,
+                pagesize: 10,
                 pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
 //                selectionmode: 'checkbox',
                 altrows: true,
@@ -122,7 +239,7 @@
                 showfilterrow: true,
                 columnsresize: true,
                 rowsheight: 40,
-                pagesize: 15,
+                pagesize: 10,
                 pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
 //                selectionmode: 'checkbox',
                 altrows: true,
@@ -139,55 +256,67 @@
                 ]
             });
 
-        /*var url3 = "<?php echo $this->request->webroot; ?>Dashboard/get_scheme_info";
 
-        // prepare the data
-        var source3 =
-        {
-            dataType: "json",
-            dataFields: [
-                {name: 'title', type: 'string'},
-                {name: 'progress', type: 'string'},
-                {name: 'scheme_code', type: 'string'},
-                {name: 'lab', type: 'string'},
-                {name: 'letter', type: 'string'},
-                {name: 'vehicle', type: 'string'},
-                {name: 'accounts', type: 'string'},
-                {name: 'multimedia', type: 'string'},
-            ],
-            id: 'id',
-            url: url3
-        };
-
-        var dataAdapter3 = new $.jqx.dataAdapter(source3);
-
-        $("#progressTable").jqxGrid(
-            {
-                width: '100%',
-                source: dataAdapter3,
-                pageable: true,
-                filterable: true,
-                sortable: true,
-                showfilterrow: true,
-                columnsresize: true,
-                rowsheight: 40,
-                pagesize: 15,
-                pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
-//                selectionmode: 'checkbox',
-                altrows: true,
-                autoheight: true,
-
-
-                columns: [
-                    {text: '<?= __('Scheme') ?>', dataField: 'title', width: '40%'},
-                    {text: '<?= __('Scheme Code') ?>', dataField: 'scheme_code', width: '10%'},
-                    {text: '<?= __('Progress Value') ?>', dataField: 'progress', width: '25%', cellsalign: 'center'},
-                    {text: '<?= __('Letter') ?>', cellsalign: 'center', dataField: 'letter', width: '5%'},
-                    {text: '<?= __('Lab') ?>', cellsalign: 'center', dataField: 'lab', width: '5%'},
-                    {text: '<?= __('Vehicle') ?>', cellsalign: 'center', dataField: 'vehicle', width: '5%'},
-                    {text: '<?= __('Accounts') ?>', cellsalign: 'center', dataField: 'accounts', width: '5%'},
-                    {text: '<?= __('Multimedia') ?>', cellsalign: 'center', dataField: 'multimedia', width: '5%'}
-                ]
-            });*/
     });
 </script>
+
+<script>
+
+    $(document).ready(function () {
+        $.ajax({
+            url: "<?php echo $this->request->webroot; ?>TaskManagement/ajax/get_my_calendar_task_data",
+            type: 'POST',
+            data: 'type=fetch',
+            async: false,
+            success: function(response){
+               // console.log(response);
+                json_events = response;
+            }
+        });
+
+
+
+        $('#calendar').fullCalendar({
+            defaultDate: '<?php echo date('Y-m-d')?>',
+            //  editable: true,
+            //  eventLimit: true, // allow "more" link when too many events
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+
+
+
+        events: JSON.parse(json_events),
+
+
+        });
+
+
+    });
+
+</script>
+<style>
+
+    body {
+        padding: 0;
+        font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+        font-size: 14px;
+    }
+
+    #calendar {
+        margin: 40px 10px;
+
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .fc-today {
+        background: #b3cccc  !important;
+        border: none !important;
+        border-top: 1px solid #ddd !important;
+        font-weight: bold;
+    }
+
+</style>

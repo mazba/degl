@@ -19,10 +19,20 @@ class TaskManagementController extends AppController
     public function index()
     {
         $user = $this->Auth->user();
-        $taskManagement = $this->TaskManagement->find('all', [
+        $taskManagement_new = $this->TaskManagement->find('all', [
             'conditions' => ['TaskManagement.user_id ' => $user['id'], 'status' => 1],
             'order' => ['TaskManagement.id' => 'DESC']
         ]);
+        $taskManagement['taskManagement_new']= $taskManagement_new->toArray();
+
+
+        $taskManagement_old = $this->TaskManagement->find('all', [
+            'conditions' => ['TaskManagement.user_id ' => $user['id'], 'status' => 0],
+            'order' => ['TaskManagement.id' => 'DESC']
+        ]);
+        $taskManagement['taskManagement_old']= $taskManagement_old->toArray();
+
+
         $this->set('taskManagement', $taskManagement);
         $this->set('_serialize', ['taskManagement']);
     }
@@ -228,6 +238,61 @@ class TaskManagementController extends AppController
                 $this->response->body(json_encode($my_tasks));
                 return $this->response;
             }
+
+        if($action=='get_my_calendar_task_data'){
+
+            $user_id = $this->Auth->user('id');
+            $querys = $this->TaskManagement->find('all', [
+                'conditions' => ['TaskManagement.user_id ' => $user_id, 'status' => 1]
+            ]);
+
+            $result=[];
+$i=0;
+            foreach($querys as $key=>$row){
+                if($row['start_date_time'] != $row['end_date_time']) {
+
+                    $result[$i]['title'] = $row['title'];
+                    $result[$i]['url'] = $this->request->webroot . 'TaskManagement/view/' . $row['id'];
+                    $result[$i]['start'] = date('Y-m-d', $row['end_date_time']);
+                    $result[$i]['end'] = date('Y-m-d', $row['end_date_time']);
+                    $result[$i]['color'] = '#ff6666';
+                }
+                $i++;
+
+            }
+
+            foreach($querys as $row){
+                if($row['start_date_time'] != $row['end_date_time']) {
+                    $result[$i]['title'] = $row['title'];
+                    $result[$i]['url'] = $this->request->webroot . 'TaskManagement/view/' . $row['id'];
+                    $result[$i]['start'] = date('Y-m-d', $row['start_date_time']);
+                    //   $start_result[$key]['end']= date('Y-m-d',$row['end_date_time']);
+                    $result[$i]['color'] = '#85e085';
+                }
+                $i++;
+
+            }
+
+            foreach($querys as $row){
+                if($row['start_date_time'] == $row['end_date_time']) {
+                    $result[$i]['title'] = $row['title'];
+                    $result[$i]['url'] = $this->request->webroot . 'TaskManagement/view/' . $row['id'];
+                    $result[$i]['start'] = date('Y-m-d', $row['start_date_time']);
+                    //   $start_result[$key]['end']= date('Y-m-d',$row['end_date_time']);
+                    $result[$i]['color'] = '#809fff';
+                }
+                $i++;
+
+            }
+
+//            echo "<pre>";print_r($result);die();
+            $this->response->body(json_encode(array_values($result)));
+            return $this->response;
+
+        }
+
+
+
 
 
         }

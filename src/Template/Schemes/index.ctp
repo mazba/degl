@@ -1,3 +1,4 @@
+
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
         <li><a href="<?= $this->Url->build(('/Dashboard'), true); ?>"><?= __('Dashboard') ?></a></li>
@@ -21,64 +22,126 @@
 <div class="schemes index panel panel-default">
     <div class="panel-heading"><h6 class="panel-title"><i class="icon-table"></i> <?= __('List of Schemes') ?></h6>
     </div>
-    <div class="datatable">
-        <table class="table">
-            <thead>
-            <tr>
-                <th><?= __('id') ?></th>
-                <th><?= __('name_en') ?></th>
-                <th><?= __('Scheme Code') ?></th>
-                <th><?= __('project') ?></th>
-                <th><?= __('district') ?></th>
-                <?php
-                if (($user_roles['edit'] == 1)) {
-                    ?>
-                    <th class="actions"><?= __('Actions') ?></th>
-                    <?php
-                }
-                ?>
-            </tr>
-            </thead>
-            <tbody>
-            <?php
-            $i=1;
-            foreach ($schemes as $scheme) {
-                ?>
-                <tr>
-                    <td><?= $this->Number->format($i++) ?></td>
-                    <td><?= h($scheme->name_en) ?></td>
-                    <td><?= h($scheme->scheme_code) ?></td>
-                    <td><?= $scheme['project'] ?></td>
-                    <td><?= $scheme['district'] ?></td>
+    <div class="well text-center">
+        <div id="dataTable" style="margin-top:5px ">
 
-                    <td class="actions">
-
-                        <?php
-                        if ($user_roles['edit'] == 1) {
-                            echo $this->Html->link('<button style="margin-right: 2px" class="btn btn-info btn-icon" type="button"><i class="icon-pencil3"></i></button>', ['action' => 'edit', $scheme->id
-                            ], ['escapeTitle' => false, 'title' => 'edit']);
-                            echo $this->Html->link('<button class="btn btn-danger btn-icon" type="button"><i class="icon-stackoverflow"></i></button>', ['action' => 'View', $scheme->id
-                            ], ['escapeTitle' => false, 'title' => 'View']);
-                            echo $this->Html->link('<button class="btn btn-warning btn-icon" type="button"><i class="icon-exit"></i></button>', ['action' => 'close_scheme', $scheme->id
-                            ], ['escapeTitle' => false, 'title' => 'Close Scheme']);
-                        }
-
-                        if ($user_info['user_group_id'] == 2 && $scheme->approved) {
-                            echo $this->Html->link('<button class="btn btn-success btn-icon" type="button"><i class="icon-user-plus"></i></button>', ['action' => 'assign_contractors', $scheme->id
-                            ], ['escapeTitle' => false, 'title' => 'Assign Contractors']);
-                        }
-
-                        ?>
-                    </td>
-                </tr>
-
-            <?php } ?>
-            </tbody>
-        </table>
+        </div>
     </div>
+
+
+    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" id="modal-content">
+
+            </div>
+        </div>
+    </div>
+
+
 </div>
-<style>
-    .table td {
-        padding: 5px 1px !important;
-    }
-</style>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var url = "<?php echo $this->request->webroot; ?>Schemes/index_ajax/get_grid_data";
+
+        // prepare the data
+        var source =
+        {
+            dataType: "json",
+            dataFields: [
+                {name: 'sl', type: 'int'},
+                {name: 'districts_name', type: 'string'},
+                {name: 'upazilas_name', type: 'string'},
+                {name: 'financial_year', type: 'string'},
+                {name: 'scheme_name', type: 'string'},
+                {name: 'projects_name', type: 'string'},
+                {name: 'contractor_name', type: 'string'},
+                {name: 'contract_amount', type: 'float'},
+                {name: 'scheme_progresses', type: 'string'},
+                {name: 'contract_date', type: 'string'},
+                {name: 'expected_complete_date', type: 'string'},
+                {name: 'action', type: 'string'}
+            ],
+            id: 'id',
+            url: url
+        };
+
+        var dataAdapter = new $.jqx.dataAdapter(source);
+        var spanWithTitle = function (row, columnfield, value, defaulthtml, columnproperties, rowdata) {
+            return '<span title="'+rowdata.scheme_name+'"> '+rowdata.scheme_name+' </span> ';
+        };
+        $("#dataTable").jqxGrid(
+            {
+                width: '100%',
+                source: dataAdapter,
+                pageable: true,
+                filterable: true,
+                sortable: true,
+                showfilterrow: true,
+                columnsresize: true,
+                pagesize: 15,
+                pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
+//                selectionmode: 'checkbox',
+                altrows: true,
+                autoheight: true,
+
+
+                columns: [
+                    {text: '<?= __('#') ?>', cellsalign: 'center', dataField: 'sl', width: '5%'},
+                    {text: '<?= __('District') ?>', dataField: 'districts_name', filtertype: 'list', width: '10%'},
+                    {text: '<?= __('Upazila') ?>', dataField: 'upazilas_name', filtertype: 'list', width: '10%'},
+                    {text: '<?= __('Financial Year') ?>', dataField: 'financial_year', filtertype: 'list', width: '7%'},
+                    {text: '<?= __('Project') ?>', dataField: 'projects_name', filtertype: 'list', width: '9%'},
+
+                    {text: '<?= __('Scheme Name') ?>', cellsrenderer: spanWithTitle, filtertype: 'list', width: '14%'},
+                    {text: '<?= __('Contractor') ?>', dataField: 'contractor_name', filtertype: 'list', width: '10%'},
+                    {
+                        text: '<?= __('Contract Amount') ?>',
+                        dataField: 'contract_amount',
+                        filtertype: 'list',
+                        width: '7%'
+                    },
+                    {text: '<?= __('Progress Value') ?>', dataField: 'scheme_progresses', width: '7%'},
+                    {text: '<?= __('Contract Date') ?>', dataField: 'contract_date', width: '7%'},
+                    {text: '<?= __('Complete Date') ?>', dataField: 'expected_complete_date', width: '9%'},
+                    {text: '<?= __('Action') ?>', cellsalign: 'center', dataField: 'action', width: '5%'}
+                ]
+            });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        $(document).on ('click', ".view", function () {
+            var id = $(this).data('scheme_id');
+            console.log(id);
+            $.ajax({
+                type: 'POST',
+                url: '<?= $this->Url->build("/Schemes/view_by_id/")?>',
+                data: {id: id},
+                success: function (data, status) {
+                   $('#modal-content').html(data);
+                    $('.modal').modal('show')
+                }
+            });
+        });
+        $(document).on ('click', ".edit", function () {
+            var id = $(this).data('scheme_id');
+            var url =  '<?= $this->Url->build("/Schemes/edit_by_id/")?>'+id;
+           // console.log(id);
+            $.ajax({
+                type: 'GET',
+                url:url,
+
+                success: function (data, status) {
+                   $('#modal-content').html(data);
+                    $('.modal').modal('show')
+                }
+            });
+        });
+
+
+    });
+</script>

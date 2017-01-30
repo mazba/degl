@@ -15,10 +15,7 @@
 namespace App\Controller;
 
 use Cake\Core\Configure;
-use Cake\Network\Exception\NotFoundException;
-use Cake\View\Exception\MissingTemplateException;
 use Cake\ORM\TableRegistry;
-use Phinx\Config\Config;
 
 /**
  * Static content controller
@@ -58,13 +55,12 @@ class DashboardController extends AppController
             ->toArray();
             $this->set('taskManagements', $taskManagements);
             $this->set('my_files', $this->get_my_files());*/
-            if($user['user_group_id'] == Configure::read('user_groups')['superadmin'])
-            {
+            if ($user['user_group_id'] == Configure::read('user_groups')['superadmin']) {
                 $this->view = 'supper_dashboard';
                 $this->set('recieve_file_info', $this->get_recieve_file_info());
                 $this->set('issue_file_info', $this->get_issue_file_info());
                 $this->set('vehicle_info', $this->get_vehicle_info());
-               // $this->set('lab_test_info', $this->get_lab_test_info());
+                // $this->set('lab_test_info', $this->get_lab_test_info());
                 $this->set('contractors_info', $this->get_contractor_info());
                 $this->set('all_users_info', $this->get_all_users_info());
                 $this->set('nothi_info', $this->get_nothi_info());
@@ -72,12 +68,13 @@ class DashboardController extends AppController
                 $this->set('scheme_info_progress', $this->get_scheme_progress_info());
 //                $this->set('scheme_progress_info', $this->scheme_progress_info());
 
-            }
-            elseif($user['user_group_id'] == Configure::read('user_groups')['admin'])
-            {
+            } elseif ($user['user_group_id'] == Configure::read('user_groups')['admin']) {
+
+             //   echo "<pre>";print_r($this->get_my_task_info());die();
                 $this->view = 'supper_dashboard';
-                $this->set('recieve_file_info', $this->get_recieve_file_info());
-                $this->set('issue_file_info', $this->get_issue_file_info());
+                $this->set('details_file_info', $this->get_recieve_file_info());
+                $this->set('details_task_info', $this->get_my_task_info());
+              //  $this->set('issue_file_info', $this->get_issue_file_info());
                 $this->set('vehicle_info', $this->get_vehicle_info());
                 //$this->set('lab_test_info', $this->get_lab_test_info());
                 $this->set('contractors_info', $this->get_contractor_info());
@@ -86,32 +83,21 @@ class DashboardController extends AppController
                 $this->set('count_scheme_info', $this->count_scheme_info());
                 $this->set('scheme_info_progress', $this->get_scheme_progress_info());
 //                $this->set('scheme_progress_info', $this->scheme_progress_info());
-            }
-            elseif($user['user_group_id'] == Configure::read('user_groups')['staff'])
-            {
+            } elseif ($user['user_group_id'] == Configure::read('user_groups')['staff']) {
                 $this->view = 'staff_dashboard';
-            }
-            elseif($user['user_group_id'] == Configure::read('user_groups')['lab'])
-            {
+            } elseif ($user['user_group_id'] == Configure::read('user_groups')['lab']) {
                 $this->view = 'lab_dashboard';
-            }
-            elseif($user['user_group_id'] == Configure::read('user_groups')['vehicles'])
-            {
+            } elseif ($user['user_group_id'] == Configure::read('user_groups')['vehicles']) {
                 $this->view = 'vehicles_dashboard';
-            }
-            elseif($user['user_group_id'] == Configure::read('user_groups')['counter'])
-            {
+            } elseif ($user['user_group_id'] == Configure::read('user_groups')['counter']) {
                 $this->view = 'counter_dashboard';
-            }
-            elseif($user['user_group_id'] == Configure::read('user_groups')['accounts'])
-            {
+            } elseif ($user['user_group_id'] == Configure::read('user_groups')['accounts']) {
                 $this->view = 'account_dashboard';
                 $this->set('allotment_receive_info', $this->get_allotment_receive_info());
                 $this->set('bill_paid_info', $this->get_bill_paid_info());
                 $this->set('bill_approve_info', $this->get_bill_approve_info());
-            }
-            else{
-                $this->view="general_dashboard";
+            } else {
+                $this->view = "general_dashboard";
             }
         }
     }
@@ -218,30 +204,123 @@ class DashboardController extends AppController
 
     private function get_recieve_file_info()
     {
-        if (in_array('ReceiveFileRegisters', $this->my_task_controllers)) {
-            $user = $this->Auth->user();
-            $info['total_today'] = 0;
-            $receive_file_table = TableRegistry::get('receive_file_registers');
-            $query = $receive_file_table->find();
-            $query->select(['count' => $query->func()->count('*')]);
-            if ($user['user_group_id'] != 1) {
-                $query->where(['receive_office' => $user['office_id']]);
-            }
-            $info['total'] = $query->first()->toArray()['count'];
-            $time_from = strtotime(date('d-M-Y', time()));
-            $query = $receive_file_table->find();
-            $query->select(['count' => $query->func()->count('*')]);
-            if ($user['user_group_id'] != 1) {
-                $query->where(['receive_office' => $user['office_id']]);
-            }
+//        if (in_array('ReceiveFileRegisters', $this->my_task_controllers)||1) {
+//            $user = $this->Auth->user();
+//            $info['total_today'] = 0;
+//
+//            $receive_file_table = TableRegistry::get('receive_file_registers');
+//            $query = $receive_file_table->find();
+//            $query->select(['count' => $query->func()->count('*')]);
+//            if ($user['user_group_id'] != 1) {
+//                $query->where(['receive_office' => $user['office_id']]);
+//            }
+//            $info['total'] = $query->first()->toArray()['count'];
+//
+//
+//
+//            $time_from = strtotime(date('d-M-Y', time()));
+//            $query = $receive_file_table->find();
+//            $query->select(['count' => $query->func()->count('*')]);
+//            if ($user['user_group_id'] != 1) {
+//                $query->where(['receive_office' => $user['office_id']]);
+//            }
+//
+//            $query->where(['created_date >=' => $time_from]);
+//            $info['total_today'] = $query->first()->toArray()['count'];
+//
+//            return $info;
+//        } else {
+//            return null;
+//        }
 
-            $query->where(['created_date >=' => $time_from]);
-            $info['total_today'] = $query->first()->toArray()['count'];
+        $time_from = strtotime(date('d-M-Y', time()));
+        $user = $this->Auth->user();
+        $user_id = $this->Auth->user('id');
+        $this->loadModel('MessageRegisters');
 
-            return $info;
-        } else {
-            return null;
+//        $querys = $this->MessageRegisters->find();
+//        $querys->autoFields(true);
+//        $querys->select(['count' => $querys->func()->count('*')]);
+//        $querys->where(['MessageRegisters.attachment_type' => Configure::read('attachment_type.4')]);
+//        $querys->leftJoin('recipients', 'recipients.message_register_id=MessageRegisters.id');
+//
+//        if ($user['user_group_id'] != 1) {
+//            $querys->where(['recipients.user_id' => $user_id]);
+//        }
+//        $info['total'] = $querys->first()->toArray()['count'];
+
+
+        $querys = $this->MessageRegisters->find();
+        $querys->autoFields(true);
+        $querys->select(['count' => $querys->func()->count('*')]);
+        $querys->where(['MessageRegisters.attachment_type' => Configure::read('attachment_type.4')]);
+        $querys->leftJoin('recipients', 'recipients.message_register_id=MessageRegisters.id');
+        $querys->where(['recipients.created_date >=' => $time_from]);
+        if ($user['user_group_id'] != 1) {
+            $querys->where(['recipients.user_id' => $user_id]);
         }
+        $info['todays_total'] = $querys->first()->toArray()['count'];
+
+
+        $querys = $this->MessageRegisters->find();
+        $querys->autoFields(true);
+        $querys->select(['count' => $querys->func()->count('*')]);
+        $querys->where(['MessageRegisters.attachment_type' => Configure::read('attachment_type.4')]);
+        $querys->where(['MessageRegisters.is_read' =>0]);
+        $querys->leftJoin('recipients', 'recipients.message_register_id=MessageRegisters.id');
+        $querys->where(['recipients.created_date >=' => $time_from]);
+        if ($user['user_group_id'] != 1) {
+            $querys->where(['recipients.user_id' => $user_id]);
+        }
+        $info['todays_unread'] = $querys->first()->toArray()['count'];
+
+        $querys = $this->MessageRegisters->find();
+        $querys->autoFields(true);
+        $querys->select(['count' => $querys->func()->count('*')]);
+        $querys->where(['MessageRegisters.attachment_type' => Configure::read('attachment_type.4')]);
+        $querys->where(['MessageRegisters.is_forward' =>1]);
+        $querys->leftJoin('recipients', 'recipients.message_register_id=MessageRegisters.id');
+        $querys->where(['recipients.created_date >=' => $time_from]);
+        if ($user['user_group_id'] != 1) {
+            $querys->where(['recipients.user_id' => $user_id]);
+        }
+        $info['todays_forward'] = $querys->first()->toArray()['count'];
+
+
+        return $info;
+
+    }
+
+    private function get_my_task_info()
+    {
+        $time_from = strtotime(date('d-M-Y', time()));
+        $user = $this->Auth->user();
+        $user_id = $this->Auth->user('id');
+        $this->loadModel('TaskManagement');
+
+        $querys = $this->TaskManagement->find();
+        $querys->autoFields(true);
+        $querys->select(['count' => $querys->func()->count('*')]);
+     //   $querys->where(['TaskManagement.status' => 1]);
+     //   $querys->where(['TaskManagement.created_date >=' => $time_from]);
+        if ($user['user_group_id'] != 1) {
+            $querys->where(['TaskManagement.user_id' => $user_id]);
+        }
+        $info['total'] = $querys->first()->toArray()['count'];
+
+
+        $querys = $this->TaskManagement->find();
+        $querys->autoFields(true);
+        $querys->select(['count' => $querys->func()->count('*')]);
+        $querys->where(['TaskManagement.status' =>1]);
+      //  $querys->where(['TaskManagement.updated_date >=' => $time_from]);
+        if ($user['user_group_id'] != 1) {
+            $querys->where(['TaskManagement.user_id' => $user_id]);
+        }
+        $info['total_active'] = $querys->first()->toArray()['count'];
+
+        return $info;
+
     }
 
     private function get_issue_file_info()
@@ -302,16 +381,16 @@ class DashboardController extends AppController
             {
                 $query->where(['receive_office'=>$user['office_id']]);
             }*/
-            //To-Do join office_id
+    //To-Do join office_id
 
-            /*$query->where(['created_date >=' => $time_from]);
-            $info['total_today'] = $query->first()->toArray()['count'];
+    /*$query->where(['created_date >=' => $time_from]);
+    $info['total_today'] = $query->first()->toArray()['count'];
 
-            return $info;
-        } else {
-            return null;
-        }
-    }*/
+    return $info;
+} else {
+    return null;
+}
+}*/
 
     private function get_contractor_info()
     {
@@ -402,7 +481,7 @@ class DashboardController extends AppController
         $this->loadModel('SchemeProgresses');
         $schemeProgresses = $this->SchemeProgresses->find('all')
             ->where(['SchemeProgresses.office_id' => $user['office_id']])
-            ->where(['SchemeProgresses.status' =>1, 'SchemeProgresses.progress_value >=' => 50]);
+            ->where(['SchemeProgresses.status' => 1, 'SchemeProgresses.progress_value >=' => 50]);
         return $schemeProgresses->count();
     }
 
@@ -451,17 +530,16 @@ class DashboardController extends AppController
         $user = $this->Auth->user();
         $this->loadModel('Schemes');
         $scheme_tbl = $this->Schemes->find('all')
-            ->select(['schemes.id','schemes.name_en','schemes.name_bn','schemes.scheme_code'])
+            ->select(['schemes.id', 'schemes.name_en', 'schemes.name_bn', 'schemes.scheme_code'])
             ->select(['scheme_progresses.progress_value'])
             ->group('Schemes.id')
             ->where([
-                'project_offices.office_id'=>$user['office_id'],
-                'Schemes.status !='=>Configure::read('scheme_complete_status')])
+                'project_offices.office_id' => $user['office_id'],
+                'Schemes.status !=' => Configure::read('scheme_complete_status')])
             ->innerJoin('project_offices', 'project_offices.project_id = Schemes.project_id')
             ->leftJoin('scheme_progresses', 'scheme_progresses.scheme_id = Schemes.id AND scheme_progresses.status = 1');
         $schemes = [];
-        foreach ($scheme_tbl as $scheme)
-        {
+        foreach ($scheme_tbl as $scheme) {
             if ($scheme['scheme_progresses']["progress_value"] > 50) {
                 $progress = " progress-bar-success";
             } else {
@@ -486,21 +564,22 @@ class DashboardController extends AppController
     {
         $user = $this->Auth->user();
         $this->loadModel('AllotmentRegisters');
-        $allotment_receives=$this->AllotmentRegisters->find();
-        $result=$allotment_receives->select(['total_allotment_received'=>$allotment_receives->func()->count('AllotmentRegisters.id'),'total_received'=>$allotment_receives->func()->sum('AllotmentRegisters.allotment_amount')])
-        ->where(['AllotmentRegisters.dr_cr'=>'Credit'])
-        ->toArray();
+        $allotment_receives = $this->AllotmentRegisters->find();
+        $result = $allotment_receives->select(['total_allotment_received' => $allotment_receives->func()->count('AllotmentRegisters.id'), 'total_received' => $allotment_receives->func()->sum('AllotmentRegisters.allotment_amount')])
+            ->where(['AllotmentRegisters.dr_cr' => 'Credit'])
+            ->toArray();
 
         return $result;
     }
+
     public function get_bill_paid_info()
     {
         $user = $this->Auth->user();
         $this->loadModel('AllotmentRegisters');
-        $allotment_receives=$this->AllotmentRegisters->find();
-        $result=$allotment_receives->select(['total_bill_count'=>$allotment_receives->func()->count('AllotmentRegisters.id'),'total_bill_paid'=>$allotment_receives->func()->sum('AllotmentRegisters.allotment_amount')])
-        ->where(['AllotmentRegisters.dr_cr'=>'Debit'])
-        ->toArray();
+        $allotment_receives = $this->AllotmentRegisters->find();
+        $result = $allotment_receives->select(['total_bill_count' => $allotment_receives->func()->count('AllotmentRegisters.id'), 'total_bill_paid' => $allotment_receives->func()->sum('AllotmentRegisters.allotment_amount')])
+            ->where(['AllotmentRegisters.dr_cr' => 'Debit'])
+            ->toArray();
 
         return $result;
     }
@@ -509,10 +588,10 @@ class DashboardController extends AppController
     {
         $user = $this->Auth->user();
         $this->loadModel('PurtoBills');
-        $purtoBills=$this->PurtoBills->find();
-        $result=$purtoBills->select(['total_bill_approve'=>$purtoBills->func()->count('PurtoBills.id')])
-        ->where(['PurtoBills.created_date >'=>mktime(0,0,0),'PurtoBills.created_date <'=>mktime(24,0,0)])
-        ->toArray();
+        $purtoBills = $this->PurtoBills->find();
+        $result = $purtoBills->select(['total_bill_approve' => $purtoBills->func()->count('PurtoBills.id')])
+            ->where(['PurtoBills.created_date >' => mktime(0, 0, 0), 'PurtoBills.created_date <' => mktime(24, 0, 0)])
+            ->toArray();
         return $result;
     }
 }

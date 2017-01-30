@@ -72,7 +72,7 @@
                                     <td><?= $labTest['latest_number_of_test'] ?></td>
                                     <td><?= $labTest['rate'] ?></td>
                                     <td><?= $labTest['total'] ?></td>
-                                    <td><?= $labTest['latest_total'] ?></td>
+                                    <td><?= ($labTest['number_of_test']+$labTest['latest_number_of_test'])*$labTest['rate']   ?></td>
                                 </tr>
                             <?php } ?>
                             <tr>
@@ -85,9 +85,18 @@
                                 <td><?= array_sum(array_column($labTests, 'latest_total')) ?></td>
                             </tr>
                             <tr style="background: #dcd8ce">
-                                <td class="text-right" colspan="5"><?= __('Total') ?></td>
-                                <td class="text-center"
-                                    colspan="2"><?= array_sum(array_column($labTests, 'latest_total')) + array_sum(array_column($labTests, 'total')) ?></td>
+                                <td class="text-right" colspan="6"><?= __('Total') ?></td>
+                                <td class="" colspan="1"><?= array_sum(array_column($labTests, 'latest_total')) + array_sum(array_column($labTests, 'total')) ?></td>
+                            </tr>
+
+                            <tr style="background: #dcd8ce">
+                                <td class="text-right" colspan="6"><?='Test Fee Paid Up to Previous Bill Tk.' ?></td>
+                                <td class="" colspan="1"><?=  array_sum(array_column($labTests, 'total')) ?></td>
+                            </tr>
+
+                            <tr style="background: #dcd8ce">
+                                <td class="text-right" colspan="6"><?='Net payable this bill Tk' ?></td>
+                                <td class="" colspan="1"><?= (array_sum(array_column($labTests, 'latest_total')) + array_sum(array_column($labTests, 'total')))- array_sum(array_column($labTests, 'total')) ?></td>
                             </tr>
 
                             </tbody>

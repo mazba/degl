@@ -15,6 +15,8 @@
     <link href="<?php echo Router::url('/', true); ?>bs3admin/css/styles.css" rel="stylesheet" type="text/css">
     <link href="<?php echo Router::url('/', true); ?>bs3admin/css/icons.css" rel="stylesheet" type="text/css">
     <link href="<?php echo Router::url('/', true); ?>css/common.css" rel="stylesheet" type="text/css">
+    <link href="<?php echo Router::url('/', true); ?>fullcalendar/fullcalendar.css" rel='stylesheet' />
+    <link href="<?php echo Router::url('/', true); ?>fullcalendar/fullcalendar.print.css" rel='stylesheet' media='print' />
     <!-- autocomplete-->
     <?php
     echo $this->Html->css('bootstrap-chosen.css');
@@ -76,6 +78,11 @@
 
     <script type="text/javascript" src="<?php echo Router::url('/', true); ?>bs3admin/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="<?php echo Router::url('/', true); ?>bs3admin/js/application.js"></script>
+
+    <script src="<?php echo Router::url('/', true); ?>fullcalendar/lib/moment.min.js"></script>
+    <script src="<?php echo Router::url('/', true); ?>fullcalendar/fullcalendar.min.js"></script>
+
+
     <!--  autocomplete-->
     <?php
     echo $this->Html->script('chosen.jquery.js');
@@ -133,44 +140,44 @@
 
 
 </head>
-<body class="sidebar-wide">
+    <body class="sidebar-wide">
 
-<div class="navbar navbar-inverse" role="navigation">
-    <?php echo $this->element('header'); ?>
-    <?php echo $this->element('top_menu'); ?>
-</div>
-<div class="page-container">
+    <div class="navbar navbar-inverse" role="navigation">
+        <?php echo $this->element('header'); ?>
+        <?php echo $this->element('top_menu'); ?>
+    </div>
+    <div class="page-container">
 
 
-    <!-- Page content -->
+        <!-- Page content -->
 
-    <div class="page-content col-md-12">
-        <?php echo $this->element('left_menu'); ?>
-        <?= $this->Flash->render() ?>
+        <div class="page-content col-md-12">
+            <?php echo $this->element('left_menu'); ?>
+            <?= $this->Flash->render() ?>
 
-        <div style="min-height: 530px;">
-            <?php echo $this->fetch('content'); ?>
+            <div style="min-height: 530px;">
+                <?php echo $this->fetch('content'); ?>
+            </div>
+
+            <?php echo $this->element('footer'); ?>
+
         </div>
 
-        <?php echo $this->element('footer'); ?>
+        <!-- /page content -->
 
     </div>
-
-    <!-- /page content -->
-
-</div>
-<div id="loader">
-    <img src="<?php echo Router::url('/', true); ?>img/loading-spinner-default.gif">
-</div>
-<!-- /page container -->
-<script type="text/javascript" src="<?php echo Router::url('/', true); ?>js/lightbox.js"></script>
-<script>
-    lightbox.option({
-        'resizeDuration': 200,
-        'wrapAround': true,
-        'fitImagesInViewport': true
-    })
-</script>
+    <div id="loader">
+        <img src="<?php echo Router::url('/', true); ?>img/loading-spinner-default.gif">
+    </div>
+    <!-- /page container -->
+    <script type="text/javascript" src="<?php echo Router::url('/', true); ?>js/lightbox.js"></script>
+    <script>
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'fitImagesInViewport': true
+        })
+    </script>
 </body>
 
 </html>

@@ -29,6 +29,7 @@ Configure::load('config_receive_file_registers', 'default');
     <div class="panel-body col-sm-12">
         <?php
         echo $this->Form->input('sender_name',['required'=>'required']);
+        echo $this->Form->input('receive_date',['required'=>'required','class'=>'form-control hasdatepicker','type'=>'text']);
         echo $this->Form->input('office_name');
         echo $this->Form->input('address',['type'=>'textarea']);
         echo $this->Form->input('subject');

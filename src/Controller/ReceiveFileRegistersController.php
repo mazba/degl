@@ -98,7 +98,7 @@ class ReceiveFileRegistersController extends AppController
                     $data['letter_media'] = $inputs['letter_media'];
                 }
 
-                $data['receive_date'] = time();
+                $data['receive_date'] = strtotime($inputs['receive_date']) ? strtotime($inputs['receive_date']) : 0;
 
                 $data['letter_date'] = time();
 

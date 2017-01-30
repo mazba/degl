@@ -2,6 +2,8 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\ORM\TableRegistry;
+
 
 /**
  * Employees Controller
@@ -67,9 +69,13 @@ class EmployeesController extends AppController
         {
 
             $data=$this->request->data;
+          //  echo "<pre>";print_r($data);die();
+            $nothi_assigndata['nothi_register_id']=$data['parent_id'];
+            unset($data['parent_id']);
             $data['created_by']=$user['id'];
             $data['created_date']=time();
             $x=strtotime($data['birth_date']);
+         //   echo "<pre>";print_r($data);die();
             if($x!==false)
             {
                 $data['birth_date']=$x;
@@ -88,20 +94,39 @@ class EmployeesController extends AppController
                 $data['joining_date']='';
             }
             $employee = $this->Employees->patchEntity($employee, $data);
+          // echo "<pre>";print_r($employee);die();
             if ($this->Employees->save($employee))
             {
-                $this->Flash->success(__('The employee has been saved.'));
-                return $this->redirect(['action' => 'index']);
+
+                $NothiAssignsTable = TableRegistry::get('NothiAssigns');
+                $nothiassign = $NothiAssignsTable->newEntity();
+
+                $nothiassign->nothi_register_id =  $nothi_assigndata['nothi_register_id'];
+                $nothiassign->employee_id =$employee->id;
+
+                if ($NothiAssignsTable->save($nothiassign)) {
+                    $this->Flash->success(__('The employee has been saved.'));
+                    return $this->redirect(['action' => 'index']);
+
+                }else{
+                    $this->Flash->error(__('The employee could not be saved. Please, try again.'));
+                }
+
+
             }
             else
             {
-                $this->Flash->error(__('The employee could not be saved. Please, try again.'));
+
             }
         }
+        $this->loadModel('NothiRegisters');
+        $nothiRegisters = $this->NothiRegisters->find('list', [
+            'conditions' => ['status' => 1, 'office_id' => $user['office_id'], 'parent_id' => 0],
+        ])->toArray();
         $offices = $this->Employees->Offices->find('list', ['conditions' =>['id' => $user['office_id']]]);
         $designations = $this->Employees->Designations->find('list', ['conditions' =>['office_id' => $user['office_id']]]);
 
-        $this->set(compact('employee', 'offices', 'designations'));
+        $this->set(compact('employee', 'offices', 'designations','nothiRegisters'));
         $this->set('_serialize', ['employee']);
     }
 

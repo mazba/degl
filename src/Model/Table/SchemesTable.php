@@ -62,6 +62,26 @@ class SchemesTable extends Table
         $this->hasMany('SchemeDetails', [
             'foreignKey' => 'scheme_id'
         ]);
+
+        $this->hasOne('VehiclesStatus', [
+            'foreignKey' => 'scheme_id'
+        ]);
+
+        $this->hasOne('ProposedRaBills', [
+            'foreignKey' => 'scheme_id'
+        ]);
+
+        $this->hasOne('ProposedRaBills', [
+            'foreignKey' => 'scheme_id'
+        ]);
+
+        $this->hasMany('SchemeProgresses', [
+            'foreignKey' => 'scheme_id'
+        ]);
+
+        $this->hasMany('SchemeProgressPlans', [
+            'foreignKey' => 'scheme_id'
+        ]);
         $this->belongsTo('CreatedUser', [
             'className' => 'Users',
             'foreignKey' => 'created_by',

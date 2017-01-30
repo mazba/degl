@@ -1,3 +1,15 @@
+<?php // echo  "<pre>";print_r($employee_details );die();?>
+<style>
+    .report-table {
+        overflow: scroll;
+        overflow-y: hidden;
+    }
+
+    .dropdown {
+        cursor: pointer;
+    }
+
+</style>
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
         <li><a href="<?= $this->Url->build(('/Dashboard'), true); ?>"><?= __('Dashboard') ?></a></li>
@@ -5,6 +17,8 @@
         <li class="active"><?= __('Detail Nothi') ?> </li>
     </ul>
 </div>
+<script type="text/javascript"
+        src="http://maps.google.com/maps/api/js?key=AIzaSyDm0DLjHrJ0j56M4Od2ch81kP0wIIhDpzk"></script>
 <div class="tabbable page-tabs">
     <ul class="nav nav-tabs">
         <li><?= $this->Html->link(__('List of Nothi'), ['action' => 'index']) ?> </li>
@@ -80,7 +94,6 @@
                     </tr>
 
 
-
                     <tr>
                         <th><?= __('Nothi Date') ?> :</th>
                         <td>
@@ -110,115 +123,538 @@
                     </tr>
                     </tbody>
                 </table>
+
+
             </div>
         </div>
+
     </div>
 </div>
+
+<?php if (isset($nothiNothiAssigns['scheme'])) { ?>
+    <br/>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="col-md-7">
+                    <h6 class="panel-title"><i class="icon-table2"></i>Scheme Details</h6>
+                </div>
+                <div class="col-md-5">
+                    <a href=""> <span class="label label-danger">Lab Bills </span></a>
+                    <a href=""> <span class="label label-info"> Mechanical Bills</span></a>
+                    <a href=""> <span class="label label-success"> Purto Bills</span></a>
+                    <a target="_blank"
+                       href="<?= $this->Url->build(('/schemes/edit/' . $nothiNothiAssigns['scheme']['id']), true); ?>">
+                        <span class="label label-danger">Edit</span></a>
+
+                    <span class="dropdown label label-success">
+                        <span id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                         Scheme Progress
+                            <span class="caret"></span>
+                        </span>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a target="_blank"
+                                   href="<?= $this->Url->build(('/scheme_progresses/view/' . $nothiNothiAssigns['scheme']['id']), true); ?>">Progress
+                                    Report</a></li>
+                            <li><a href="#" data-toggle="modal" data-target="#myModal">Set progresses</a></li>
+                        </ul>
+                    </span>
+
+
+                </div>
+
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12 report-table">
+                    <table class="table table-striped table-responsive table-hover">
+                        <thead>
+                        <tr>
+                            <td><b>Upazila Name</b></td>
+                            <td><b>Category</b></td>
+                            <td><b>Package No</b></td>
+                            <td><b>Scheme Name</b></td>
+                            <td><b>Financial Year</b></td>
+                            <td><b>Contract Amount</b></td>
+                            <td><b>Physical Progress</b></td>
+                            <td><b>Work Order Date</b></td>
+                            <td><b>Proposed Start Date</b></td>
+                            <td><b>Actual Start Date</b></td>
+                            <td><b>Completion Date</b></td>
+                            <td><b>Actual Complete Date</b></td>
+                            <td><b>Payment (Road)</b></td>
+                            <td><b>Payment (Structure)</b></td>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr>
+                            <td><?= $nothiNothiAssigns['scheme']['upazila']['name_en']; ?></td>
+                            <td><?= $nothiNothiAssigns['scheme']['category_name']; ?></td>
+                            <td><?= $nothiNothiAssigns['scheme']['package']['name_bn'] ?></td>
+                            <td><?= $nothiNothiAssigns['scheme']['name_en']; ?></td>
+                            <td><?= $nothiNothiAssigns['scheme']['financial_year_estimate']['name']; ?></td>
+                            <td><?= $nothiNothiAssigns['scheme']['contract_amount']; ?></td>
+                            <td><?= $nothiNothiAssigns['scheme']['scheme_progresses'] ? $nothiNothiAssigns['scheme']['scheme_progresses'][0]['progress_value'] . '%' : '0%'; ?></td>
+                            <td><?= date('d-m-Y', $nothiNothiAssigns['scheme']['work_order_date']); ?></td>
+                            <td><?= date('d-m-Y', $nothiNothiAssigns['scheme']['proposed_start_date']); ?></td>
+                            <td><?= date('d-m-Y', $nothiNothiAssigns['scheme']['actual_start_date']); ?></td>
+                            <td><?= date('d-m-Y', $nothiNothiAssigns['scheme']['completion_date']); ?></td>
+                            <td><?= date('d-m-Y', $nothiNothiAssigns['scheme']['actual_complete_date']); ?></td>
+                            <td><?= $nothiNothiAssigns['scheme']['payment_road']; ?></td>
+                            <td><?= $nothiNothiAssigns['scheme']['payment_structure']; ?></td>
+
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+<?php } ?>
+
+
+<?php if (isset($employee_details) && !empty($employee_details)) { ?>
+    <br/>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="col-md-7">
+                    <h6 class="panel-title"><i class="icon-table2"></i>Employee List</h6>
+                </div>
+
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <table class="table table-striped table-responsive table-hover">
+                        <thead>
+                        <tr>
+                            <th><?= __('id') ?></th>
+                            <th><?= __('office') ?></th>
+                            <th><?= __('designation') ?></th>
+                            <th><?= __('NAME_EN') ?></th>
+                            <th><?= __('NAME_BN') ?></th>
+                            <?php
+                            if (($user_roles['view'] == 1) || ($user_roles['edit'] == 1)) {
+                                ?>
+                                <th class="actions"><?= __('Actions') ?></th>
+                                <?php
+                            }
+                            ?>
+
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <?php $i = 1; ?>
+                        <?php foreach ($employee_details as $row): ?>
+                            <tr>
+                                <td><?= $i; ?></td>
+                                <td><?= $row['offices']['name_bn']; ?></td>
+                                <td><?= $row['designations']['name_bn'] ?></td>
+                                <td><?= $row['employees']['name_en']; ?></td>
+                                <td><?= $row['employees']['name_bn']; ?></td>
+                                <td class="actions">
+                                    <?php
+                                    if ($user_roles['view'] == 1) {
+                                        echo $this->Html->link('<button class="btn btn-primary btn-icon" type="button"><i class="icon-newspaper"></i></button>', ['controller' => 'Employees', 'action' => 'view', $row['employees']['id']
+                                            , '_full' => true], ['escapeTitle' => false, 'target' => '_blank', 'title' => 'Details']);
+                                    }
+
+                                    ?>
+                                    <?php
+                                    if ($user_roles['edit'] == 1) {
+                                        echo $this->Html->link('<button class="btn btn-info btn-icon" type="button"><i class="icon-pencil3"></i></button>', ['controller' => 'Employees', 'action' => 'edit', $row['employees']['id']
+                                        ], ['escapeTitle' => false, 'target' => '_blank', 'title' => 'edit']);
+                                    }
+                                    ?>
+
+                                    <?php
+                                    if ($user_roles['delete'] == 1) {
+                                        echo $this->Html->link('<button class="btn btn-danger btn-icon" type="button"><i class="icon-remove2"></i></button>', ['controller' => 'Employees', 'action' => 'delete', $row['employees']['id']
+                                        ], ['escapeTitle' => false, 'title' => 'delete', 'confirm' => ['Are you sure to delete?']]);
+                                    }
+                                    ?>
+                                </td>
+
+                            </tr>
+                            <?php $i++; ?>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+<?php } ?>
+
+<?php if (isset($asset_list[0]['asset']) && !empty($asset_list[0]['asset'])) { ?>
+    <br/>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="col-md-7">
+                    <h6 class="panel-title"><i class="icon-table2"></i>Asset List</h6>
+                </div>
+
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <table class="table table-striped table-responsive table-hover">
+                        <thead>
+                        <tr>
+                            <th><?= __('id') ?></th>
+                            <th><?= __('name') ?></th>
+                            <th><?= __('asset_code') ?></th>
+                            <th><?= __('quantity') ?></th>
+
+                            <th class="actions"><?= __('Actions') ?></th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        foreach ($asset_list as $asset) {
+                            ?>
+                            <tr>
+                                <td><?= $this->Number->format($asset->asset->id) ?></td>
+                                <td><?= h($asset->asset->name) ?></td>
+                                <td><?= h($asset->asset->asset_code) ?></td>
+                                <td><?= $this->Number->format($asset->asset->quantity) ?></td>
+                                <td class="actions">
+                                    <?php
+
+                                    echo $this->Html->link('<button class="btn btn-primary btn-icon" type="button"><i class="icon-newspaper"></i></button>', ['controller' => 'Assets', 'action' => 'view', $asset->asset->id
+                                        , '_full' => true], ['escapeTitle' => false, 'title' => 'Details']);
+
+
+                                    ?>
+                                    <?php
+
+                                    echo $this->Html->link('<button class="btn btn-info btn-icon" type="button"><i class="icon-pencil3"></i></button>', ['action' => 'edit', $asset->asset->id
+                                    ], ['escapeTitle' => false, 'title' => 'edit']);
+
+                                    ?>
+
+                                </td>
+                            </tr>
+
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+<?php } ?>
+
 <div class="row">
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h6 class="panel-title">
-                    <i class="icon-file"></i>
-                    <?= __('Nothi Related Projects') ?>
-                </h6>
-            </div>
-            <div id="projects">
+    <?php if ($nothi_related_project) { ?>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">
+                        <i class="icon-file"></i>
+                        <?= __('Nothi Related Projects') ?>
+                    </h6>
+                </div>
+                <div id="projects">
 
+                </div>
             </div>
         </div>
-    </div>
+    <?php } ?>
+    <?php if ($nothi_related_scheme) { ?>
 
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h6 class="panel-title">
-                    <i class="icon-file"></i>
-                    <?= __('Nothi Related Schemes') ?>
-                </h6>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">
+                        <i class="icon-file"></i>
+                        <?= __('Nothi Related Schemes') ?>
+                    </h6>
+                </div>
+                <div id="schemes">
+
+                </div>
             </div>
-            <div id="schemes">
+        </div>    <?php } ?>
 
+
+    <?php if ($nothi_related_dake_file) { ?>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">
+                        <i class="icon-file"></i>
+                        <?= __('Nothi Related Dak Files') ?>
+                    </h6>
+                </div>
+                <div id="dak_files">
+
+                </div>
             </div>
         </div>
-    </div>
+    <?php } ?>
 
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h6 class="panel-title">
-                    <i class="icon-file"></i>
-                    <?= __('Nothi Related Dak Files') ?>
-                </h6>
-            </div>
-            <div id="dak_files">
+    <?php if ($nothi_related_lab_bill) { ?>
 
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">
+                        <i class="icon-file"></i>
+                        <?= __('Nothi Related Lab Bills') ?>
+                    </h6>
+                </div>
+                <div id="lab_bills">
+
+                </div>
             </div>
         </div>
-    </div>
+    <?php } ?>
+    <?php if ($nothi_related_hire_charge) { ?>
 
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h6 class="panel-title">
-                    <i class="icon-file"></i>
-                    <?= __('Nothi Related Lab Bills') ?>
-                </h6>
-            </div>
-            <div id="lab_bills">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">
+                        <i class="icon-file"></i>
+                        <?= __('Nothi Related Mechanical Bills') ?>
+                    </h6>
+                </div>
+                <div id="mechanical_bills">
 
+                </div>
             </div>
         </div>
-    </div>
+    <?php } ?>
 
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h6 class="panel-title">
-                    <i class="icon-file"></i>
-                    <?= __('Nothi Related Mechanical Bills') ?>
-                </h6>
-            </div>
-            <div id="mechanical_bills">
+    <?php if ($nothi_related_purto_bill) { ?>
 
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">
+                        <i class="icon-file"></i>
+                        <?= __('Nothi Related Purto Bills') ?>
+                    </h6>
+                </div>
+                <div id="purto_bills">
+
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h6 class="panel-title">
-                    <i class="icon-file"></i>
-                    <?= __('Nothi Related Purto Bills') ?>
-                </h6>
-            </div>
-            <div id="purto_bills">
+    <?php } ?>
 
+    <?php if ($nothi_related_allotment_registe) { ?>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">
+                        <i class="icon-file"></i>
+                        <?= __('Nothi Related Allotments') ?>
+                    </h6>
+                </div>
+                <div id="allotments">
+
+                </div>
             </div>
         </div>
-    </div>
-
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h6 class="panel-title">
-                    <i class="icon-file"></i>
-                    <?= __('Nothi Related Allotments') ?>
-                </h6>
-            </div>
-            <div id="allotments">
-
-            </div>
-        </div>
-    </div>
+    <?php } ?>
 
 
 </div>
+<?php if (array_key_exists(0, $project_images) || array_key_exists(0, $project_videos)) { ?>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title"><i class="icon-table2"></i><?= 'Investigation Details' ?></h6>
+                </div>
+                <div class="panel-body">
+                    <?php if (array_key_exists(0, $project_images)) { ?>
+                        <table class="table table-striped table-responsive table-hover">
+                            <tr>
+                                <td width="25%">Image</td>
+                                <td width="35%">Location</td>
+                                <td width="10%">Capture Time</td>
+                                <td width="15%">Capture Date</td>
+                                <td width="15%">Capture By</td>
+                            </tr>
 
+                            <?php
+                            foreach ($project_images as $project_image) {
+                                ?>
+                                <tr>
+                                    <td width="25%"><img style=" height: 100px;"
+                                                         src="<?= $this->request->webroot . 'api/images/' . $project_image['image_path']; ?>"
+                                                         alt=""/>
+                                    </td>
+
+                                    <td width="35%">
+                                        <div style=" height: 100px;" class="map"
+                                             data-lat="<?= $project_image['latitude'] ?>"
+                                             data-lon="<?= $project_image['longitude'] ?>">
+
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        <?= date('h:i:s A', $project_image['created_date']) ?>
+                                    </td>
+                                    <td>
+                                        <?= date('d/m/Y', $project_image['created_date']) ?>
+
+                                    </td>
+                                    <td>
+                                        <?= $project_image['users']['name_bn'] ?>
+
+                                    </td>
+
+                                </tr>
+
+                                <?php
+                            } ?>
+
+                        </table>
+                        <br/>
+                        <hr/>
+                        <?php
+                    }
+                    if (isset($project_videos)) { ?>
+                        <table class="table table-striped table-responsive table-hover">
+                            <tr>
+                                <td width="25%">Video</td>
+                                <td width="35%">Location</td>
+                                <td width="10%">Capture Time</td>
+                                <td width="15%">Capture Date</td>
+                                <td width="15%">Capture By</td>
+                            </tr>
+
+                            <?php foreach ($project_videos as $project_video) { ?>
+                                <tr>
+                                    <td>
+                                        <video width="100%" height="100" controls="controls">
+                                            <source
+                                                src="<?= $this->request->webroot . 'api/videos/' . $project_video['video_path']; ?>"
+                                                type="video/mp4">
+                                        </video>
+                                    </td>
+                                    <td>
+                                        <div style="height: 100px;" class="map"
+                                             data-lat="<?= $project_video['latitude'] ?>"
+                                             data-lon="<?= $project_video['longitude'] ?>"></div>
+                                    </td>
+                                    <td>
+                                        <?= date('h:i:s A', $project_video['created_date']) ?>
+                                    </td>
+
+                                    <td><?= date('d/m/Y', $project_video['created_date']) ?> </td>
+                                    <td>    <?= $project_video['users']['name_bn'] ?> </td>
+
+                                </tr>
+                            <?php } ?>
+                        </table>
+                    <?php } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } ?>
+
+
+<script>
+    $('.map').each(function (index, Element) {
+        var latitude = parseFloat($(this).data('lat'));
+        var longitude = parseFloat($(this).data('lon'));
+        var latlng = new google.maps.LatLng(latitude, longitude);
+        var myOptions =
+        {
+            zoom: 16,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.HYBRID
+        };
+        var map = new google.maps.Map(Element, myOptions);
+
+        var myMarker = new google.maps.Marker(
+            {
+                position: latlng,
+                map: map,
+                labelClass: "labels", // the CSS class for the label
+                title: "The picture/video was taken here"
+            });
+    });
+
+</script>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var url = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_dak_file/<?= $nothiRegister->id; ?>";
+
+
+        //Schemes
+
+        if ( $( "#schemes" ).length ) {
+
+            var url3 = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_schemes/<?= $nothiRegister->id; ?>";
+        // prepare the data
+        var source3 =
+        {
+            dataType: "json",
+            dataFields: [
+                {name: 'name_bn', type: 'string'},
+                {name: 'scheme_code', type: 'string'},
+                {name: 'action', type: 'string'}
+            ],
+            id: 'id',
+            url: url3
+        };
+
+        var dataAdapter3 = new $.jqx.dataAdapter(source3);
+
+        $("#schemes").jqxGrid(
+            {
+                width: '100%',
+                source: dataAdapter3,
+                pageable: true,
+                filterable: true,
+                sortable: true,
+                showfilterrow: true,
+                columnsresize: true,
+                pagesize: 15,
+                pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
+//                selectionmode: 'checkbox',
+                altrows: true,
+                autoheight: true,
+
+
+                columns: [
+                    {text: '<?= __('Name') ?>', dataField: 'name_bn', width: '70%'},
+                    {text: '<?= __('Scheme Code') ?>', dataField: 'scheme_code', width: '22%'},
+                    {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
+                ]
+            });
+    }
+
+        if ( $( "#dak_files" ).length ) {
+
+
+            var url = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_dak_file/<?= $nothiRegister->id; ?>";
         // prepare the data
         var source =
         {
@@ -261,222 +697,110 @@
                     {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
                 ]
             });
-
-
-        //Projects
-        var url2 = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_projects/<?= $nothiRegister->id; ?>";
-        // prepare the data
-        var source2 =
-        {
-            dataType: "json",
-            dataFields: [
-                {name: 'short_code', type: 'string'},
-                {name: 'name_bn', type: 'string'},
-                {name: 'development_partner', type: 'string'},
-                {name: 'action', type: 'string'}
-            ],
-            id: 'id',
-            url: url2
-        };
-
-        var dataAdapter2 = new $.jqx.dataAdapter(source2);
-
-        $("#projects").jqxGrid(
-            {
-                width: '100%',
-                source: dataAdapter2,
-                pageable: true,
-                filterable: true,
-                sortable: true,
-                showfilterrow: true,
-                columnsresize: true,
-                pagesize: 15,
-                pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
-//                selectionmode: 'checkbox',
-                altrows: true,
-                autoheight: true,
-
-
-                columns: [
-                    {text: '<?= __('Short Code') ?>', dataField: 'short_code', width: '20%'},
-                    {text: '<?= __('Name') ?>', dataField: 'name_bn', width: '50%'},
-                    {text: '<?= __('Development Partner') ?>', dataField: 'development_partner', width: '22%'},
-                    {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
-                ]
-            });
-
-        //Schemes
-        var url3 = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_schemes/<?= $nothiRegister->id; ?>";
-        // prepare the data
-        var source3 =
-        {
-            dataType: "json",
-            dataFields: [
-                {name: 'name_bn', type: 'string'},
-                {name: 'scheme_code', type: 'string'},
-                {name: 'action', type: 'string'}
-            ],
-            id: 'id',
-            url: url3
-        };
-
-        var dataAdapter3 = new $.jqx.dataAdapter(source3);
-
-        $("#schemes").jqxGrid(
-            {
-                width: '100%',
-                source: dataAdapter3,
-                pageable: true,
-                filterable: true,
-                sortable: true,
-                showfilterrow: true,
-                columnsresize: true,
-                pagesize: 15,
-                pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
-//                selectionmode: 'checkbox',
-                altrows: true,
-                autoheight: true,
-
-
-                columns: [
-                    {text: '<?= __('Name') ?>', dataField: 'name_bn', width: '70%'},
-                    {text: '<?= __('Scheme Code') ?>', dataField: 'scheme_code', width: '22%'},
-                    {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
-                ]
-            });
+    }
 
         //Lab Bills
-        var url4 = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_lab_bills/<?= $nothiRegister->id; ?>";
-        // prepare the data
-        var source4 =
-        {
-            dataType: "json",
-            dataFields: [
-                {name: 'title', type: 'string'},
-                {name: 'type', type: 'string'},
-                {name: 'total_amount', type: 'string'},
-                {name: 'net_payable', type: 'string'},
-                {name: 'action', type: 'string'}
-            ],
-            id: 'id',
-            url: url4
-        };
 
-        var dataAdapter4 = new $.jqx.dataAdapter(source4);
+        if ($("#lab_bills").length) {
 
-        $("#lab_bills").jqxGrid(
+            var url4 = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_lab_bills/<?= $nothiRegister->id; ?>";
+            // prepare the data
+            var source4 =
             {
-                width: '100%',
-                source: dataAdapter4,
-                pageable: true,
-                filterable: true,
-                sortable: true,
-                showfilterrow: true,
-                columnsresize: true,
-                pagesize: 15,
-                pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
+                dataType: "json",
+                dataFields: [
+                    {name: 'title', type: 'string'},
+                    {name: 'type', type: 'string'},
+                    {name: 'total_amount', type: 'string'},
+                    {name: 'net_payable', type: 'string'},
+                    {name: 'action', type: 'string'}
+                ],
+                id: 'id',
+                url: url4
+            };
+
+            var dataAdapter4 = new $.jqx.dataAdapter(source4);
+
+            $("#lab_bills").jqxGrid(
+                {
+                    width: '100%',
+                    source: dataAdapter4,
+                    pageable: true,
+                    filterable: true,
+                    sortable: true,
+                    showfilterrow: true,
+                    columnsresize: true,
+                    pagesize: 15,
+                    pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
 //                selectionmode: 'checkbox',
-                altrows: true,
-                autoheight: true,
+                    altrows: true,
+                    autoheight: true,
 
 
-                columns: [
-                    {text: '<?= __('Title') ?>', dataField: 'title', width: '40%'},
-                    {text: '<?= __('Type') ?>', dataField: 'type', width: '10%'},
-                    {text: '<?= __('Total Amount') ?>', dataField: 'total_amount', width: '21%'},
-                    {text: '<?= __('Net Payable') ?>', dataField: 'net_payable', width: '21%'},
-                    {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
-                ]
-            });
+                    columns: [
+                        {text: '<?= __('Title') ?>', dataField: 'title', width: '40%'},
+                        {text: '<?= __('Type') ?>', dataField: 'type', width: '10%'},
+                        {text: '<?= __('Total Amount') ?>', dataField: 'total_amount', width: '21%'},
+                        {text: '<?= __('Net Payable') ?>', dataField: 'net_payable', width: '21%'},
+                        {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
+                    ]
+                });
+
+        }
+
 
         //Mechanical Bills
-        var url5 = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_mechanical_bills/<?= $nothiRegister->id; ?>";
-        // prepare the data
-        var source5 =
-        {
-            dataType: "json",
-            dataFields: [
-                {name: 'title', type: 'string'},
-                {name: 'total_amount', type: 'string'},
-                {name: 'net_payable', type: 'string'},
-                {name: 'action', type: 'string'}
-            ],
-            id: 'id',
-            url: url5
-        };
 
-        var dataAdapter5 = new $.jqx.dataAdapter(source5);
+        if ($("#mechanical_bills").length) {
 
-        $("#mechanical_bills").jqxGrid(
+            var url5 = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_mechanical_bills/<?= $nothiRegister->id; ?>";
+            // prepare the data
+            var source5 =
             {
-                width: '100%',
-                source: dataAdapter5,
-                pageable: true,
-                filterable: true,
-                sortable: true,
-                showfilterrow: true,
-                columnsresize: true,
-                pagesize: 15,
-                pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
+                dataType: "json",
+                dataFields: [
+                    {name: 'title', type: 'string'},
+                    {name: 'total_amount', type: 'string'},
+                    {name: 'net_payable', type: 'string'},
+                    {name: 'action', type: 'string'}
+                ],
+                id: 'id',
+                url: url5
+            };
+
+            var dataAdapter5 = new $.jqx.dataAdapter(source5);
+
+            $("#mechanical_bills").jqxGrid(
+                {
+                    width: '100%',
+                    source: dataAdapter5,
+                    pageable: true,
+                    filterable: true,
+                    sortable: true,
+                    showfilterrow: true,
+                    columnsresize: true,
+                    pagesize: 15,
+                    pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
 //                selectionmode: 'checkbox',
-                altrows: true,
-                autoheight: true,
+                    altrows: true,
+                    autoheight: true,
 
 
-                columns: [
-                    {text: '<?= __('Title') ?>', dataField: 'title', width: '50%'},
-                    {text: '<?= __('Total Amount') ?>', dataField: 'total_amount', width: '21%'},
-                    {text: '<?= __('Net Payable') ?>', dataField: 'net_payable', width: '21%'},
-                    {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
-                ]
-            });
+                    columns: [
+                        {text: '<?= __('Title') ?>', dataField: 'title', width: '50%'},
+                        {text: '<?= __('Total Amount') ?>', dataField: 'total_amount', width: '21%'},
+                        {text: '<?= __('Net Payable') ?>', dataField: 'net_payable', width: '21%'},
+                        {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
+                    ]
+                });
 
-        //Purto Bills
-        var url6 = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_purto_bills/<?= $nothiRegister->id; ?>";
-        // prepare the data
-        var source6 =
-        {
-            dataType: "json",
-            dataFields: [
-                {name: 'bill_type', type: 'string'},
-                {name: 'bill_date', type: 'string'},
-                {name: 'gross_bill', type: 'string'},
-                {name: 'net_bill', type: 'string'},
-                {name: 'action', type: 'string'}
-            ],
-            id: 'id',
-            url: url6
-        };
-
-        var dataAdapter6 = new $.jqx.dataAdapter(source6);
-
-        $("#purto_bills").jqxGrid(
-            {
-                width: '100%',
-                source: dataAdapter6,
-                pageable: true,
-                filterable: true,
-                sortable: true,
-                showfilterrow: true,
-                columnsresize: true,
-                pagesize: 15,
-                pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
-//                selectionmode: 'checkbox',
-                altrows: true,
-                autoheight: true,
+        }
 
 
-                columns: [
-                    {text: '<?= __('Bill Type') ?>', dataField: 'bill_type', width: '32%'},
-                    {text: '<?= __('Bill Date') ?>', dataField: 'bill_date', width: '20%'},
-                    {text: '<?= __('Gross Bill') ?>', dataField: 'gross_bill', width: '20%'},
-                    {text: '<?= __('Net Bill') ?>', dataField: 'net_bill', width: '20%'},
-                    {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
-                ]
-            });
-        
-        //Purto Bills
-        var url7 = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_allotments/<?= $nothiRegister->id; ?>";
+        //allotments Bills
+        if ( $( "#allotments" ).length ) {
+
+            var url7 = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_allotments/<?= $nothiRegister->id; ?>";
         // prepare the data
         var source7 =
         {
@@ -518,7 +842,134 @@
                     {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
                 ]
             });
+    }
+        //Purto Bills
+        if ( $( "#purto_bills" ).length ) {
+
+            var url6 = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_purto_bills/<?= $nothiRegister->id; ?>";
+            // prepare the data
+            var source6 =
+            {
+                dataType: "json",
+                dataFields: [
+                    {name: 'bill_type', type: 'string'},
+                    {name: 'bill_date', type: 'string'},
+                    {name: 'gross_bill', type: 'string'},
+                    {name: 'net_bill', type: 'string'},
+                    {name: 'action', type: 'string'}
+                ],
+                id: 'id',
+                url: url6
+            };
+
+            var dataAdapter6 = new $.jqx.dataAdapter(source6);
+
+            $("#purto_bills").jqxGrid(
+                {
+                    width: '100%',
+                    source: dataAdapter6,
+                    pageable: true,
+                    filterable: true,
+                    sortable: true,
+                    showfilterrow: true,
+                    columnsresize: true,
+                    pagesize: 15,
+                    pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
+//                selectionmode: 'checkbox',
+                    altrows: true,
+                    autoheight: true,
+
+
+                    columns: [
+                        {text: '<?= __('Bill Type') ?>', dataField: 'bill_type', width: '32%'},
+                        {text: '<?= __('Bill Date') ?>', dataField: 'bill_date', width: '20%'},
+                        {text: '<?= __('Gross Bill') ?>', dataField: 'gross_bill', width: '20%'},
+                        {text: '<?= __('Net Bill') ?>', dataField: 'net_bill', width: '20%'},
+                        {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
+                    ]
+                });
+
+        }
+        //Projects
+        if ( $( "#projects" ).length ) {
+
+            var url2 = "<?php echo $this->request->webroot; ?>NothiRegisters/ajax/get_projects/<?= $nothiRegister->id; ?>";
+            // prepare the data
+            var source2 =
+            {
+                dataType: "json",
+                dataFields: [
+                    {name: 'short_code', type: 'string'},
+                    {name: 'name_bn', type: 'string'},
+                    {name: 'development_partner', type: 'string'},
+                    {name: 'action', type: 'string'}
+                ],
+                id: 'id',
+                url: url2
+            };
+
+            var dataAdapter2 = new $.jqx.dataAdapter(source2);
+
+            $("#projects").jqxGrid(
+                {
+                    width: '100%',
+                    source: dataAdapter2,
+                    pageable: true,
+                    filterable: true,
+                    sortable: true,
+                    showfilterrow: true,
+                    columnsresize: true,
+                    pagesize: 15,
+                    pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
+//                selectionmode: 'checkbox',
+                    altrows: true,
+                    autoheight: true,
+
+
+                    columns: [
+                        {text: '<?= __('Short Code') ?>', dataField: 'short_code', width: '20%'},
+                        {text: '<?= __('Name') ?>', dataField: 'name_bn', width: '50%'},
+                        {text: '<?= __('Development Partner') ?>', dataField: 'development_partner', width: '22%'},
+                        {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
+                    ]
+                });
+
+        }
+
 
 
     });
 </script>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"><?= __('Add Scheme Progress') ?></h4>
+            </div>
+            <div class="modal-body">
+                <br/>
+                <?= $this->Form->create($schemeProgress, ['class' => 'form-horizontal', 'role' => 'form']); ?>
+
+                <?php
+                echo $this->Form->hidden('scheme_id', ['value' => $nothiNothiAssigns['scheme']['id']]);
+                ?>
+                <div class="col-sm-12">
+                    <?php echo $this->Form->input('progress_value', ['max' => 100]); ?>
+                </div>
+                <div class="col-sm-12">
+                    <?php echo $this->Form->input('remarks'); ?>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <input type="submit" value="<?= __('Save') ?>" class="btn btn-primary">
+            </div>
+            <?= $this->Form->end() ?>
+        </div>
+    </div>
+</div>

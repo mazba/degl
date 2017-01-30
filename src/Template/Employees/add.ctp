@@ -54,12 +54,26 @@ use Cake\Core\Configure;
         echo $this->Form->input('mother_name');
         echo $this->Form->input('present_address');
         echo $this->Form->input('permanent_address');
+
         echo $this->Form->input('picture', ['type' => 'file','data-preview-container'=>'#profile_image_preview']);
         ?>
         <div id="profile_image_preview" class="col-sm-offset-3">
 
         </div>
+        <div id="nothi_register" class="">
 
+                <?php
+                echo $this->Form->input('parent_id', ['required', 'options' => $nothiRegisters, 'empty' => __('Select'), 'templates' => ['inputContainer' => '<div class="form-group nothi_register {{type}}{{required}}">{{content}}</div>']]);
+                ?>
+
+        </div>
+
+        <div id="nothi_register" class="tab-pane fade">
+            <div class="col-sm-6">
+                <?php
+                ?>
+            </div>
+        </div>
     </div>
     <div class="col-sm-12 form-actions text-right">
         <input type="submit" value='<?= __("Save") ?>' class="btn btn-primary">
@@ -67,3 +81,24 @@ use Cake\Core\Configure;
 </div>
 <?= $this->Form->end() ?>
 
+<script>
+    jQuery(document).ready(function () {
+        $(document).on('change', '#parent-id', function () {
+            var parent_id = $(this).val();
+            var obj = $(this);
+            $.ajax({
+                type: 'POST',
+                url: '<?= $this->Url->build("/NothiRegisters/getSubNothi")?>',
+                data: {parent_id: parent_id},
+                success: function (data, status) {
+                    obj.closest('.nothi_register').nextAll('.nothi_register').remove();
+                    if (data) {
+                       // console.log(data);
+                        obj.closest('.form-group').after(data);
+                    }
+                }
+            });
+        });
+    });
+
+</script>

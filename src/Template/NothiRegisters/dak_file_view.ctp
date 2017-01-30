@@ -115,22 +115,24 @@ use Cake\Routing\Router;
                             <label style="display: block"><?= __('Reply attached files') ?></label>
                             <?php foreach ($reply as $data) {
 
-                                $path = pathinfo($data['file_path']);
+                                $path = pathinfo($data['files']['file_path']);
                                 if ($path['extension'] == 'jpg' || $path['extension'] == 'JPG' || $path['extension'] == 'png' || $path['extension'] == 'PNG') {
 
                                     ?>
                                     <a data-lightbox="dak_file_image"
-                                       href="<?php echo Router::url('/', true) . 'files/receive_files/' . $data['file_path']; ?>">
+                                       href="<?php echo Router::url('/', true) . 'files/receive_files/' . $data['files']['file_path']; ?>">
                                         <img width="100" height="80"
-                                             src="<?php echo Router::url('/', true) . 'files/receive_files/' . $data['file_path']; ?>">
+                                             src="<?php echo Router::url('/', true) . 'files/receive_files/' . $data['files']['file_path']; ?>">
                                     </a>
                                     <?php
                                 } else { ?>
+                                    <?php if (file_exists( $data['files']['file_path'])){?>
                                     <a target="_blank"
-                                       href="<?php echo Router::url('/', true) . 'files/receive_files/' . $data['file_path']; ?>">
-                                        <?php echo $data['file_path']; ?>
+                                       href="<?php echo Router::url('/', true) . 'files/receive_files/' . $data['files']['file_path']; ?>">
+                                        <?php echo $data['files']['file_path']; ?>
+
                                     </a>
-                                <?php }
+                                <?php } }
                             } ?>
                         </div>
                     </div>

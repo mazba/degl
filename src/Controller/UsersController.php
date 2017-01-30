@@ -86,6 +86,33 @@ class UsersController extends AppController
             {
                 $data['birth_date']=0;
             }
+
+            $files = array();
+            $file_upload_complete = true;
+            $has_file = false;
+
+
+            if ($_FILES['signature']) {
+
+//echo "<pre>";print_r($_FILES['signature']);die();
+                $base_upload_path = WWW_ROOT . 'img/signature';
+
+                    $tmp_name = $_FILES['signature']['tmp_name'];
+                    //Get the temp file path
+                    if ($tmp_name) {
+
+                        $name = time() . '_' . str_replace(' ', '_', $_FILES['signature']['name']);
+                        if (move_uploaded_file($tmp_name, $base_upload_path . '/' . $name)) {
+                            $data['signature'] = $name;
+                            $has_file = true;
+
+                        } else {
+                            $file_upload_complete = false;
+                           // break;
+                        }
+                    }
+
+            }
             $user = $this->Users->patchEntity($user, $data);
             if ($this->Users->save($user))
             {
@@ -107,7 +134,8 @@ class UsersController extends AppController
         }
         else
         {
-            $offices = $this->Users->Offices->find('list', ['conditions' => ['id ='=>$created_user['office_id']]]);
+         //   $offices = $this->Users->Offices->find('list', ['conditions' => ['id ='=>$created_user['office_id']]]);
+            $offices = $this->Users->Offices->find('list');
             $userGroups = $this->Users->UserGroups->find('list', ['conditions' => ['id !='=>1]]);
             $designations = $this->Users->Designations->find('list', ['conditions' => ['office_id ='=>$created_user['office_id']]]);
             $departments=$this->Users->Departments->find('list', ['conditions' => ['Departments.office_id ='=>$created_user['office_id']]]);
@@ -132,7 +160,6 @@ class UsersController extends AppController
         if ($this->request->is(['patch', 'post', 'put']))
         {
             $data=$this->request->data;
-
             $data=$this->request->data;
             $data['updated_by']=$created_user['id'];
             $data['updated_date']=time();
@@ -145,7 +172,36 @@ class UsersController extends AppController
             {
                 $data['birth_date']=0;
             }
+
+            $files = array();
+            $file_upload_complete = true;
+            $has_file = false;
+
+
+            if ($_FILES['signature']) {
+
+                $base_upload_path = WWW_ROOT . 'img/signature';
+
+                $tmp_name = $_FILES['signature']['tmp_name'];
+                //Get the temp file path
+                if ($tmp_name) {
+
+                    $name = time() . '_' . str_replace(' ', '_', $_FILES['signature']['name']);
+                    if (move_uploaded_file($tmp_name, $base_upload_path . '/' . $name)) {
+                        $data['signature'] = $name;
+                        $has_file = true;
+
+                    } else {
+                        $file_upload_complete = false;
+                        // break;
+                    }
+                }
+
+            }else{
+                $data['signature']=$user['signature'];
+            }
             $user = $this->Users->patchEntity($user, $data);
+			
             if ($this->Users->save($user))
             {
                 $this->Flash->success(__('The user has been saved.'));
@@ -165,7 +221,9 @@ class UsersController extends AppController
         }
         else
         {
-            $offices = $this->Users->Offices->find('list', ['conditions' => ['id ='=>$created_user['office_id']]]);
+          //  $offices = $this->Users->Offices->find('list', ['conditions' => ['id ='=>$created_user['office_id']]]);
+            $offices = $this->Users->Offices->find('list');
+
             $userGroups = $this->Users->UserGroups->find('list', ['conditions' => ['id !='=>1]]);
             $designations = $this->Users->Designations->find('list', ['conditions' => ['office_id ='=>$created_user['office_id']]]);
             $departments=$this->Users->Departments->find('list', ['conditions' => ['Departments.office_id ='=>$created_user['office_id']]]);

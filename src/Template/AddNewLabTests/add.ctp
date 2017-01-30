@@ -1,3 +1,8 @@
+<style>
+    .display_none{
+        display: none;
+    }
+</style>
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
         <li><a href="<?= $this->Url->build(('/Dashboard'), true); ?>"><?= __('Dashboard') ?></a></li>
@@ -31,7 +36,7 @@
     <div class="col-sm-7 box" style="border: 1px solid #50626D;padding-top:30px;margin-bottom: 20px ">
         <div class="panel-heading"><span id="close">X</span></div>
         <?php
-        echo $this->Form->input('lab_test_group_id', ['class'=>'form-control lab_test_group','label'=>__('Item of Works'),'options'=>$labTestGroups,'empty' => __('Select')]);
+        echo $this->Form->input('lab_test_group_id[]', ['class'=>'form-control lab_test_group','label'=>__('Item of Works'),'options'=>$labTestGroups,'empty' => __('Select')]);
         echo $this->Form->input('lab_test_list_id[]', ['label' => __('Test List'), 'class' =>'form-control testList', 'options'=>[], 'empty' => 'Select test']);
         ?>
 
@@ -42,6 +47,14 @@
         <input type="hidden" id="financial_year" name="financial_year[]" value="">
         <input type="hidden" id="lab_test_short_name" name="lab_test_short_name[]" value="">
         <input type="hidden" id="lab_test_full_name" name="lab_test_full_name[]" value="">
+        <div class="form-group prev_val display_none">
+            <label class="col-sm-3 control-label text-right" for="testRate">TestDone</label>
+            <div class="col-sm-9 ">
+                <input type="text" class=" form-control  previous_val" id="" name="" value="" readonly>
+            </div>
+        </div>
+
+
         <?php
         echo $this->Form->input('rate[]', ['label' => 'Rate', 'id' => 'testRate']);
         echo $this->Form->input('work_done_quantity',['class'=>'form-control work-done-quantity']);
@@ -50,15 +63,16 @@
             <input type="button" class="btn btn-primary calculate" id="calculate" value="<?= __('Calculate') ?>" >
         </div>
         <?php
-        echo $this->Form->input('number_of_test[]', ['class'=>'number_of_test form-control','label' => 'Number Of Test','readonly']);
+        echo $this->Form->input('number_of_test_by_system[]', ['class'=>'number_of_test_by_system form-control','label' => 'Number Of Test','readonly']);
+        echo $this->Form->input('number_of_test[]', ['class'=>'number_of_test form-control','label' => 'Number Of New Test','']);
         ?>
     </div>
 </div>
 
 <?= $this->Form->create($labTest, ['class' => 'form-horizontal','id'=>'form', 'role' => 'form']); ?>
 <div class="row panel panel-default">
-    <input type="hidden" name="lab_letter_registers_id" value="<?= $labLetterRegister->id ?>">
-    <input type="hidden" name="scheme_id" value="<?= $labLetterRegister->scheme_id ?>">
+    <input type="hidden" name="lab_letter_registers_id" id="lab_letter_registers_id" value="<?= $labLetterRegister->id ?>">
+    <input type="hidden" name="scheme_id" id="scheme_id" value="<?= $labLetterRegister->scheme_id ?>">
 
     <div class="panel-heading"><h6 class="panel-title"><i
                 class="icon-paragraph-right2"></i><?= __('Add Lab Lest') ?>
@@ -70,7 +84,7 @@
 
                 <div class="col-sm-7 box" style="border: 1px solid #50626D;padding-top:30px;margin-bottom: 20px ">
                     <?php
-                    echo $this->Form->input('lab_test_group_id', ['class'=>'form-control lab_test_group','label'=>__('Item of Works'),'options'=>$labTestGroups,'empty' => __('Select')]);
+                    echo $this->Form->input('lab_test_group_id[]', ['class'=>'form-control lab_test_group','label'=>__('Item of Works'),'options'=>$labTestGroups,'empty' => __('Select')]);
                     ?>
                     <div class="form-group input select">
                         <div class="col-sm-3 control-label text-right">
@@ -92,6 +106,14 @@
                     <input type="hidden" id="financial_year" name="financial_year[]" value="">
                     <input type="hidden" id="lab_test_short_name" name="lab_test_short_name[]" value="">
                     <input type="hidden" id="lab_test_full_name" name="lab_test_full_name[]" value="">
+
+                    <div class="form-group prev_val display_none">
+                        <label class="col-sm-3 control-label text-right" for="testRate">TestDone</label>
+                        <div class="col-sm-9 ">
+                            <input type="text" class=" form-control  previous_val" id="" name="" value="" readonly>
+                        </div>
+                    </div>
+
                     <?php
                     echo $this->Form->input('rate[]', ['label' => 'Rate', 'id' => 'testRate']);
                     echo $this->Form->input('work_done_quantity',['class'=>'form-control work-done-quantity']);
@@ -100,7 +122,8 @@
                         <input type="button" class="btn btn-primary calculate" id="calculate" value="<?= __('Calculate') ?>" >
                     </div>
                     <?php
-                    echo $this->Form->input('number_of_test[]', ['class'=>'form-control number_of_test','label' => 'Number Of Test','readonly']);
+                    echo $this->Form->input('number_of_test_by_system[]', ['class'=>'form-control number_of_test_by_system','label' => 'Number Of Test','readonly']);
+                    echo $this->Form->input('number_of_test[]', ['class'=>'form-control number_of_test','label' => 'Number Of New Test']);
                     ?>
                 </div>
             </div>
@@ -118,6 +141,7 @@
 <?= $this->Form->end() ?>
 
 <script>
+
     $(document).ready(function () {
 
         $(document).on('click', '.calculate', function () {
@@ -138,7 +162,7 @@
                     data = JSON.parse(data);
                     console.log();
                     if (data.test_no_type == 0) {
-                        test.closest('.box').find('.number_of_test').val(data.test_needed);
+                        test.closest('.box').find('.number_of_test_by_system').val(data.test_needed);
 
                     } else if (data.test_no_type == 1) {
                         test.val(data.test_needed);
@@ -158,6 +182,11 @@
 
         var lab_test_id="";
         $(document).on("change", ".testList", function (event) {
+
+            var scheme_id = $('#scheme_id').val();
+            var lab_letter_registers_id = $('#lab_letter_registers_id').val();
+            var lab_test_group= $(this).closest('.box').find('.lab_test_group').val();
+
             var test_id = $(this).val();
             lab_test_id=test_id;
             var obj = $(this);
@@ -182,6 +211,26 @@
 
                     obj.closest('.box').find('.financialYear').show();
                     obj.closest('.box').find('.financialYear').html(html);
+                }
+
+            });
+
+
+            $.ajax({
+                url: '<?=$this->Url->build(('/AddNewLabTests/get_previous_number_of_test'), true)?>',
+                type: 'POST',
+                data: {
+                    scheme_id:scheme_id,
+                    lab_letter_registers_id:lab_letter_registers_id,
+                    lab_test_group:lab_test_group,
+                    test_list_id: test_id
+                },
+                success: function (data, status) {
+
+
+
+                    obj.closest('.box').find('.prev_val').removeClass( "display_none" );
+                    obj.closest('.box').find('.previous_val').val(data);
                 }
 
             });

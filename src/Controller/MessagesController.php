@@ -431,6 +431,8 @@ class MessagesController extends AppController
                 ->orWhere(['MessageRegisters.msg_type' => 'individual'])
                 ->orWhere(['MessageRegisters.msg_type' => 'labBill'])
                 ->orWhere(['MessageRegisters.msg_type' => 'hireCharges'])
+                ->orWhere(['MessageRegisters.msg_type' => 'raBill'])
+                ->orWhere(['MessageRegisters.msg_type' => 'Approve_raBill'])
                 ->leftJoin('recipients', 'recipients.message_register_id=MessageRegisters.id')
                 ->where(['recipients.user_id' => $user['id']])
                 ->order(['MessageRegisters.created_date' => "DESC"])

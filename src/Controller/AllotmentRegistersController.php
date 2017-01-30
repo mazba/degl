@@ -118,12 +118,28 @@ class AllotmentRegistersController extends AppController
             }
         }
         if ($action == 'purto_bill'){
-            $purto_bill = $this->AllotmentRegisters->PurtoBills->find('', [
-                'conditions' => ['PurtoBills.id' => $id],
-                'contain' => ['Schemes', 'Projects', 'FinancialYearEstimates']
+//            $purto_bill = $this->AllotmentRegisters->PurtoBills->find('', [
+//                'conditions' => ['PurtoBills.id' => $id],
+//                'contain' => ['Schemes', 'Projects', 'FinancialYearEstimates']
+//            ])->first();
+
+            $this->loadModel('processed_ra_bills');
+            $this->loadModel('proposed_ra_bills');
+            $this->loadModel('Schemes');
+          //  $this->loadModel('Schemes');
+            $processed_ra_bill_info=$this->processed_ra_bills->get($id);
+            $proposed_ra_bill=$this->proposed_ra_bills->get($processed_ra_bill_info->proposed_ra_bill_id);
+
+            $scheme_info=$this->Schemes->find('all',[
+                'conditions' => ['Schemes.id' =>$processed_ra_bill_info->scheme_id ],
+               'contain' => [ 'Projects', 'FinancialYearEstimates']
             ])->first();
-            $this->set(compact('purto_bill'));
-        } elseif ($action == 'letter') {
+         //  echo "<pre>";print_r($scheme_info->financial_year_estimate);die();
+
+            $this->set(compact('processed_ra_bill_info','scheme_info','proposed_ra_bill'));
+        }
+
+        elseif ($action == 'letter') {
             $projects = $this->AllotmentRegisters->Projects
                 ->find('list')
                 ->where(['Projects.status'=>1])

@@ -224,7 +224,7 @@ Configure::load('config_receive_file_registers', 'default');
     <div class="panel-body">
         <div class="col-md-12">
             <form method="post"
-                  action="<?php echo $this->request->webroot; ?>my_files/forward/<?= $my_file->id ?>">
+                  action="<?php echo $this->request->webroot; ?>my_files/forward/<?= $my_file->id ?>" enctype="multipart/form-data">
                 <div class="col-md-10">
                     <div class="form-group">
                         <label class="col-sm-2 control-label"><?= __("Recipients") ?></label>
@@ -357,7 +357,15 @@ Configure::load('config_receive_file_registers', 'default');
                         </div>
                     </div>
                 </div>
+                <div class="col-md-10">
+                    <div class="form-group input">
+                        <label class="col-sm-2 control-label"><?= __('Attach File(s)') ?></label>
 
+                        <div class="col-sm-10 container_attached_files">
+                            <input type="file" multiple="" name="attachments[]">
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-12">
                     <div class="col-sm-12 form-actions text-right">
                         <div class="col-sm-12 form-group input">
