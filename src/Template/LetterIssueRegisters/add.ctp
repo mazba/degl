@@ -163,7 +163,7 @@ Configure::load('config_receive_file_registers', 'default');
             </div>
         </div>
 
-        <?php echo $this->Form->input('parent_id', ['label' => __('Nothi'), 'options' => $nothiRegisters, 'empty' => __('Select'), 'required', 'templates' => ['inputContainer' => '<div class="form-group nothi_register {{type}}{{required}}">{{content}}</div>']]); ?>
+        <?php echo $this->Form->input('parent_id', ['label' => __('Nothi'), 'options' => $nothiRegisters, 'class' =>"form-control parent-id" ,'empty' => __('Select'), 'required', 'templates' => ['inputContainer' => '<div class="form-group nothi_register {{type}}{{required}}">{{content}}</div>']]); ?>
 
     </div>
     <div class="panel-body col-sm-12">
@@ -213,10 +213,10 @@ Configure::load('config_receive_file_registers', 'default');
 
         });
 
-        $(document).on('change', '#parent-id', function () {
+        $(document).on('change', '.parent-id', function () {
             var parent_id = $(this).val();
             var obj = $(this);
-            obj.closest('#container_parent_id').find('.child').remove()
+            obj.nextAll().remove()
             $.ajax({
                 type: 'POST',
                 url: '<?= $this->Url->build("/LetterIssueRegisters/getSubNothi")?>',
@@ -224,7 +224,7 @@ Configure::load('config_receive_file_registers', 'default');
                 dataType: 'json',
                 success: function (data, status) {
                     if(Object.keys(data).length){
-                        var childSelect = $('<select class="child form-control"></select>');
+                        var childSelect = $('<select class="child parent-id form-control" name= "parent_id" ></select>');
                         childSelect.append($('<option></option>').text("নির্বাচন করুন").val(""));
                         $.each(data,function(i,v){
                             childSelect.append($('<option></option>').text(v).val(i));

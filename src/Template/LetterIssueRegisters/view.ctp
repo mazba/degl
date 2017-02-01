@@ -37,10 +37,10 @@ use Cake\Routing\Router;
     </div>
     <div id="PrintArea">
     <div class="col-sm-12">
-        <h4 class="text-center">Government of the People's Republic of Bangladesh</h4>
-        <h4 class="text-center">Local Govt. Engineering Department</h4>
-        <h4 class="text-center">Office of the Executive Engineer</h4>
-        <h4 class="text-center">District: Gazipur</h4>
+        <h4 class="text-center"><?= __('Government of the People\'s Republic of Bangladesh')?></h4>
+        <h4 class="text-center"><?= __('Local Govt. Engineering Department')?> </h4>
+        <h4 class="text-center"><?= __('Office of the Executive Engineer')?></h4>
+        <h4 class="text-center"><?= __('District: Gazipur')?></h4>
         <h4 class="text-center"><a>www.lged.gov.bd</a></h4>
     </div>
     <div class="col-sm-10">

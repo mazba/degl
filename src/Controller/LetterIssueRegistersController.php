@@ -380,6 +380,7 @@ class LetterIssueRegistersController extends AppController
         $this->loadModel('NothiRegisters');
         $nothiRegisters = $this->NothiRegisters->find('list', ['conditions' => ['parent_id' => $this->request->data('parent_id'), 'status !=' => 99]])->toArray();
         $this->response->body(json_encode($nothiRegisters));
+
         return $this->response;
     }
 }
