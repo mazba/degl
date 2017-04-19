@@ -1291,7 +1291,7 @@ ul.list-justified li {
 }
 
 .page-content {
-  margin: 0 25px 0 265px;
+  /*margin: 0 25px 0 265px;*/
   position: relative;
 }
 
