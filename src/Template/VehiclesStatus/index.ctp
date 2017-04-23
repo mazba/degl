@@ -30,10 +30,12 @@
             dataFields: [
                 { name: 'id', type: 'int' },
                 { name: 'title', type: 'string' },
+                { name: 'serviceCost', type: 'string' },
                 { name: 'vehicle_location', type: 'string' },
                 { name: 'vehicle_status', type: 'string' },
                 { name: 'employee', type: 'string' },
                 { name: 'schemes', type: 'string' },
+                { name: 'daily_cost_ratio', type: 'string' },
                 { name: 'assign_date', type: 'string' },
                 { name: 'action', type: 'string' }
             ],
@@ -60,50 +62,19 @@
 
 
                 columns: [
-                    { text: '<?= __('#') ?>',cellsalign: 'center', dataField: 'id',width:'5%'},
-                    { text: '<?= __('Title') ?>', dataField: 'title',width:'20%'},
+                    { text: '<?= __('#') ?>',cellsalign: 'center' ,dataField: 'id',width:'5%'},
+                    { text: '<?= __('Title') ?>', dataField: 'title',width:'16%'},
                     { text: '<?= __('Vehicle Status') ?>', dataField: 'vehicle_status',width:'7%'},
-                    { text: '<?= 'বর্তমান অবস্থান' ?>',dataField: 'vehicle_location',width:'13%'},
+                    { text: '<?= 'বর্তমান অবস্থান' ?>',dataField: 'vehicle_location',width:'10%'},
                     { text: '<?= __('Driver') ?>', dataField: 'employee',width:'10%'},
-                    { text: '<?= __('Scheme') ?>', dataField: 'schemes',width:'28%'},
+                    { text: '<?= __('Scheme') ?>', dataField: 'schemes',width:'22%'},
+                    { text: '<?= __('Service Cost') ?>', dataField: 'serviceCost',width:'6%'},
+                    { text: '<?= __('Daily Cost Ratio') ?>', dataField: 'daily_cost_ratio',width:'5%'},
                     { text: '<?= __('Assign Date') ?>', dataField: 'assign_date',width:'10%'},
-                    { text: '<?= __('Action') ?>', cellsalign: 'center',dataField: 'action',width:'7%'}
+                    { text: '<?= __('Action') ?>', cellsalign: 'center',dataField: 'action',width:'9%'}
 
                 ]
             });
 
-//        $(document).on("click", ".print", function(event)
-//        {
-//            var req_type = $(this).data('print');
-//            var newWin = window.open('','','height=700,width=900');
-//            $.ajax({
-//                url: '<?//=$this->Url->build(('/VehicleStatus/print_it'), true)?>//',
-//                type: 'POST',
-//                data:{
-//                    type:req_type,
-//                    start_date:$('[name=start_date]').val(),
-//                    end_date:$('[name=end_date]').val()
-//                },
-//                success: function (data, status)
-//                {
-//                    if(data)
-//                    {
-//                        newWin.document.write(data);
-//                        newWin.document.close();
-//                        newWin.focus();
-//                        newWin.print();
-//                    }
-//                    else
-//                    {
-//                        alert('NO DATA FOUND');
-//                    }
-//                },
-//                error: function (xhr, desc, err)
-//                {
-//                    console.log("error");
-//
-//                }
-//            });
-//        });
     });
 </script>

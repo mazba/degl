@@ -142,7 +142,11 @@ class VehiclesController extends AppController
                     $vehicle['load_capacity'] = $vehicle['equipment_capacity'];
                 }
                 $vehicle['vehicle_status'] = $vehicle_status[$vehicle['vehicle_status']];
-                $vehicle['action'] = '<a title="' . __('View') . '" class="icon-newspaper" href="' . $this->request->webroot . 'Vehicles/view/' . $vehicle['id'] . '" ></a> &nbsp' . '<a title="' . __('Edit') . '" class="icon-pencil3 text-warning" href="' . $this->request->webroot . 'Vehicles/edit/' . $vehicle['id'] . '" ></a> &nbsp' . '<a title="' . __('Delete') . '" class="icon-remove3 text-danger" onclick="return confirm(\'Are you sure to delete?\');" href="' . $this->request->webroot . 'Vehicles/delete/' . $vehicle['id'] . '" ></a> &nbsp' . '<a title="' . __('Servicing Report') . '" class="icon-certificate text-info" href="' . $this->request->webroot . 'Vehicles/service_report/' . $vehicle['id'] . '" ></a> &nbsp' . '<a title="' . __('Vehicle Driver Report') . '" class="icon-bus text-info" href="' . $this->request->webroot . 'Vehicles/driver_report/' . $vehicle['id'] . '" ></a>';
+                $vehicle['action'] = '<a title="' . __('View') . '" class="icon-newspaper" href="' . $this->request->webroot . 'Vehicles/view/' . $vehicle['id'] . '" ></a> &nbsp' .
+                    '<a title="' . __('Edit') . '" class="icon-pencil3 text-warning" href="' . $this->request->webroot . 'Vehicles/edit/' . $vehicle['id'] . '" ></a> &nbsp' .
+                    '<a title="' . __('Delete') . '" class="icon-remove3 text-danger" onclick="return confirm(\'Are you sure to delete?\');" href="' . $this->request->webroot . 'Vehicles/delete/' . $vehicle['id'] . '" ></a> &nbsp' .
+                    '<a title="' . __('Servicing Report') . '" class="icon-certificate text-info" href="' . $this->request->webroot . 'Vehicles/service_report/' . $vehicle['id'] . '" ></a> &nbsp' .
+                    '<a title="' . __('Vehicle Driver Report') . '" class="icon-bus text-info" href="' . $this->request->webroot . 'Vehicles/driver_report/' . $vehicle['id'] . '" ></a>';
             }
             $this->response->body(json_encode($vehicles));
             return $this->response;
@@ -159,7 +163,10 @@ class VehiclesController extends AppController
             'contain' => ['Offices', 'CreatedUser', 'UpdatedUser']
         ]);
         $this->loadModel('VehicleServicings');
-        $services = $this->VehicleServicings->find('all', ['contain'=>['VehicleServicingDetails'],'conditions' => ['VehicleServicings.vehicle_id' => $id]]);
+        $services = $this->VehicleServicings->find('all', [
+            'contain'=>['VehicleServicingDetails'],
+            'conditions' => ['VehicleServicings.vehicle_id' => $id]
+        ]);
 
 
         $this->set(compact('vehicle', 'services'));

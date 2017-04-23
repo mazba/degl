@@ -19,7 +19,7 @@ use Cake\Core\Configure;
     <div class="panel-heading"><h6 class="panel-title"><i
                 class="icon-paragraph-right2"></i><?= __('Add Assign Vehicle') ?>
         </h6></div>
-    <?php     echo $this->Form->hidden('id'); ?>
+<?php     echo $this->Form->hidden('id'); ?>
     <div class="panel-body col-sm-6">
         <?php
 

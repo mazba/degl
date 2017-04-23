@@ -62,7 +62,8 @@ Configure::load('config_vehicles', 'default');
 //        echo $this->Form->input('equipment_capacity', ['class' => 'form-control equipment']);
         echo $this->Form->input('vehicle_location', ['class' => 'form-control']);
 //        echo $this->Form->input('vehicle_place_of_user', ['class' => 'form-control']);
-        echo $this->Form->input('others',['label'=>_('Others / Lubricant Oil Capacity')])
+        echo $this->Form->input('others',['label'=>_('Others / Lubricant Oil Capacity')]);
+        echo $this->Form->input('daily_cost_ratio',['class' => 'form-control vehicles']);
         ?>
     </div>
     <div class="panel-body col-sm-6">

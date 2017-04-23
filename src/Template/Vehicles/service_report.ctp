@@ -108,8 +108,10 @@
                     <th class="text-center"><?= __('COMPLETE') ?></th>
                 </tr>
 
-                <?php $i = 1;
-                foreach ($services as $service): ?>
+                <?php $i = 1; $expense = 0;
+                foreach ($services as $service):
+                    $expense += $service->service_charge;
+                    ?>
                     <tr>
                         <td><?= $i++; ?></td>
                         <td><?= date('d-m-Y', $service->breakdown_date) ?></td>
@@ -134,7 +136,18 @@
                         <td><?= $service->job_card ?></td>
                     </tr>
                 <?php endforeach; ?>
-
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><?= $expense ?></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
             </table>
         </div>
         <div style="margin-top:100px;display: inline-block;width: 100%;text-align: center">

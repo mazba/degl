@@ -7,6 +7,7 @@
         <table class="table table-bordered" style="border: 1px solid #eee; margin-bottom: 10px;">
             <thead>
             <tr>
+            	<th rowspan="2"><?= __('SL') ?></th>
                 <th rowspan="2"><?= __('Scheme Name') ?></th>
                 <th rowspan="2"><?= __('Package Name') ?></th>
                 <th rowspan="2"><?= __('Contract Amount') ?></th>
@@ -33,6 +34,7 @@
             $total_building = 0;
             $total_road_payment = 0;
             $total_structure_payment = 0;
+            $count=1;
             foreach ($schemes as $scheme) {
                 $total_amount += $scheme['schemes']['contract_amount'];
                 $total_progress += $scheme['scheme_progresses']['progress_value'];
@@ -43,6 +45,7 @@
                 $total_structure_payment += $scheme['schemes']['payment_structure'];
                 ?>
                 <tr>
+                    <td><?= $count ?></td>
                     <td><?= $scheme['schemes']['name_bn'] ?></td>
                     <td><?= $scheme['packages']['name_bn'] ?></td>
                     <td><?= $scheme['schemes']['contract_amount'] ?></td>
@@ -57,15 +60,18 @@
                     <td>&nbsp;</td>
                 </tr>
                 <?php
+                $count++;
             }
             ?>
             <tr>
+            <td></td>
                 <td><?= __('Total') ?></td>
+                
                 <td>&nbsp;</td>
                 <td><?= $total_amount ?></td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
-                <td><?= $total_progress ?></td>
+                <td></td>
                 <td><?= $total_road_length ?></td>
                 <td><?= $total_structure_length ?></td>
                 <td><?= $total_building ?></td>

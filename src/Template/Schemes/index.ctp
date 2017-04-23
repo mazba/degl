@@ -1,10 +1,10 @@
-
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
         <li><a href="<?= $this->Url->build(('/Dashboard'), true); ?>"><?= __('Dashboard') ?></a></li>
         <li class="active"><?= __('Schemes') ?></li>
     </ul>
 </div>
+
 <div class="tabbable page-tabs">
     <ul class="nav nav-tabs">
         <li class="active"><?= $this->Html->link(__('List of Schemes'), ['action' => 'index']) ?></li>
@@ -51,7 +51,7 @@
             dataType: "json",
             dataFields: [
                 {name: 'sl', type: 'int'},
-                {name: 'districts_name', type: 'string'},
+              
                 {name: 'upazilas_name', type: 'string'},
                 {name: 'financial_year', type: 'string'},
                 {name: 'scheme_name', type: 'string'},
@@ -89,15 +89,14 @@
 
                 columns: [
                     {text: '<?= __('#') ?>', cellsalign: 'center', dataField: 'sl', width: '5%'},
-                    {text: '<?= __('District') ?>', dataField: 'districts_name', filtertype: 'list', width: '10%'},
+                  
                     {text: '<?= __('Upazila') ?>', dataField: 'upazilas_name', filtertype: 'list', width: '10%'},
                     {text: '<?= __('Financial Year') ?>', dataField: 'financial_year', filtertype: 'list', width: '7%'},
                     {text: '<?= __('Project') ?>', dataField: 'projects_name', filtertype: 'list', width: '9%'},
 
-                    {text: '<?= __('Scheme Name') ?>', cellsrenderer: spanWithTitle, filtertype: 'list', width: '14%'},
-                    {text: '<?= __('Contractor') ?>', dataField: 'contractor_name', filtertype: 'list', width: '10%'},
-                    {
-                        text: '<?= __('Contract Amount') ?>',
+                    {text: '<?= __('Scheme Name') ?>', dataField: 'scheme_name', width: '20%'},
+                    {text: '<?= __('Contractor') ?>', dataField: 'contractor_name', width: '10%'},
+                    {                       text: '<?= __('Contract Amount') ?>',
                         dataField: 'contract_amount',
                         filtertype: 'list',
                         width: '7%'
@@ -105,7 +104,7 @@
                     {text: '<?= __('Progress Value') ?>', dataField: 'scheme_progresses', width: '7%'},
                     {text: '<?= __('Contract Date') ?>', dataField: 'contract_date', width: '7%'},
                     {text: '<?= __('Complete Date') ?>', dataField: 'expected_complete_date', width: '9%'},
-                    {text: '<?= __('Action') ?>', cellsalign: 'center', dataField: 'action', width: '5%'}
+                    {text: '<?= __('Action') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
                 ]
             });
     });
@@ -141,6 +140,21 @@
                 }
             });
         });
+
+        $(document).on ('click', ".workOrder", function () {
+                    var id = $(this).data('scheme_id');
+                    var url =  '<?= $this->Url->build("/Schemes/work_order_by_id/")?>'+id;
+                   // console.log(id);
+                    $.ajax({
+                        type: 'GET',
+                        url:url,
+
+                        success: function (data, status) {
+                           $('#modal-content').html(data);
+                            $('.modal').modal('show')
+                        }
+                    });
+                });
 
 
     });

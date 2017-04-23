@@ -179,7 +179,7 @@ use Cake\Core\Configure;
 
                             <?php endif; ?>
                         <?php endforeach; ?>
-                        <th contenteditable="true"><?= __('Remarks') ?></th>
+                       
                     </tr>
                     </thead>
 
@@ -198,14 +198,27 @@ use Cake\Core\Configure;
                                     continue;
                                 } ?>
                                 <?php if (array_key_exists($key, $schemes[0])): ?>
-                                    <td><?= $scheme[$key] ?></td>
+                                    <td><?php 
+                                    
+                                    if($key=="physical_progress")
+                                    {
+                                    	
+                                    	$datePice = explode(".",$scheme[$key]);
+                                    	echo $datePice[0]. "%";
+                                    }
+                                    else
+                                    {
+                                    	echo $scheme[$key];
+                                    
+                                    }
+                                     ?></td>
                                 <?php endif; ?>
                             <?php endforeach; ?>
-                            <th>&nbsp;</th>
+                           
                         </tr>
                     <?php endforeach; ?>
                     <tr>
-                        <td><?= $i ?></td>
+                        <td> <?php echo"<b> Sub total</b>"; ?> </td>
                         <?php
                         foreach ($fields as $key => $value): ?>
 

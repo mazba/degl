@@ -8,6 +8,7 @@
 <div class="projects index panel panel-default">
     <div class="panel-heading"><h6 class="panel-title"><i class="icon-table"></i> <?= __('List of Projects') ?></h6>
     </div>
+    
     <div class="datatable">
         <table class="table">
             <thead>
@@ -21,6 +22,7 @@
             </thead>
             <tbody>
             <?php
+		
             foreach ($projects as $project)
             {
                 ?>

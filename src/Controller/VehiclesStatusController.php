@@ -38,16 +38,27 @@ class VehiclesStatusController extends AppController
             } else {
                 $vehicle_status = Configure::read('vehicle_status');
                 $query = TableRegistry::get('vehicles')->find();
-                $vehicles = $query->select(['vehicles.id', 'vehicles.title','vehicles.vehicle_status','vehicles_status.vehicle_location','vehicles_status.assign_date','employees.name_en','schemes.name_en' ])
+                $this->loadModel('VehicleServicings');
+                $vehicles = $query->select([
+                    'vehicles.id',
+                    'vehicles.title',
+                    'vehicles.daily_cost_ratio',
+                    'vehicles.vehicle_status',
+                    'serviceCost' => $query->func()->sum('vehicle_servicings.service_charge'),
+                    'vehicles_status.vehicle_location',
+                    'vehicles_status.assign_date',
+                    'employees.name_en','schemes.name_en'
+                ])
                     ->hydrate(false)
                     ->where(['vehicles.office_id' => $user['office_id']])
                     ->leftJoin('vehicles_status', 'vehicles_status.vehicle_id = vehicles.id AND vehicles_status.status = 1')
+                    ->leftJoin('vehicle_servicings', 'vehicle_servicings.vehicle_id = vehicles.id')
                     ->leftJoin('employees', 'employees.id = vehicles_status.employee_id')
                     ->leftJoin('schemes', 'schemes.id = vehicles_status.scheme_id')
                     ->order(['vehicles.id'=>'ASC'])
+                    ->group(['vehicles.id'])
                     ->toArray();
             }
-        // echo "<pre>";print_r($vehicles);die();
 
             foreach ($vehicles as &$vehicle) {
                 $vehicle['vehicle_location'] = $vehicle['vehicles_status']['vehicle_location'];
@@ -55,10 +66,12 @@ class VehiclesStatusController extends AppController
                 $vehicle['schemes'] = $vehicle['schemes']['name_en'];
                 $vehicle['employee'] = $vehicle['employees']['name_en'];
                 $vehicle['vehicle_status'] = $vehicle_status[$vehicle['vehicle_status']];
-                $vehicle['action'] = '<a title="' . __('View') . '" class="icon-newspaper" href="' . $this->request->webroot . 'VehiclesStatus/view/' . $vehicle['id'] . '" ><a> &nbsp' . '<a title="' . __('ADD') . '" class="icon-user-plus" href="' . $this->request->webroot . 'VehiclesStatus/add/' . $vehicle['id'] . '" ><a> &nbsp' . '<a title="' . __('Edit') . '" class="icon-pencil3 text-danger" href="' . $this->request->webroot . 'VehiclesStatus/edit/' . $vehicle['id'] . '" ><a>';
+                $vehicle['action'] = '<a title="' . __('View') . '" class="icon-newspaper" href="' . $this->request->webroot . 'VehiclesStatus/view/' . $vehicle['id'] . '" ><a> &nbsp' .
+                    '<a title="' . __('ADD') . '" class="icon-user-plus" href="' . $this->request->webroot . 'VehiclesStatus/add/' . $vehicle['id'] . '" ><a> &nbsp' .
+                    '<a title="' . __('Edit') . '" class="icon-pencil3 text-danger" href="' . $this->request->webroot . 'VehiclesStatus/edit/' . $vehicle['id'] . '" ><a> &nbsp'.
+                    '<a title="' . __('Report') . '" class="icon-certificate text-info" href="' . $this->request->webroot . 'VehiclesStatus/report/' . $vehicle['id'] . '" ><a>';
 
             }
-
             $this->response->body(json_encode(array_values($vehicles)));
             return $this->response;
         } else {
@@ -91,19 +104,15 @@ class VehiclesStatusController extends AppController
      */
     public function add($id)
     {
-        // echo "<pre>";print_r($id);die();
-       
-        
-        
+
         $vehiclesStatus = $this->VehiclesStatus->find('all', [
             'conditions' => ['VehiclesStatus.status ' => 1,'VehiclesStatus.vehicle_id ' => $id],
             'order' => ['id' => 'DESC'],
         ])
         ->first();
-        
-       // $vehiclesStatus = $this->VehiclesStatus->newEntity();
-        if ($this->request->is('post')) {
 
+        if ($this->request->is('post')) {
+            $vehiclesStatus = $this->VehiclesStatus->newEntity();
             $data = $this->request->data;
             $data['vehicle_id'] = $id;
             
@@ -118,7 +127,6 @@ class VehiclesStatusController extends AppController
                 ->execute();
 
             $vehiclesStatus = $this->VehiclesStatus->patchEntity($vehiclesStatus, $data);
-            //echo "<pre>";print_r($vehiclesStatus);die();
             if ($this->VehiclesStatus->save($vehiclesStatus)) {
                 $this->Flash->success('The vehicles status has been saved.');
                 return $this->redirect(['action' => 'index']);
@@ -128,6 +136,8 @@ class VehiclesStatusController extends AppController
         }
         $employees = $this->VehiclesStatus->Employees->find('list',['conditions' => ['status' => 1]]);
         $schemes = $this->VehiclesStatus->Schemes->find('list');
+//        $location = $this->VehiclesStatus->Schemes->find()
+//            ->
         $this->set(compact('vehiclesStatus', 'employees', 'schemes'));
         $this->set('_serialize', ['vehiclesStatus']);
     }
@@ -203,5 +213,32 @@ class VehiclesStatusController extends AppController
             $this->Flash->error('The vehicles status could not be deleted. Please, try again.');
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Delete method
+     *
+     * @param string|null $id Vehicles Status id.
+     * @return void Redirects to index.
+     * @throws \Cake\Network\Exception\NotFoundException When record not found.
+     */
+    public function report($id = null)
+    {
+        // Default info about vehicles
+        $user = $this->Auth->user();
+        $this->loadModel('Vehicles');
+        $vehicle = $this->Vehicles->get($id, [
+            'contain' => []
+        ]);
+
+        // Vehicle Details Report
+        $vehicle_status = Configure::read('vehicle_status');
+        $this->loadModel('VehiclesStatus');
+        $vehicleDetails = $this->VehiclesStatus->find()
+            ->where(['VehiclesStatus.vehicle_id' => $id])
+            ->contain(['Vehicles','Employees','Schemes'])
+            ->hydrate(false)
+            ->toArray();
+        $this->set(compact('vehicle','vehicleDetails'));
     }
 }
