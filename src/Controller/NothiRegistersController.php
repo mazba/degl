@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -129,6 +130,40 @@ class NothiRegistersController extends AppController
             ->where(['nothi_register_id ' => $id,'receive_file_register_id >'=> 0])
             ->toArray();
 
+        // added by Durjoy
+        if($nothi_related_dake_file){
+
+            $this->loadModel('ReceiveFileRegisters');
+            $this->loadModel('LetterApprovals');
+            $this->loadModel('Users');
+            $querys_data = $this->ReceiveFileRegisters->find()
+//                ->select([
+//                    'ReceiveFileRegisters.subject',
+//                    'ReceiveFileRegisters.sender_name',
+//                    'ReceiveFileRegisters.sender_office_name',
+//                    'ReceiveFileRegisters.sarok_no',
+//                    'ReceiveFileRegisters.letter_date',
+//                    'ReceiveFileRegisters.letter_description',
+//                    'LetterIssueRegisters.subject',
+//                    'LetterIssueRegisters.reminder_number',
+//                    'LetterIssueRegisters.created_date',
+//                    'LetterIssueRegisters.description',
+//                    'MessageRegisters.id',
+//                    'files.file_path',
+////                    'Users.user_signature',
+//                ])
+//                ->autoFields(true)
+                ->leftJoin('nothi_assigns', 'ReceiveFileRegisters.id=nothi_assigns.receive_file_register_id')
+                ->contain(['LetterIssueRegisters','LetterApprovals.Users','Files', 'MessageRegisters' ])
+//                ->leftJoin('files', 'files.table_key = ReceiveFileRegisters.id' )
+                ->where(['nothi_assigns.nothi_register_id' => $id])
+                ->where(['Files.table_name' => 'receive_file_registers'])
+                ->order(['ReceiveFileRegisters.created_date' => 'asc'])
+//                ->hydrate(false)
+                ->toArray();
+//            pr($querys_data);die;
+        }
+
         $nothi_related_project=$this->NothiAssigns->find('all')
             ->where(['nothi_register_id ' => $id,'project_id >'=> 0])
             ->toArray();
@@ -181,7 +216,7 @@ class NothiRegistersController extends AppController
         $employee_details=$employee_details->toArray();
 
         //echo "<pre>";print_r($employee_details);die();
-        $this->set(compact('nothi_related_scheme','nothi_related_dake_file','nothi_related_project','nothi_related_lab_bill','nothi_related_hire_charge','nothi_related_purto_bill','nothi_related_allotment_registe','asset_list','nothiRegister', 'nothiNothiAssigns', 'project_images', 'project_videos','schemeProgress','employee_details'));
+        $this->set(compact('nothi_related_scheme','nothi_related_dake_file','nothi_related_project','nothi_related_lab_bill','nothi_related_hire_charge','nothi_related_purto_bill','nothi_related_allotment_registe','asset_list','nothiRegister', 'nothiNothiAssigns', 'project_images', 'project_videos','schemeProgress','employee_details','querys_data'));
         //$this->set('nothiRegister', $nothiRegister);
         $this->set('_serialize', ['nothiRegister']);
     }
@@ -586,5 +621,18 @@ class NothiRegistersController extends AppController
 
         $this->set(compact('nothiRegisters'));
         $this->layout = 'ajax';
+    }
+
+    public function modalData()
+    {
+        $input = $this->request->data();
+        $receive_file_register_id = $input['letter_new_id'];
+        $this->loadModel('LetterIssueRegisters');
+        $letter_data = $this->LetterIssueRegisters->find()
+            ->where(['receive_file_register_id' => $receive_file_register_id, 'status' => 1])
+            ->first();
+        $this->layout='ajax';
+        $this->set(compact('letter_data'));
+
     }
 }

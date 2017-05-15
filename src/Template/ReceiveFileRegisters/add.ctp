@@ -31,8 +31,9 @@ Configure::load('config_receive_file_registers', 'default');
         echo $this->Form->input('sender_name',['required'=>'required']);
         echo $this->Form->input('receive_date',['required'=>'required','class'=>'form-control hasdatepicker','type'=>'text']);
         echo $this->Form->input('office_name');
-        echo $this->Form->input('address',['type'=>'textarea']);
+        echo $this->Form->input('address',['type'=>'textarea', 'rows' => 2]);
         echo $this->Form->input('subject');
+        echo $this->Form->input('sarok_no');
         ?>
         <div class="form-group">
             <label class="col-sm-3 control-label text-right"><?= __('Description') ?></label>

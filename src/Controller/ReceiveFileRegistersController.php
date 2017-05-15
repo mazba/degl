@@ -110,11 +110,10 @@ class ReceiveFileRegistersController extends AppController
                 } else {
                     $data['is_hardcopy_attached'] = 0;
                 }
-
+                $data['sarok_no'] = $inputs['sarok_no'];
                 $data['created_by'] = $user['id'];
                 $data['created_date'] = time();
                 $data['status'] = 1;
-
                 $receiveFileRegister = $this->ReceiveFileRegisters->patchEntity($receiveFileRegister, $data);
 
                 if ($status = $this->ReceiveFileRegisters->save($receiveFileRegister)) {

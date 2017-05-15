@@ -30,11 +30,10 @@ Configure::load('config_receive_file_registers', 'default');
         echo $this->Form->input('sender_name', ['required' => 'required']);
         echo $this->Form->input('sender_office_name');
         echo $this->Form->input('sender_address', ['type' => 'textarea']);
-        echo $this->Form->input('subject');
         ?>
         <?php if (!empty($receiveFileRegister['message_registers']['message_text'])): ?>
             <div class="form-group">
-                <label class="col-sm-3 control-label text-right"><?= __('Description') ?></label>
+                <label class="col-sm-3 control-label text-right"><?= __('বার্তা') ?></label>
 
                 <div class="col-sm-9">
                 <textarea name="description" id="ckeditor">
@@ -43,6 +42,7 @@ Configure::load('config_receive_file_registers', 'default');
                 </div>
             </div>
         <?php endif; ?>
+        <?php echo $this->Form->input('subject'); ?>
         <?php if (!empty($files)) { ?>
             <div class="form-group input">
                 <label class="col-sm-3 control-label text-right"><?= __('Attach File(s)') ?></label>
@@ -73,6 +73,16 @@ Configure::load('config_receive_file_registers', 'default');
         <?php } ?>
         <?php
         echo $this->Form->input('sarok_no');
+        ?>
+                <div class="form-group">
+            <label class="col-sm-3 control-label text-right"><?= __('বিবরন') ?></label>
+                    <div class="col-sm-9">
+                        <textarea name="letter_description" id="ckeditorTwo">
+                            <?= isset ($receiveFileRegister['letter_description'])?$receiveFileRegister['letter_description']:""?>
+                        </textarea>
+                    </div>
+                </div>
+        <?php
         echo $this->Form->input('releated_to', ['onchange' => 'displayField()', 'empty' => 'Select one', 'options' => ['project' => 'Projects', 'scheme' => 'Schemes', 'work_description' => 'Others'], 'required']);
 
         ?>
@@ -89,7 +99,7 @@ Configure::load('config_receive_file_registers', 'default');
             <?php echo $this->Form->input('work_description', ['type' => 'textarea']); ?>
         </div>
         <?php
-            echo $this->Form->input('selected_nothi', ['value' => isset($receiveFileRegister) ? $receiveFileRegister->nothi_registers['nothi_no'] : "", 'disabled']);
+        echo $this->Form->input('selected_nothi', ['value' => isset($receiveFileRegister) ? $receiveFileRegister->nothi_registers['nothi_no'] : "", 'disabled']);
         ?>
         <?php echo $this->Form->input('parent_id', ['label' => __('Nothi'), 'options' => $nothiRegisters, 'empty' => __('Select'), 'required', 'templates' => ['inputContainer' => '<div class="form-group nothi_register {{type}}{{required}}">{{content}}</div>']]); ?>
 
@@ -139,7 +149,6 @@ Configure::load('config_receive_file_registers', 'default');
 
                 <div class="col-sm-9">
                         <textarea name="description" id="ckeditor">
-
 
                         </textarea>
                 </div>
@@ -334,6 +343,7 @@ Configure::load('config_receive_file_registers', 'default');
         });
 
         CKEDITOR.replace('ckeditor');
+        CKEDITOR.replace('ckeditorTwo');
     </script>
     <style>
         .plus_button:hover {

@@ -30,6 +30,22 @@ class ReceiveFileRegistersTable extends Table
         $this->belongsTo('Schemes', [
             'foreignKey' => 'scheme_id'
         ]);
+
+        $this->hasMany('LetterApprovals',[
+            'foreignKey' => 'receive_file_register_id'
+        ]);
+
+        $this->hasOne('LetterIssueRegisters',[
+            'foreignKey' => 'receive_file_register_id'
+        ]);
+
+        $this->hasOne('MessageRegisters',[
+            'foreignKey' => 'resource_id'
+        ]);
+        $this->hasOne('Files',[
+            'foreignKey' => 'table_key'
+        ]);
+
     }
 
     /**

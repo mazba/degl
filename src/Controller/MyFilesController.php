@@ -18,6 +18,7 @@ class MyFilesController extends AppController
      */
     public function view($id = null)
     {
+        $user = $this->Auth->user();
         $this->loadModel('MessageRegisters');
         $read['is_read'] = 1;
 
@@ -121,8 +122,25 @@ class MyFilesController extends AppController
                 ->leftJoin('nothi_assigns', 'nothi_assigns.receive_file_register_id=ReceiveFileRegisters.id')
                 ->first();
         }
-
-        $this->set(compact('my_file', 'attach', 'departments', 'directions', 'history', 'receiveFileRegister'));
+        //  Conditions for modal
+        $receiveFileRegisterId = $receiveFileRegister->id;
+        $this->loadModel('LetterIssueRegisters');
+        $letterIssueData = $this->LetterIssueRegisters->find()
+            ->where(['receive_file_register_id' => $receiveFileRegisterId ])
+            ->hydrate(false)
+            ->first();
+        // Approval check
+        $this->loadModel('LetterApprovals');
+        $letterApproval = $this->LetterApprovals->find()
+            ->select('id')
+            ->where(['receive_file_register_id' => $receiveFileRegisterId, 'user_id' => $user['id']])
+            ->first();
+        $signatures = $this->LetterApprovals->find()
+            ->where(['receive_file_register_id' => $receiveFileRegisterId])
+            ->contain('users')
+            ->hydrate(false)
+            ->toArray();
+        $this->set(compact('my_file', 'attach', 'departments', 'directions', 'history', 'receiveFileRegister','receiveFileRegisterId','letterIssueData','letterApproval','signatures'));
     }
 
     public function edit($id = null)
@@ -138,7 +156,7 @@ class MyFilesController extends AppController
             ->leftJoin('nothi_assigns', 'nothi_assigns.receive_file_register_id=ReceiveFileRegisters.id')
             ->leftJoin('nothi_registers', 'nothi_registers.id=nothi_assigns.nothi_register_id')
             ->first();
-
+//pr($receiveFileRegister);die;
         if ($this->request->is(['post', 'put', 'patch'])) {
             $inputs = $this->request->data();
 
@@ -199,7 +217,9 @@ class MyFilesController extends AppController
             if (isset($inputs['is_resolution'])) {
                 $data['is_resolution'] = $inputs['is_resolution'];
             }
-
+            if (isset($inputs['letter_description'])) {
+                $data['letter_description'] = $inputs['letter_description'];
+            }
             $update_receive_file_registers = TableRegistry::get('ReceiveFileRegisters');
             $update_receive_file_register = $update_receive_file_registers->get($id);
             $update_receive_file_registers->patchEntity($update_receive_file_register, $data);
@@ -511,7 +531,6 @@ class MyFilesController extends AppController
             ->order(['Departments.order_no' => 'asc', 'designations.order_no' => 'asc']);
         $this->loadModel('DirectionSetups');
         $directions = $this->DirectionSetups->find('all');
-
         $this->set(compact('receiveFileRegister', 'projects', 'schemes', 'files', 'nothiRegisters', 'departments', 'directions'));
     }
 
@@ -1033,6 +1052,67 @@ class MyFilesController extends AppController
         $nothiRegisters = $this->NothiRegisters->find('list', ['conditions' => ['parent_id' => $this->request->data('nothi_id'), 'status !=' => 99]])->toArray();
         $this->set(compact('nothiRegisters'));
         $this->layout = 'ajax';
+    }
+
+    public function newLetterAssign()
+    {
+        $user = $this->Auth->user();
+        $today = time();
+        $this->loadModel('LetterIssueRegisters');
+        $inputs = $this->request->data();
+        $id = $inputs['row_id'];
+        if($id){
+            $letterIssueRegister = $this->LetterIssueRegisters->get($id);
+        }
+        else{
+            $letterIssueRegister = $this->LetterIssueRegisters->newEntity();
+        }
+        $inputs['created_by'] = $user['id'];
+        $inputs['created_date'] = $today;
+        $inputs['number_of_pages'] = 1;
+        $inputs['letter_nature'] = "SUBLETTER";
+        $letterIssueRegister = $this->LetterIssueRegisters->patchEntity($letterIssueRegister, $inputs);
+        if($inputs['subject'] != ''){
+            if($this->LetterIssueRegisters->save($letterIssueRegister))
+            {
+                $response_text =  __('সফলভাবে পত্রজারী হয়েছে');
+            }
+        }
+        else
+        {
+            $response_text =  __('সমস্যা হয়েছে আবার চেষ্টা করুন');
+        }
+        $response = [
+            'success'=>true,
+            'msg'=>$response_text
+        ];
+        $this->response->body(json_encode($response));
+        return $this->response;
+    }
+
+    public function approveLetter()
+    {
+        $user = $this->Auth->user();
+        $time = time();
+        $this->loadModel('LetterApprovals');
+        $letterApproval = $this->LetterApprovals->newEntity();
+        $inputs = $this->request->data();
+        $inputs['user_id'] = $user['id'];
+        $inputs['created_date'] = $time;
+        $letterApproval = $this->LetterApprovals->patchEntity($letterApproval, $inputs);
+        if($this->LetterApprovals->save($letterApproval)){
+            $response_text = __('Success');
+        }
+        else
+        {
+            $response_text = __('Fail');
+        }
+        $response = [
+            'success'=>true,
+            'msg'=>$response_text
+        ];
+        $this->response->body(json_encode($response));
+        return $this->response;
     }
 
 
