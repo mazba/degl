@@ -29,7 +29,7 @@
     </div>
 
 
-    <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div id="scheme-modal-main" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content" id="modal-content">
 
@@ -122,7 +122,7 @@
                 data: {id: id},
                 success: function (data, status) {
                    $('#modal-content').html(data);
-                    $('.modal').modal('show')
+                    $('#scheme-modal-main').modal('show')
                 }
             });
         });
@@ -136,7 +136,7 @@
 
                 success: function (data, status) {
                    $('#modal-content').html(data);
-                    $('.modal').modal('show')
+                    $('#scheme-modal-main').modal('show')
                 }
             });
         });
@@ -151,7 +151,7 @@
 
                         success: function (data, status) {
                            $('#modal-content').html(data);
-                            $('.modal').modal('show')
+                            $('#scheme-modal-main').modal('show')
                         }
                     });
                 });

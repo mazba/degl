@@ -719,13 +719,14 @@ class SchemesController extends AppController {
           $scheme['contract_date'] = date('d/m/Y', $scheme['contract_date']);
           $scheme['expected_complete_date'] = date('d/m/Y', $scheme['expected_complete_date']);
           //$scheme['action'] = '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text-danger edit" > </button>';
-          $scheme['action'] = '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text-danger edit" > </button>'.''.'<button title="' . __('Work Order') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text workOrder" > </button>' . '' . '&nbsp;<a class="" title="Assign Contractors" href="' . $this->request->webroot . 'Schemes/assign_contractors/' . $scheme['scheme_id'] . '" ><i class="icon-user-plus"></i><a>';
+          $scheme['action'] =
+              '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text-danger edit" > </button>'.''.
+              '<button title="' . __('Work Order') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text workOrder" > </button>' . '' .
+              '&nbsp;<a class="" title="Assign Contractors" href="' . $this->request->webroot . 'Schemes/assign_contractors/' . $scheme['scheme_id'] . '" ><i class="icon-user-plus"></i><a>';
 
           $sl++;
         }
-
       }
-
       $this->response->body(json_encode($schemes));
       return $this->response;
 
@@ -961,8 +962,14 @@ class SchemesController extends AppController {
     $contractor_file = $this->Files->find('all', ['conditions' => ['table_key' => $id]])
                                    ->toArray();
 
+    // condition for contractor
+    $this->loadModel('LetterIssueRegisters');
+    $letterIssueData = $this->LetterIssueRegisters->find()
+        ->where(['scheme_contractor_id' => $scheme['id'] ])
+        ->hydrate(false)
+        ->first();
     //echo "<pre>";print_r($contractor_file);die();
-    $this->set(compact('contractor_file', 'assigned_contractors', 'scheme_sub_types', 'nothiRegisters', 'scheme_types', 'scheme', 'projects', 'workTypes', 'workSubTypes', 'districts', 'upazilas', 'municipalities', 'financialYearEstimates', 'office_type', 'packages'));
+    $this->set(compact('contractor_file', 'assigned_contractors', 'scheme_sub_types', 'nothiRegisters', 'scheme_types', 'scheme', 'projects', 'workTypes', 'workSubTypes', 'districts', 'upazilas', 'municipalities', 'financialYearEstimates', 'office_type', 'packages','letterIssueData'));
 
     //  echo "<pre>";print_r($scheme);die();
     // $this->set('scheme', $scheme);
@@ -975,9 +982,8 @@ class SchemesController extends AppController {
       $id = $scheme_id;
       $result = TableRegistry::get('Schemes')
           ->find('all')
-          ->where(['id' => $scheme_id, 'status' => 1])->toArray();
-      /*$this->response->body(json_encode($result));
-      return $this->response;*/
+          ->where(['Schemes.id' => $scheme_id, 'Schemes.status' => 1])
+          ->contain(['Projects'])->toArray();
       $this->set(compact('result'));
   }
   public function edit_scheme_progress($scheme_id) {
@@ -1648,4 +1654,41 @@ class SchemesController extends AppController {
     $this->response->body(json_encode($messages));
     return $this->response;
   }
+
+  //Letter assign for contractor
+  public function newLetterAssign()
+  {
+    $user = $this->Auth->user();
+    $today = time();
+    $this->loadModel('LetterIssueRegisters');
+    $inputs = $this->request->data();
+    $id = $inputs['row_id'];
+    if($id){
+      $letterIssueRegister = $this->LetterIssueRegisters->get($id);
+    }
+    else{
+      $letterIssueRegister = $this->LetterIssueRegisters->newEntity();
+    }
+    $inputs['created_by'] = $user['id'];
+    $inputs['created_date'] = $today;
+    $inputs['number_of_pages'] = 1;
+    $inputs['letter_nature'] = "SUBLETTER";
+    $letterIssueRegister = $this->LetterIssueRegisters->patchEntity($letterIssueRegister, $inputs);
+    if($this->LetterIssueRegisters->save($letterIssueRegister))
+    {
+      $response_text =  __('সফলভাবে পত্রজারী হয়েছে');
+    }
+    else
+    {
+      $response_text =  __('সমস্যা হয়েছে আবার চেষ্টা করুন');
+    }
+    $response = [
+        'success'=>true,
+        'msg'=>$response_text
+    ];
+    $this->response->body(json_encode($response));
+    return $this->response;
+
+  }
+
 }
