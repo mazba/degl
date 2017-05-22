@@ -36,6 +36,7 @@ class MyFilesController extends AppController
             ->find()
             ->where(['table_key' => $my_file['resource_id'], 'table_name' => 'receive_file_registers'])
             ->toArray();
+
         $query = TableRegistry::get('Files');
         $attach2 = $query
             ->find()
@@ -91,7 +92,6 @@ class MyFilesController extends AppController
 
         $this->loadModel('DirectionSetups');
         $directions = $this->DirectionSetups->find('all');
-
         if ($my_file->reference_msg_id && $my_file->msg_type == "reply") {
             $reply_msg = $my_file;
             $my_file = $this->MessageRegisters->get($my_file->reference_msg_id, ['contain' => ['Projects', 'Recipients']]);
@@ -104,9 +104,8 @@ class MyFilesController extends AppController
             $my_file = $this->MessageRegisters->get($my_file->reference_msg_id, ['contain' => ['Projects', 'Recipients']]);
             $this->set(compact('reply_msg'));
         }
-
+        $this->loadModel('ReceiveFileRegisters');
         if ($my_file->thread_id) {
-            $this->loadModel('ReceiveFileRegisters');
             $receiveFileRegister = $this->ReceiveFileRegisters->find()
                 ->autoFields(true)
                 ->select(['nothi_assigns.nothi_register_id'])
@@ -114,7 +113,6 @@ class MyFilesController extends AppController
                 ->leftJoin('nothi_assigns', 'nothi_assigns.receive_file_register_id=ReceiveFileRegisters.id')
                 ->first();
         } else {
-            $this->loadModel('ReceiveFileRegisters');
             $receiveFileRegister = $this->ReceiveFileRegisters->find()
                 ->autoFields(true)
                 ->select(['nothi_assigns.nothi_register_id'])
@@ -122,8 +120,10 @@ class MyFilesController extends AppController
                 ->leftJoin('nothi_assigns', 'nothi_assigns.receive_file_register_id=ReceiveFileRegisters.id')
                 ->first();
         }
-        //  Conditions for modal
         $receiveFileRegisterId = $receiveFileRegister->id;
+        // summery data pop
+        $receiveFileRegisterData = $this->ReceiveFileRegisters->get($receiveFileRegisterId);
+        //  Conditions for modal
         $this->loadModel('LetterIssueRegisters');
         $letterIssueData = $this->LetterIssueRegisters->find()
             ->where(['receive_file_register_id' => $receiveFileRegisterId ])
@@ -140,7 +140,7 @@ class MyFilesController extends AppController
             ->contain('users')
             ->hydrate(false)
             ->toArray();
-        $this->set(compact('my_file', 'attach', 'departments', 'directions', 'history', 'receiveFileRegister','receiveFileRegisterId','letterIssueData','letterApproval','signatures'));
+        $this->set(compact('my_file', 'attach', 'departments', 'directions', 'history', 'receiveFileRegister','receiveFileRegisterId','letterIssueData','letterApproval','signatures','receiveFileRegisterData', 'user'));
     }
 
     public function edit($id = null)
@@ -216,9 +216,6 @@ class MyFilesController extends AppController
             }
             if (isset($inputs['is_resolution'])) {
                 $data['is_resolution'] = $inputs['is_resolution'];
-            }
-            if (isset($inputs['letter_description'])) {
-                $data['letter_description'] = $inputs['letter_description'];
             }
             $update_receive_file_registers = TableRegistry::get('ReceiveFileRegisters');
             $update_receive_file_register = $update_receive_file_registers->get($id);
@@ -1063,25 +1060,48 @@ class MyFilesController extends AppController
         $id = $inputs['row_id'];
         if($id){
             $letterIssueRegister = $this->LetterIssueRegisters->get($id);
+            if($letterIssueRegister['created_by'] != $user['id']){
+                $response_text =  __('আপনি এডিট করার অনুমতি প্রাপ্ত নন');
+            }else{
+                $inputs['created_by'] = $user['id'];
+                $inputs['created_date'] = $today;
+                $inputs['number_of_pages'] = 1;
+                $inputs['letter_nature'] = "SUBLETTER";
+                $inputs['status'] = 2;
+                $letterIssueRegister = $this->LetterIssueRegisters->patchEntity($letterIssueRegister, $inputs);
+                if($inputs['subject'] != ''){
+                    if($this->LetterIssueRegisters->save($letterIssueRegister))
+                    {
+                        $response_text =  __('সফলভাবে ড্রাফটে সেভ হয়েছে');
+                    }
+                }
+                else
+                {
+                    $response_text =  __('সমস্যা হয়েছে আবার চেষ্টা করুন');
+                }
+            }
         }
         else{
             $letterIssueRegister = $this->LetterIssueRegisters->newEntity();
-        }
-        $inputs['created_by'] = $user['id'];
-        $inputs['created_date'] = $today;
-        $inputs['number_of_pages'] = 1;
-        $inputs['letter_nature'] = "SUBLETTER";
-        $letterIssueRegister = $this->LetterIssueRegisters->patchEntity($letterIssueRegister, $inputs);
-        if($inputs['subject'] != ''){
-            if($this->LetterIssueRegisters->save($letterIssueRegister))
-            {
-                $response_text =  __('সফলভাবে পত্রজারী হয়েছে');
+            $inputs['created_by'] = $user['id'];
+            $inputs['created_date'] = $today;
+            $inputs['number_of_pages'] = 1;
+            $inputs['letter_nature'] = "SUBLETTER";
+            $inputs['status'] = 2;
+            $letterIssueRegister = $this->LetterIssueRegisters->patchEntity($letterIssueRegister, $inputs);
+            if($inputs['subject'] != ''){
+                if($this->LetterIssueRegisters->save($letterIssueRegister))
+                {
+                    $response_text =  __('সফলভাবে ড্রাফটে সেভ হয়েছে');
+                }
             }
+            else
+            {
+                $response_text =  __('সমস্যা হয়েছে আবার চেষ্টা করুন');
+            }
+
         }
-        else
-        {
-            $response_text =  __('সমস্যা হয়েছে আবার চেষ্টা করুন');
-        }
+
         $response = [
             'success'=>true,
             'msg'=>$response_text
@@ -1114,6 +1134,47 @@ class MyFilesController extends AppController
         $this->response->body(json_encode($response));
         return $this->response;
     }
-
-
+    // modal letter description
+    public function letterDescription(){
+        $inputs = $this->request->data;
+        $id = $inputs['sammary_id'];
+        $this->loadModel('ReceiveFileRegisters');
+        $receiveFileRegister = $this->ReceiveFileRegisters->get($id);
+        $receiveFileRegister = $this->ReceiveFileRegisters->patchEntity($receiveFileRegister, $inputs);
+        if($this->ReceiveFileRegisters->save($receiveFileRegister)){
+            $response_text = __('সফলভাবে সারাংশ সেভ হয়েছে');
+        }
+        else
+        {
+            $response_text = __('সমস্যা হয়েছে আবার চেষ্টা করুন');
+        }
+        $response = [
+            'success'=>true,
+            'msg'=>$response_text
+        ];
+        $this->response->body(json_encode($response));
+        return $this->response;
+    }
+    // send to xen potro jari
+    public function draftSend(){
+        $inputs = $this->request->data;
+        $this->loadModel('LetterIssueRegisters');
+        $letterIssueRegister = $this->LetterIssueRegisters->get($inputs['row_id']);
+        $inputs['status'] = 1;
+        $letterIssueRegister = $this->LetterIssueRegisters->patchEntity($letterIssueRegister, $inputs);
+        if($this->LetterIssueRegisters->save($letterIssueRegister)){
+            $response_text = __('সফলভাবে পাঠানো হলো');
+        }
+        else
+        {
+            $response_text = __('সমস্যা হয়েছে আবার চেষ্টা করুন');
+        }
+        $response = [
+            'success'=>true,
+            'msg'=>$response_text
+        ];
+        pr($response);die;
+        $this->response->body(json_encode($response));
+        return $this->response;
+    }
 }

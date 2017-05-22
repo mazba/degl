@@ -165,7 +165,7 @@ Configure::load('config_offices', 'default');
                 <div class="row">
                     <div class="col-md-3 ">
                         <ul class="nav nav-tabs ">
-<!--                            <li class="active"><a href="#a" data-toggle="tab">Summary of Scheme</a></li>-->
+                            <!--                            <li class="active"><a href="#a" data-toggle="tab">Summary of Scheme</a></li>-->
                             <li><a class="active" href="#b" data-toggle="tab">Scheme Info</a></li>
                             <li><a data-toggle="tab" href="#nothi_register"></i>Nothi</a></li>
 
@@ -179,7 +179,7 @@ Configure::load('config_offices', 'default');
                             <li><a data-toggle="tab" href="#approval_allotment">Approval Allotment</a></li>
                             <li><a data-toggle="tab" href="#estimated">Estimated Cost</a></li>
                             <li><a data-toggle="tab" href="#payment">Payment</a></li>
-
+                            <li><a data-toggle="tab" href="#payorder">Payorder</a></li>
                             <li><a class="action_btn" href="#item_bbq" data-tab-url="edit_item_bbq" data-toggle="tab" id="item_and_bbq">Item & BOQ</a></li>
                             <li><a class="action_btn" href="#lab_details_wrp" data-tab-url="get_lab_bill_info" data-toggle="tab">Lab</a></li>
                             <li><a class="action_btn" href="#scheme_vehicle_wrp" data-tab-url="scheme_vehicle_manage"   data-toggle="tab" id="scheme_vehicles">Vehicles</a></li>
@@ -653,6 +653,26 @@ Configure::load('config_offices', 'default');
                                     <?= $this->Form->end() ?>
                                 </div>
                             </div>
+
+                            <!--   Payorder tab -->
+                            <div id="payorder" class="tab-pane fade">
+                                <div class="col-sm-12">
+                                    <input id="scheme-payorders-scheme-id" class="form-control" type="hidden" value="<?= $scheme['id'] ?>">
+                                    <?php
+                                    echo $this->Form->input('scheme_payorders.order_number');
+                                    echo $this->Form->input('scheme_payorders.initial_date', ['class' => 'form-control hasdatepicker']);
+                                    echo $this->Form->input('scheme_payorders.expire_date', ['class' => 'form-control hasdatepicker']);
+                                    echo $this->Form->input('scheme_payorders.medium');
+                                    echo $this->Form->input('scheme_payorders.submit_date', ['class' => 'form-control hasdatepicker']);
+                                    ?>
+                                </div>
+                                <div class="col-sm-9 col-sm-offset-3 text-center"  id="payorder-text-wrp">
+                                    <h2 style="padding: 6px"></h2>
+                                </div>
+                                <div class="col-sm-9 col-sm-offset-3 form-actions text-center">
+                                    <button class="btn btn-primary btn-block submit-payorder"><?= __('Save') ?></button>
+                                </div>
+                            </div>
                             <div class="tab-pane" id="item_bbq">
 
                             </div>
@@ -761,7 +781,7 @@ Configure::load('config_offices', 'default');
                 });
             }
             //this one for turn on add multiple row of scheme progress plan
-           $(document).off('click','.add_file');
+            $(document).off('click','.add_file');
         });
 
         $(document).on("change", "#work-type-id", function (event) {
@@ -900,7 +920,24 @@ Configure::load('config_offices', 'default');
                 }
             });
         });
-        
-        
+
+        // payorder data save function
+        $(document).on('click', ".submit-payorder", function(){
+            var scheme_id = $('#scheme-payorders-scheme-id').val();
+            var order_number = $('#scheme-payorders-order-number').val();
+            var initial_date = $('#scheme-payorders-initial-date').val();
+            var expire_date = $('#scheme-payorders-expire-date').val();
+            var order_medium = $('#scheme-payorders-medium').val();
+            var submit_date = $('#scheme-payorders-submit-date').val();
+            $.ajax({
+                type: 'POST',
+                url: "<?= $this->Url->build(['controller' => 'Schemes', 'action' => 'payorder']) ?>",
+                data: {scheme_id: scheme_id, order_number: order_number, initial_date: initial_date, expire_date: expire_date, order_medium: order_medium, submit_date: submit_date},
+                success: function(response){
+                    console.log(response);
+                }
+            })
+        });
+
     });
 </script>

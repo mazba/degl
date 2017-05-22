@@ -27,6 +27,7 @@ Configure::load('config_receive_file_registers', 'default');
         </h6></div>
     <div class="panel-body col-sm-12">
         <?php
+        echo $this->Form->input('sarok_no');
         echo $this->Form->input('sender_name', ['required' => 'required']);
         echo $this->Form->input('sender_office_name');
         echo $this->Form->input('sender_address', ['type' => 'textarea']);
@@ -71,17 +72,7 @@ Configure::load('config_receive_file_registers', 'default');
                 </div>
             </div>
         <?php } ?>
-        <?php
-        echo $this->Form->input('sarok_no');
-        ?>
-                <div class="form-group">
-            <label class="col-sm-3 control-label text-right"><?= __('বিবরন') ?></label>
-                    <div class="col-sm-9">
-                        <textarea name="letter_description" id="ckeditorTwo">
-                            <?= isset ($receiveFileRegister['letter_description'])?$receiveFileRegister['letter_description']:""?>
-                        </textarea>
-                    </div>
-                </div>
+
         <?php
         echo $this->Form->input('releated_to', ['onchange' => 'displayField()', 'empty' => 'Select one', 'options' => ['project' => 'Projects', 'scheme' => 'Schemes', 'work_description' => 'Others'], 'required']);
 

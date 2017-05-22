@@ -1688,6 +1688,10 @@ class SchemesController extends AppController {
     ];
     $this->response->body(json_encode($response));
     return $this->response;
+  }
+
+  // payoder assign for scheme
+  public function payorder(){
 
   }
 
