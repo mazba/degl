@@ -1,8 +1,10 @@
 <?php
 use Cake\Core\Configure;
 use Cake\Routing\Router;
-
 Configure::load('config_receive_file_registers', 'default');
+//pr($letterIssueData['status']);
+//pr($user['id']);
+//die;
 ?>
 <?php if ($receiveFileRegister['project_id'] == null && $receiveFileRegister['scheme_id'] == null && $receiveFileRegister['nothi_assigns']['nothi_register_id'] == null) { ?>
     <div class="callout callout-danger fade in" style="margin-top: 20px;">
@@ -206,7 +208,8 @@ Configure::load('config_receive_file_registers', 'default');
                         <button style="width:80px" class="btn btn-warning"
                                 onclick="showDescription()"><?= __('Description') ?></button>
                     <?php endif; ?>
-                    <button style="width:80px" class="btn btn-info"
+
+                    <button style="width:80px" class="btn btn-info condition-check <?= ($letterIssueData['status'] != 1 && $user['id'] == 33)?'display-none':'' ?>"
                             onclick="showLetterIssue()"><?= __('Letter Issues') ?></button>
 
                     <div class="4" id="approve-response" style="<?= (!empty($letterApproval))?'display: inline-block':'display: none'?>">
@@ -838,13 +841,13 @@ function EngToBanglaNum($input) {
                     var response_send = JSON.parse(response);
                     $('.submit-xen').remove();
                     $responseWrp = $('#response-text-wrp');
-                    $responseWrp.find('h2').html(response.msg);
+                    $responseWrp.find('h2').html(response_send.msg);
                     $responseWrp.find('h2').addClass('btn-success');
                 }
             });
         }
         else {
-            alert('ড্রাফট খালি');
+            alert('পূর্বে ড্রাফটে সেভ করুন');
         }
     });
 
@@ -883,5 +886,8 @@ function EngToBanglaNum($input) {
     .modal-dialog {
         margin: 30px auto;
         width: 800px;
+    }
+    .display-none{
+        display: none;
     }
 </style>

@@ -1060,48 +1060,28 @@ class MyFilesController extends AppController
         $id = $inputs['row_id'];
         if($id){
             $letterIssueRegister = $this->LetterIssueRegisters->get($id);
-            if($letterIssueRegister['created_by'] != $user['id']){
-                $response_text =  __('আপনি এডিট করার অনুমতি প্রাপ্ত নন');
-            }else{
-                $inputs['created_by'] = $user['id'];
-                $inputs['created_date'] = $today;
-                $inputs['number_of_pages'] = 1;
-                $inputs['letter_nature'] = "SUBLETTER";
-                $inputs['status'] = 2;
-                $letterIssueRegister = $this->LetterIssueRegisters->patchEntity($letterIssueRegister, $inputs);
-                if($inputs['subject'] != ''){
-                    if($this->LetterIssueRegisters->save($letterIssueRegister))
-                    {
-                        $response_text =  __('সফলভাবে ড্রাফটে সেভ হয়েছে');
-                    }
-                }
-                else
-                {
-                    $response_text =  __('সমস্যা হয়েছে আবার চেষ্টা করুন');
-                }
-            }
+            if($letterIssueRegister['created_by'] != $user['id']) goto end;
         }
         else{
             $letterIssueRegister = $this->LetterIssueRegisters->newEntity();
-            $inputs['created_by'] = $user['id'];
-            $inputs['created_date'] = $today;
-            $inputs['number_of_pages'] = 1;
-            $inputs['letter_nature'] = "SUBLETTER";
-            $inputs['status'] = 2;
-            $letterIssueRegister = $this->LetterIssueRegisters->patchEntity($letterIssueRegister, $inputs);
-            if($inputs['subject'] != ''){
-                if($this->LetterIssueRegisters->save($letterIssueRegister))
-                {
-                    $response_text =  __('সফলভাবে ড্রাফটে সেভ হয়েছে');
-                }
-            }
-            else
-            {
-                $response_text =  __('সমস্যা হয়েছে আবার চেষ্টা করুন');
-            }
-
         }
-
+        $inputs['created_by'] = $user['id'];
+        $inputs['created_date'] = $today;
+        $inputs['number_of_pages'] = 1;
+        $inputs['letter_nature'] = "SUBLETTER";
+        $letterIssueRegister = $this->LetterIssueRegisters->patchEntity($letterIssueRegister, $inputs);
+        if($inputs['subject'] != ''){
+            if($this->LetterIssueRegisters->save($letterIssueRegister))
+            {
+                $response_text =  __('সফলভাবে পত্রজারী হয়েছে');
+            }
+        }
+        else
+        {
+            $response_text =  __('সমস্যা হয়েছে আবার চেষ্টা করুন');
+        }
+        end:
+        $response_text = isset($response_text)?$response_text:__('আপনি এডিট করার অনুমতি প্রাপ্ত নন');
         $response = [
             'success'=>true,
             'msg'=>$response_text
@@ -1160,6 +1140,7 @@ class MyFilesController extends AppController
         $inputs = $this->request->data;
         $this->loadModel('LetterIssueRegisters');
         $letterIssueRegister = $this->LetterIssueRegisters->get($inputs['row_id']);
+        if($letterIssueRegister['status'] == 1) goto end;
         $inputs['status'] = 1;
         $letterIssueRegister = $this->LetterIssueRegisters->patchEntity($letterIssueRegister, $inputs);
         if($this->LetterIssueRegisters->save($letterIssueRegister)){
@@ -1169,11 +1150,13 @@ class MyFilesController extends AppController
         {
             $response_text = __('সমস্যা হয়েছে আবার চেষ্টা করুন');
         }
+        end:
+        $response_text = isset($response_text)?$response_text:__('ইতিমধ্যে পাঠানো হয়ে গেছে');
+
         $response = [
             'success'=>true,
             'msg'=>$response_text
         ];
-        pr($response);die;
         $this->response->body(json_encode($response));
         return $this->response;
     }
