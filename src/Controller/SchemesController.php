@@ -953,9 +953,7 @@ class SchemesController extends AppController {
                                              ->first();
       $this->set(compact('selected_nothi'));
     }
-    $this->loadModel('SchemeContractors');
-    $assigned_contractors = $this->SchemeContractors->find('all', ['contain' => ['Contractors'], 'conditions' => ['scheme_id' => $id]])
-                                                    ->toArray();
+
     //echo "<pre>";print_r($assigned_contractors);die();
 
     $this->loadModel('Files');
@@ -968,8 +966,8 @@ class SchemesController extends AppController {
         ->where(['scheme_contractor_id' => $scheme['id'] ])
         ->hydrate(false)
         ->first();
-    //echo "<pre>";print_r($contractor_file);die();
-    $this->set(compact('contractor_file', 'assigned_contractors', 'scheme_sub_types', 'nothiRegisters', 'scheme_types', 'scheme', 'projects', 'workTypes', 'workSubTypes', 'districts', 'upazilas', 'municipalities', 'financialYearEstimates', 'office_type', 'packages','letterIssueData'));
+    pr($letterIssueData);die;
+    $this->set(compact('contractor_file', 'scheme_sub_types', 'nothiRegisters', 'scheme_types', 'scheme', 'projects', 'workTypes', 'workSubTypes', 'districts', 'upazilas', 'municipalities', 'financialYearEstimates', 'office_type', 'packages','letterIssueData'));
 
     //  echo "<pre>";print_r($scheme);die();
     // $this->set('scheme', $scheme);
@@ -1615,6 +1613,16 @@ class SchemesController extends AppController {
 
     $this->set(compact('labTests'));
 
+  }
+  // function for contractor_info
+  public function contractor_info($id)
+  {
+    $this->layout = 'ajax';
+    $this->loadModel('Contractors');
+    $this->loadModel('SchemeContractors');
+    $assigned_contractors = $this->SchemeContractors->find('all', ['contain' => ['Contractors'], 'conditions' => ['scheme_id' => $id]])
+        ->toArray();
+    $this->set(compact('assigned_contractors','id'));
   }
 
   public function get_account_bill_details($id) {

@@ -647,7 +647,7 @@ Configure::load('config_receive_file_registers', 'default');
                             <div class="col-sm-12">
                                 <p><b><?= __('Reminder Number') ?>: </b><?= $letterIssueData['reminder_number'] ?></p>
                                 <p><b><?= __('Subject') ?>: </b><?= $letterIssueData['subject'] ?></p>
-                                <p><b><?= __('Description') ?>: </b><?= $letterIssueData['description'] ?></p>
+                                <p style="padding-left: 1em"><?= $letterIssueData['description'] ?></p>
                             </div>
                         </div>
                     </div>

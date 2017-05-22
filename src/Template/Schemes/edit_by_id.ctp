@@ -175,7 +175,7 @@ Configure::load('config_offices', 'default');
 
                             <li><a class="action_btn" href="#app_tender" data-toggle="tab">App Tender</a></li>
                             <li><a class="action_btn" href="#contract_sign" data-toggle="tab">Contract Sign</a></li>
-                            <li><a class="action_btn" href="#contractors" data-toggle="tab">Contractor</a></li>
+                            <li><a class="action_btn" href="#contractors" data-tab-url="contractor_info"  data-toggle="tab">Contractor</a></li>
                             <li><a data-toggle="tab" href="#approval_allotment">Approval Allotment</a></li>
                             <li><a data-toggle="tab" href="#estimated">Estimated Cost</a></li>
                             <li><a data-toggle="tab" href="#payment">Payment</a></li>
@@ -516,37 +516,8 @@ Configure::load('config_offices', 'default');
 
                             </div>
 
-                            <div id="contractors" class="tab-pane fade">
-                                <div class="col-sm-12">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h6 class="panel-title"><i class="icon-table2"></i>Contractor List</h6>
-                                        </div>
-                                        <div class="panel-body">
-                                            <table class="table  table-bordered">
-                                                <tr>
-                                                    <td>Contractor Title</td>
-                                                    <td>Contact Person Name</td>
-                                                    <td>Contractor Phone</td>
-                                                    <td>Mobile</td>
-                                                    <td>Is Lead?</td>
-                                                </tr>
-                                                <?php foreach($assigned_contractors  as $row):?>
-                                                    <tr>
-                                                        <td><?= $row['contractor']['contractor_title']?></td>
-                                                        <td><?= $row['contractor']['contact_person_name']?></td>
-                                                        <td><?= $row['contractor']['contractor_phone']?></td>
-                                                        <td><?= $row['contractor']['mobile']?></td>
-                                                        <td><?= $row['is_lead']?'Yes':''?></td>
-                                                    </tr>
-                                                <?php endforeach?>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12 text-right">
-                                    <a class="btn btn-success modal-contractor"  onclick="return confirm('আপনি কি এই কন্ট্রাকটর এর জন্য কোনো পত্রজারী করতে চান?');"  data-toggle="modal" data-target="#NewLetter"><?= __('Letter Issues') ?></a>
-                                </div>
+                            <div  class="tab-pane active" id="contractors">
+
                             </div>
 
                             <div id="approval_allotment" class="tab-pane fade">
@@ -707,52 +678,6 @@ Configure::load('config_offices', 'default');
 <div class="modal-footer">
     <div id="footer"></div>
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-</div>
-
-
-<!-- Modal for contractor -->
-<div id="NewLetter" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-new">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="row panel panel-default">
-                    <div class="panel-body col-sm-12">
-                        <div class="form-group input">
-                            <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('Subject') ?></label>
-                            <div class="col-sm-11 container_description" style="width: 87.667%;">
-                                <input type="hidden" class="row-id"  value="<?= $letterIssueData['id']?$letterIssueData['id']:'' ?>">
-                                <input type="hidden" name="scheme_contractor_id" class="letter_issue_scheme_id" value="<?= $scheme['id']? $scheme['id']:'' ?>">
-                                <input type="text" value="<?= $letterIssueData['subject']?$letterIssueData['subject']:'' ?>" name="subject" class="subject form-control" required="required"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="panel-body col-sm-12">
-                        <div class="form-group input">
-                            <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('Description') ?></label>
-                            <div class="col-sm-11 container_description" style="width: 87.667%;">
-                                <textarea name="description" class="form-control description" rows="10" required="required"><?= $letterIssueData['description']?$letterIssueData['description']:'' ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12 text-center"  id="response-text-wrp">
-                        <h2 style="padding: 6px"></h2>
-                    </div>
-                    <div class="col-sm-12 form-actions text-center">
-                        <button class="btn btn-primary btn-block submit-letter"><?= __('Save') ?></button>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="col-md-12 text-center">
-                            <button style="margin-bottom: 1em" class="modal-close btn btn-sm btn-warning modal-newsletter"><?= __('বন্ধ করুন ') ?></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>

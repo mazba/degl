@@ -1068,12 +1068,13 @@ class MyFilesController extends AppController
         $inputs['created_by'] = $user['id'];
         $inputs['created_date'] = $today;
         $inputs['number_of_pages'] = 1;
+        $inputs['status'] = 2;
         $inputs['letter_nature'] = "SUBLETTER";
         $letterIssueRegister = $this->LetterIssueRegisters->patchEntity($letterIssueRegister, $inputs);
         if($inputs['subject'] != ''){
             if($this->LetterIssueRegisters->save($letterIssueRegister))
             {
-                $response_text =  __('সফলভাবে পত্রজারী হয়েছে');
+                $response_text =  __(' সফলভাবে ড্রাফটে সেভ হয়েছে');
             }
         }
         else
