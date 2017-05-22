@@ -7,6 +7,7 @@
 
 namespace App\Controller;
 
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
 class GeneralReportsController extends AppController {
@@ -14,6 +15,12 @@ class GeneralReportsController extends AppController {
 
     if ($this->request->is(['post'])) {
       $inputs = $this->request->data;
+      $field_config = Configure::read('general_report_fields');
+      $arraged_items = [];
+      foreach($inputs['field'] as &$item)
+        $arraged_items[$field_config[$item]] = $item;
+      $inputs['field'] = $arraged_items;
+//      pr($inputs);die;
       $inputs['progress'] = str_replace('%', '', $inputs['progress']);
       $inputs['progress'] = explode('-', $inputs['progress']);
       $user = $this->Auth->user();
