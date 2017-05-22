@@ -111,18 +111,33 @@ use Cake\Core\Configure;
             </div>
         </div>
     </div>
+<!--    flied setup-->
+    <link type="text/css" href="<?= $this->request->webroot ?>multiselect/css/ui.multiselect.css" rel="stylesheet" />
+    <script type="text/javascript" src="<?= $this->request->webroot ?>multiselect/js/ui.multiselect.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $("#fields").multiselect();
+        });
+    </script>
+    <style>
+        #fields {
+            margin: 0 auto;
+            width: 660px;
+            height: 200px;
+        }
+    </style>
     <div class="col-sm-12" style="margin-top: 40px">
         <div class="row">
-            <ul id="sortable" style="overflow: scroll">
-                <?php foreach (Configure::read('general_report_fields') as $key => $item): ?>
-                    <li class="ui-state-default">
-                        <?= __($item) ?>
-                        <input type="hidden" name="field[<?= $item ?>]" value="<?= $key ?>">
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+            <div class="col-md-6 col-md-offset-3">
+                <select name="field[]" id="fields" multiple="multiple">
+                    <?php foreach (Configure::read('general_report_fields') as $key => $item): ?>
+                        <option value="<?php echo $key; ?>"><?php echo $item; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
         </div>
     </div>
+<!--    end field setup-->
     <div class="col-sm-offset-5 col-sm-3" style="margin-top: 15px">
         <?= $this->Form->submit(__('Generate Report'), ['class' => 'btn btn-warning']) ?>
     </div>
