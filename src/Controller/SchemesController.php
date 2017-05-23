@@ -722,7 +722,8 @@ class SchemesController extends AppController {
           $scheme['action'] =
               '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text-danger edit" > </button>'.''.
               '<button title="' . __('Work Order') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text workOrder" > </button>' . '' .
-              '&nbsp;<a class="" title="Assign Contractors" href="' . $this->request->webroot . 'Schemes/assign_contractors/' . $scheme['scheme_id'] . '" ><i class="icon-user-plus"></i><a>';
+              '&nbsp;<a class="" title="Assign Contractors" href="' . $this->request->webroot . 'Schemes/assign_contractors/' . $scheme['scheme_id'] . '" ><i class="icon-user-plus"></i><a>'. '' .
+              '&nbsp;<a class="" title="Scheme Nothi" href="' . $this->request->webroot . 'note_sheet_events/view/' . $scheme['scheme_id'] . '" ><i class="icon-redo"></i><a>';
 
           $sl++;
         }
@@ -960,14 +961,7 @@ class SchemesController extends AppController {
     $contractor_file = $this->Files->find('all', ['conditions' => ['table_key' => $id]])
                                    ->toArray();
 
-    // condition for contractor
-    $this->loadModel('LetterIssueRegisters');
-    $letterIssueData = $this->LetterIssueRegisters->find()
-        ->where(['scheme_contractor_id' => $scheme['id'] ])
-        ->hydrate(false)
-        ->first();
-    pr($letterIssueData);die;
-    $this->set(compact('contractor_file', 'scheme_sub_types', 'nothiRegisters', 'scheme_types', 'scheme', 'projects', 'workTypes', 'workSubTypes', 'districts', 'upazilas', 'municipalities', 'financialYearEstimates', 'office_type', 'packages','letterIssueData'));
+    $this->set(compact('contractor_file', 'scheme_sub_types', 'nothiRegisters', 'scheme_types', 'scheme', 'projects', 'workTypes', 'workSubTypes', 'districts', 'upazilas', 'municipalities', 'financialYearEstimates', 'office_type', 'packages'));
 
     //  echo "<pre>";print_r($scheme);die();
     // $this->set('scheme', $scheme);
@@ -1619,10 +1613,12 @@ class SchemesController extends AppController {
   {
     $this->layout = 'ajax';
     $this->loadModel('Contractors');
+    $this->loadModel('LetterIssueRegisters');
     $this->loadModel('SchemeContractors');
     $assigned_contractors = $this->SchemeContractors->find('all', ['contain' => ['Contractors'], 'conditions' => ['scheme_id' => $id]])
         ->toArray();
-    $this->set(compact('assigned_contractors','id'));
+    $assign_letters = $this->LetterIssueRegisters->find('all', ['conditions' => ['scheme_id' => $id]])->toArray();
+    $this->set(compact('assigned_contractors','id','assign_letters'));
   }
 
   public function get_account_bill_details($id) {
@@ -1669,14 +1665,8 @@ class SchemesController extends AppController {
     $user = $this->Auth->user();
     $today = time();
     $this->loadModel('LetterIssueRegisters');
+    $letterIssueRegister = $this->LetterIssueRegisters->newEntity();
     $inputs = $this->request->data();
-    $id = $inputs['row_id'];
-    if($id){
-      $letterIssueRegister = $this->LetterIssueRegisters->get($id);
-    }
-    else{
-      $letterIssueRegister = $this->LetterIssueRegisters->newEntity();
-    }
     $inputs['created_by'] = $user['id'];
     $inputs['created_date'] = $today;
     $inputs['number_of_pages'] = 1;

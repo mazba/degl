@@ -45,6 +45,26 @@
                         <h6 class="panel-title"><i class="icon-table2"></i><?=__('Letters')?></h6>
                     </div>
                     <div class="panel-body">
+                        <table class="table  table-bordered">
+                            <tr>
+                                <td><?= __('স্মারক নম্বর') ?></td>
+                                <td><?= __('বিষয়') ?> </td>
+                                <td><?= __('বর্ণনা') ?></td>
+                                <td><?= __('অ্যাকশন ') ?></td>
+                            </tr>
+                            <?php foreach($assign_letters  as $row):?>
+                                <tr>
+                                    <td><?= $row['sarok_no']?></td>
+                                    <td><?= $row['subject']?></td>
+                                    <td><?= $row['description']?></td>
+                                    <td>
+                                        <?php
+                                        echo $this->Html->link(__('View'), ['action' => 'view', $row['id']],['class'=>'btn btn-sm btn-info']);
+                                        ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach?>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -64,11 +84,18 @@
                 <div class="row panel panel-default">
                     <div class="panel-body col-sm-12">
                         <div class="form-group input">
+                            <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('Reminder Number') ?></label>
+                            <div class="col-sm-11 container_description" style="width: 87.667%;">
+                                <input type="text" name="sarok_no" class="reminder form-control" required="required"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body col-sm-12">
+                        <div class="form-group input">
                             <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('Subject') ?></label>
                             <div class="col-sm-11 container_description" style="width: 87.667%;">
-                                <input type="hidden" class="row-id"  value="<?= $letterIssueData['id']?$letterIssueData['id']:'' ?>">
-                                <input type="hidden" name="scheme_contractor_id" class="letter_issue_scheme_id" value="<?= $scheme['id']? $scheme['id']:'' ?>">
-                                <input type="text" value="<?= $letterIssueData['subject']?$letterIssueData['subject']:'' ?>" name="subject" class="subject form-control" required="required"/>
+                                <input type="hidden" name="scheme_id" class="letter_issue_scheme_id" value="<?= $id? $id:'' ?>">
+                                <input type="text"  name="subject" class="subject form-control" required="required"/>
                             </div>
                         </div>
                     </div>
@@ -76,7 +103,7 @@
                         <div class="form-group input">
                             <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('Description') ?></label>
                             <div class="col-sm-11 container_description" style="width: 87.667%;">
-                                <textarea name="description" class="form-control description" rows="10" required="required"><?= $letterIssueData['description']?$letterIssueData['description']:'' ?></textarea>
+                                <textarea name="description" class="form-control description" rows="10" required="required"></textarea>
                             </div>
                         </div>
                     </div>
@@ -84,11 +111,11 @@
                         <h2 style="padding: 6px"></h2>
                     </div>
                     <div class="col-sm-12 form-actions text-center">
-                        <button class="btn btn-primary btn-block submit-letter"><?= __('Save') ?></button>
+                        <button type="button" class="btn btn-primary btn-block submit-letter"><?= __('Save') ?></button>
                     </div>
                     <div class="col-md-12">
                         <div class="col-md-12 text-center">
-                            <button style="margin-bottom: 1em" class="modal-close btn btn-sm btn-warning modal-newsletter"><?= __('বন্ধ করুন ') ?></button>
+                            <button type="button" style="margin-bottom: 1em" class="modal-close btn btn-sm btn-warning modal-newsletter"><?= __('বন্ধ করুন ') ?></button>
                         </div>
                     </div>
                 </div>
@@ -96,3 +123,25 @@
         </div>
     </div>
 </div>
+
+<script>
+    // modal data save
+    $(document).on('click', ".submit-letter", function(){
+        var sarok_no = $('.reminder').val();
+        var scheme_id = $('.letter_issue_scheme_id').val();
+        var subject = $('.subject').val();
+        var description = $('.description').val();
+        $.ajax({
+            type: 'POST',
+            url :"<?= $this->Url->build(['controller' => 'Schemes', 'action' => 'newLetterAssign']) ?>",
+            data: {scheme_id: scheme_id, subject: subject, description: description, sarok_no: sarok_no},
+            success: function(response){
+                var response = JSON.parse(response);
+                $('.submit-letter').remove();
+                $responseWrp = $('#response-text-wrp');
+                $responseWrp.find('h2').html(response.msg);
+                $responseWrp.find('h2').addClass('btn-success');
+            }
+        });
+    });
+</script>

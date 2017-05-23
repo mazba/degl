@@ -826,25 +826,6 @@ Configure::load('config_offices', 'default');
         $(document).on ('click', ".modal-newsletter", function () {
             $('#NewLetter').modal('hide');
         });
-        // modal data save
-        $(document).on('click', ".submit-letter", function(){
-            var row_id = $('.row-id').val();
-            var scheme_contractor_id = $('.letter_issue_scheme_id').val();
-            var subject = $('.subject').val();
-            var description = $('.description').val();
-            $.ajax({
-                type: 'POST',
-                url :"<?= $this->Url->build(['controller' => 'Schemes', 'action' => 'newLetterAssign']) ?>",
-                data: {row_id:row_id, scheme_contractor_id: scheme_contractor_id, subject: subject, description: description},
-                success: function(response){
-                    var response = JSON.parse(response);
-                    $('.submit-letter').remove();
-                    $responseWrp = $('#response-text-wrp');
-                    $responseWrp.find('h2').html(response.msg);
-                    $responseWrp.find('h2').addClass('btn-success');
-                }
-            });
-        });
 
         // payorder data save function
         $(document).on('click', ".submit-payorder", function(){

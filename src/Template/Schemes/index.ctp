@@ -103,8 +103,8 @@
                     },
                     {text: '<?= __('Progress Value') ?>', dataField: 'scheme_progresses', width: '7%'},
                     {text: '<?= __('Contract Date') ?>', dataField: 'contract_date', width: '7%'},
-                    {text: '<?= __('Complete Date') ?>', dataField: 'expected_complete_date', width: '9%'},
-                    {text: '<?= __('Action') ?>', cellsalign: 'center', dataField: 'action', width: '8%'}
+                    {text: '<?= __('Complete Date') ?>', dataField: 'expected_complete_date', width: '7%'},
+                    {text: '<?= __('Action') ?>', cellsalign: 'center', dataField: 'action', width: '10%'}
                 ]
             });
     });
