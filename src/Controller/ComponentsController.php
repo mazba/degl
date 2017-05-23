@@ -137,4 +137,40 @@ class ComponentsController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+
+    public function get_grid_data()
+    {
+        $user = $this->Auth->user();
+        $this->loadModel('Schemes');
+        $schemes = $this->Schemes->find('all')//->autoFields(true)
+        ->select(['financial_year' => 'financial_year_estimates.name', 'scheme_name' => 'Schemes.name_en', 'projects_name' => 'projects.short_code', 'districts_name' => 'districts.name_en', 'upazilas_name' => 'upazilas.name_en', 'contractor_name' => 'contractors.contractor_title', 'contract_amount' => 'Schemes.contract_amount', 'contract_date' => 'Schemes.contract_date', /*'scheme_progresses' => 'scheme_progresses.progress_value',*/
+            'expected_complete_date' => 'Schemes.expected_complete_date', 'scheme_id' => 'Schemes.id', 'scheme_progresses' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)'])
+            ->distinct(['Schemes.id'])
+            ->innerJoin('project_offices', 'project_offices.project_id = Schemes.project_id')
+            ->leftJoin('projects', 'projects.id = Schemes.project_id')
+            ->leftJoin('districts', 'districts.id = Schemes.district_id')
+            ->leftJoin('upazilas', 'upazilas.id = Schemes.upazila_id')
+            ->leftJoin('scheme_progresses', 'scheme_progresses.scheme_id = Schemes.id')
+            ->leftJoin('upazilas', 'upazilas.id = Schemes.upazila_id')
+            ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id = Schemes.id')
+            ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
+            ->leftJoin('financial_year_estimates', 'financial_year_estimates.id = Schemes.financial_year_estimate_id')
+            ->where(['Schemes.status' => 1, 'project_offices.office_id' => $user['office_id']])
+            ->order(['Schemes.id' => 'desc'])
+            ->toArray();
+        $sl = 1;
+//        pr($this->request->params['pass'][0]);die;
+        foreach ($schemes as &$scheme) {
+            $scheme['sl'] = $sl;
+            $scheme['contract_date'] = date('d/m/Y', $scheme['contract_date']);
+            $scheme['expected_complete_date'] = date('d/m/Y', $scheme['expected_complete_date']);
+            //$scheme['action'] = '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text-danger edit" > </button>';
+            $scheme['action'] =
+                    '<a class="" title="Scheme Nothi" href="' . $this->request->webroot . 'VehiclesStatus/add/'.$this->request->params['pass'][0].'/'. $scheme['scheme_id'] . '" ><i class="icon-redo"></i><a>';
+            $sl++;
+        }
+//        pr($schemes);die;
+        $this->response->body(json_encode($schemes));
+        return $this->response;
+    }
 }

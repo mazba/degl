@@ -107,15 +107,20 @@ class VehiclesStatusController extends AppController
 
         $vehiclesStatus = $this->VehiclesStatus->find('all', [
             'conditions' => ['VehiclesStatus.status ' => 1,'VehiclesStatus.vehicle_id ' => $id],
-            'order' => ['id' => 'DESC'],
+            'contain' => 'Schemes',
+            'order' => ['VehiclesStatus.id' => 'DESC'],
         ])
         ->first();
+        if(!empty($vehiclesStatus['scheme']['name_en'])){
+            $scheme_name = $vehiclesStatus['scheme']['name_en'];
+        }else{
+            $scheme_name = 'এখন ও কোনো স্কিম এসাইন করা হয় নাই';
+        }
 
-        if ($this->request->is('post')) {
+        if ($this->request->is(['patch', 'post', 'put'])) {
             $vehiclesStatus = $this->VehiclesStatus->newEntity();
             $data = $this->request->data;
             $data['vehicle_id'] = $id;
-            
             $data['status'] = 1;
             $data['assign_date'] = strtotime($data['assign_date']);
 
@@ -135,10 +140,10 @@ class VehiclesStatusController extends AppController
             }
         }
         $employees = $this->VehiclesStatus->Employees->find('list',['conditions' => ['status' => 1]]);
-        $schemes = $this->VehiclesStatus->Schemes->find('list');
+//        $schemes = $this->VehiclesStatus->Schemes->find('list');
 //        $location = $this->VehiclesStatus->Schemes->find()
 //            ->
-        $this->set(compact('vehiclesStatus', 'employees', 'schemes'));
+        $this->set(compact('vehiclesStatus', 'employees','scheme_name'));
         $this->set('_serialize', ['vehiclesStatus']);
     }
 
@@ -168,7 +173,7 @@ class VehiclesStatusController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
 
             $data = $this->request->data;
-           // echo "<pre>";print_r($data);die();
+            echo "<pre>";print_r($data);die();
             $data['end_date']=strtotime( $data['end_date']);
 
 
