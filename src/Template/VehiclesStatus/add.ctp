@@ -1,6 +1,6 @@
 <?php
 use Cake\Core\Configure;
-
+//;
 ?>
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
@@ -11,7 +11,7 @@ use Cake\Core\Configure;
     </ul>
 </div>
 
-
+<?php if(isset($this->request->params['pass'][1])): ?>
 
 <?= $this->Form->create($vehiclesStatus, ['class' => 'form-horizontal', 'role' => 'form']); ?>
 <div class="row panel panel-default">
@@ -39,4 +39,6 @@ use Cake\Core\Configure;
     </div>
 </div>
 <?= $this->Form->end() ?>
-
+<?php else: ?>
+    <h1>jugrid</h1>
+<?php endif; ?>

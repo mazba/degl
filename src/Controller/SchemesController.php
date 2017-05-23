@@ -140,13 +140,13 @@ class SchemesController extends AppController {
     } else {
       $this->loadModel('Projects');
       $projects = $this->Projects->find('list')
-                                 ->InnerJoin('project_offices', 'project_offices.project_id = Projects.id')
-                                 ->where(['project_offices.office_id' => $user['office_id']]);
+          ->InnerJoin('project_offices', 'project_offices.project_id = Projects.id')
+          ->where(['project_offices.office_id' => $user['office_id']]);
 
       $this->loadModel('Offices');
       $office = $this->Offices->find()
-                              ->where(['id' => $user['office_id']])
-                              ->first();
+          ->where(['id' => $user['office_id']])
+          ->first();
       $office_type = $office->office_level;
       if (in_array($office->office_level, ['HEAD_QUARTER', 'DIVISION', 'ZONAL'])) {
         $districts = $this->Schemes->Districts->find('list');
@@ -154,18 +154,18 @@ class SchemesController extends AppController {
         $municipalities = [];
       } else {
         $districts = $this->Schemes->Districts->find('list')
-                                              ->where(['id' => $office['district_id']]);
+            ->where(['id' => $office['district_id']]);
         if (in_array($office->office_level, ['UPAZILA'])) {
           $upazilas = $this->Schemes->Upazilas->find('list')
-                                              ->where(['id' => $office['upazila_id']]);
+              ->where(['id' => $office['upazila_id']]);
 
         } else {
           $upazilas = $this->Schemes->Upazilas->find('list')
-                                              ->where(['district_id' => $office['district_id']]);
+              ->where(['district_id' => $office['district_id']]);
         }
 
         $municipalities = $this->Schemes->Municipalities->find('list')
-                                                        ->where(['district_id' => $office['district_id']]);
+            ->where(['district_id' => $office['district_id']]);
 
       }
     }
@@ -177,7 +177,7 @@ class SchemesController extends AppController {
     $scheme_types = $this->Schemes->SchemeTypes->find('list');
     $this->loadModel('NothiRegisters');
     $nothiRegisters = $this->NothiRegisters->find('list', ['conditions' => ['status' => 1, 'office_id' => $user['office_id'], 'parent_id' => 0],])
-                                           ->toArray();
+        ->toArray();
 
     $this->set(compact('scheme', 'projects', 'nothiRegisters', 'workTypes', 'workSubTypes', 'scheme_types', 'districts', 'upazilas', 'municipalities', 'financialYearEstimates', 'office_type', 'packages'));
     $this->set('_serialize', ['scheme']);
@@ -279,8 +279,8 @@ class SchemesController extends AppController {
 
           $this->loadModel('nothi_assigns');
           $nothi_file = $this->nothi_assigns->find()
-                                            ->where(['scheme_id' => $id])
-                                            ->first();
+              ->where(['scheme_id' => $id])
+              ->first();
 
           if (!empty($nothi_file)) {
             $arr = array();
@@ -314,13 +314,13 @@ class SchemesController extends AppController {
     } else {
       $this->loadModel('Projects');
       $projects = $this->Projects->find('list')
-                                 ->InnerJoin('project_offices', 'project_offices.project_id = Projects.id')
-                                 ->where(['project_offices.office_id' => $user['office_id']]);
+          ->InnerJoin('project_offices', 'project_offices.project_id = Projects.id')
+          ->where(['project_offices.office_id' => $user['office_id']]);
 
       $this->loadModel('Offices');
       $office = $this->Offices->find()
-                              ->where(['id' => $user['office_id']])
-                              ->first();
+          ->where(['id' => $user['office_id']])
+          ->first();
       $office_type = $office->office_level;
       if (in_array($office->office_level, ['HEAD_QUARTER', 'DIVISION', 'ZONAL'])) {
         $districts = $this->Schemes->Districts->find('list');
@@ -328,18 +328,18 @@ class SchemesController extends AppController {
         $municipalities = [];
       } else {
         $districts = $this->Schemes->Districts->find('list')
-                                              ->where(['id' => $office['district_id']]);
+            ->where(['id' => $office['district_id']]);
         if (in_array($office->office_level, ['UPAZILA'])) {
           $upazilas = $this->Schemes->Upazilas->find('list')
-                                              ->where(['id' => $office['upazila_id']]);
+              ->where(['id' => $office['upazila_id']]);
 
         } else {
           $upazilas = $this->Schemes->Upazilas->find('list')
-                                              ->where(['district_id' => $office['district_id']]);
+              ->where(['district_id' => $office['district_id']]);
         }
 
         $municipalities = $this->Schemes->Municipalities->find('list')
-                                                        ->where(['district_id' => $office['district_id']]);
+            ->where(['district_id' => $office['district_id']]);
 
       }
 
@@ -357,18 +357,18 @@ class SchemesController extends AppController {
     $scheme_sub_types = $this->Schemes->SubSchemeTypes->find('list');
     $this->loadModel('NothiRegisters');
     $nothiRegisters = $this->NothiRegisters->find('list', ['conditions' => ['status' => 1, 'office_id' => $user['office_id'], 'parent_id' => 0],])
-                                           ->toArray();
+        ->toArray();
 
     $this->loadModel('nothi_assigns');
     $nothi = $this->nothi_assigns->find()
-                                 ->select(['nothi_register_id'])
-                                 ->where(['scheme_id' => $id])
-                                 ->first();
+        ->select(['nothi_register_id'])
+        ->where(['scheme_id' => $id])
+        ->first();
     if (!empty($nothi)) {
       $selected_nothi = $this->NothiRegisters->find()
-                                             ->select(['nothi_no'])
-                                             ->where(['id' => $nothi['nothi_register_id']])
-                                             ->first();
+          ->select(['nothi_no'])
+          ->where(['id' => $nothi['nothi_register_id']])
+          ->first();
       $this->set(compact('selected_nothi'));
     }
 
@@ -381,14 +381,14 @@ class SchemesController extends AppController {
     $multimedia_data = $this->Schemes->get($id, ['contain' => ['Projects', 'Districts', 'multimedia']]);
 //      Investigations Reports (Image)
     $project_images = TableRegistry::get('project_images')
-                                   ->find('all');
+        ->find('all');
     $project_images->select(['users.name_bn', 'users.picture']);
     $project_images->autoFields(TRUE);
     $project_images->where(['project_images.scheme_id' => $id]);
     $project_images->leftJoin('users', 'users.id=project_images.created_by');
 //      Investigations Reports (Videos)
     $project_videos = TableRegistry::get('project_videos')
-                                   ->find('all');
+        ->find('all');
     $project_videos->select(['users.name_bn', 'users.picture']);
     $project_videos->autoFields(TRUE);
     $project_videos->where(['project_videos.scheme_id' => $id]);
@@ -430,7 +430,7 @@ class SchemesController extends AppController {
     if ($task == 'get_subwork_by_worktype_id') {
       $this->view = 'get_subwork_by_worktype_id';
       $workSubTypes = $this->Schemes->WorkSubTypes->find('list')
-                                                  ->where(['work_type_id' => $this->request->data['work_type_id']]);
+          ->where(['work_type_id' => $this->request->data['work_type_id']]);
       $this->set(compact('workSubTypes'));
       //$this -> render('get_modules_by_componentId');
     } elseif ($task == 'get_upazila_municpaltiy_by_disctrict_id') {
@@ -438,9 +438,9 @@ class SchemesController extends AppController {
       $district_id = $this->request->data['district_id'];
       $this->view = 'get_upazila_municpaltiy_by_disctrict_id';
       $upazilas = $this->Schemes->Upazilas->find('list')
-                                          ->where(['district_id' => $district_id]);
+          ->where(['district_id' => $district_id]);
       $municipalities = $this->Schemes->Municipalities->find('list')
-                                                      ->where(['district_id' => $district_id]);
+          ->where(['district_id' => $district_id]);
 
       $this->set(compact('upazilas', 'municipalities'));
 
@@ -448,7 +448,7 @@ class SchemesController extends AppController {
 
       $schemeTypeId = $this->request->data['schemeTypeId'];
       $sub_scheme_types = $this->Schemes->SubSchemeTypes->find('list')
-                                                        ->where(['scheme_type_id' => $schemeTypeId]);
+          ->where(['scheme_type_id' => $schemeTypeId]);
       $this->response->body(json_encode($sub_scheme_types));
       return $this->response;
     }
@@ -494,13 +494,13 @@ class SchemesController extends AppController {
     $scheme = $this->Schemes->get($id);
     $this->loadModel('Contractors');
     $contractors = $this->Contractors->find('all', ['fields' => ['id', 'contractor_title']])
-                                     ->toArray();
+        ->toArray();
     $this->loadModel('SchemeContractors');
     $assigned_contractors = $this->SchemeContractors->find('all', ['conditions' => ['scheme_id' => $id], 'fields' => ['id' => 'contractor_id']])
-                                                    ->hydrate(FALSE)
-                                                    ->toArray();
+        ->hydrate(FALSE)
+        ->toArray();
     $is_lead = $this->SchemeContractors->find('all', ['conditions' => ['scheme_id' => $id, 'is_lead' => 1], 'fields' => ['id' => 'contractor_id']])
-                                       ->first();
+        ->first();
 
     if ($this->request->is(['patch', 'post', 'put'])) {
 
@@ -508,8 +508,8 @@ class SchemesController extends AppController {
       $scheme_contractors = TableRegistry::get('scheme_contractors');
       $query = $scheme_contractors->query();
       $query->delete()
-            ->where(['scheme_id' => $id])
-            ->execute();
+          ->where(['scheme_id' => $id])
+          ->execute();
       //End
 
       $tender_documents = array();
@@ -598,8 +598,8 @@ class SchemesController extends AppController {
 
             $file_query = $scheme_contractors->query();
             $file_query->insert(array_keys($contractor_data))
-                       ->values($contractor_data)
-                       ->execute();
+                ->values($contractor_data)
+                ->execute();
           }
 
           //:::::: save contractor files in files table ::::
@@ -616,8 +616,8 @@ class SchemesController extends AppController {
             $file_data['status'] = 1;
             $file_query = $files_table->query();
             $file_query->insert(array_keys($file_data))
-                       ->values($file_data)
-                       ->execute();
+                ->values($file_data)
+                ->execute();
           }
           // save tender_notices
           foreach ($tender_notices as $file) {
@@ -630,8 +630,8 @@ class SchemesController extends AppController {
             $file_data['status'] = 1;
             $file_query = $files_table->query();
             $file_query->insert(array_keys($file_data))
-                       ->values($file_data)
-                       ->execute();
+                ->values($file_data)
+                ->execute();
           }
           // save tender_contracts
           foreach ($tender_contracts as $file) {
@@ -644,8 +644,8 @@ class SchemesController extends AppController {
             $file_data['status'] = 1;
             $file_query = $files_table->query();
             $file_query->insert(array_keys($file_data))
-                       ->values($file_data)
-                       ->execute();
+                ->values($file_data)
+                ->execute();
           }
 
           //:::::: save remarks scheme remarks table ::::
@@ -661,8 +661,8 @@ class SchemesController extends AppController {
 
             $file_query = $files_table->query();
             $file_query->insert(array_keys($remarks_data))
-                       ->values($remarks_data)
-                       ->execute();
+                ->values($remarks_data)
+                ->execute();
           }
 
           $this->Flash->success(__('The scheme has been assigned.'));
@@ -686,7 +686,7 @@ class SchemesController extends AppController {
       if ($user['user_group_id'] == 1)
       {
         $schemes = $this->Schemes->find('all', ['conditions' => ['Schemes.status' => 1], 'contain' => ['Projects', 'Districts']])
-                                 ->toArray();
+            ->toArray();
 
         foreach ($schemes as &$scheme) {
           $scheme['district'] = $scheme->district['name_en'];
@@ -697,21 +697,21 @@ class SchemesController extends AppController {
       else
       {
         $schemes = $this->Schemes->find('all')//->autoFields(true)
-                                 ->select(['financial_year' => 'financial_year_estimates.name', 'scheme_name' => 'Schemes.name_en', 'projects_name' => 'projects.short_code', 'districts_name' => 'districts.name_en', 'upazilas_name' => 'upazilas.name_en', 'contractor_name' => 'contractors.contractor_title', 'contract_amount' => 'Schemes.contract_amount', 'contract_date' => 'Schemes.contract_date', /*'scheme_progresses' => 'scheme_progresses.progress_value',*/
-          'expected_complete_date' => 'Schemes.expected_complete_date', 'scheme_id' => 'Schemes.id', 'scheme_progresses' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)'])
-                                 ->distinct(['Schemes.id'])
-                                 ->innerJoin('project_offices', 'project_offices.project_id = Schemes.project_id')
-                                 ->leftJoin('projects', 'projects.id = Schemes.project_id')
-                                 ->leftJoin('districts', 'districts.id = Schemes.district_id')
-                                 ->leftJoin('upazilas', 'upazilas.id = Schemes.upazila_id')
-                                 ->leftJoin('scheme_progresses', 'scheme_progresses.scheme_id = Schemes.id')
-                                 ->leftJoin('upazilas', 'upazilas.id = Schemes.upazila_id')
-                                 ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id = Schemes.id')
-                                 ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
-                                 ->leftJoin('financial_year_estimates', 'financial_year_estimates.id = Schemes.financial_year_estimate_id')
-                                 ->where(['Schemes.status' => 1, 'project_offices.office_id' => $user['office_id']])
-                                 ->order(['Schemes.id' => 'desc'])
-                                 ->toArray();
+        ->select(['financial_year' => 'financial_year_estimates.name', 'scheme_name' => 'Schemes.name_en', 'projects_name' => 'projects.short_code', 'districts_name' => 'districts.name_en', 'upazilas_name' => 'upazilas.name_en', 'contractor_name' => 'contractors.contractor_title', 'contract_amount' => 'Schemes.contract_amount', 'contract_date' => 'Schemes.contract_date', /*'scheme_progresses' => 'scheme_progresses.progress_value',*/
+            'expected_complete_date' => 'Schemes.expected_complete_date', 'scheme_id' => 'Schemes.id', 'scheme_progresses' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)'])
+            ->distinct(['Schemes.id'])
+            ->innerJoin('project_offices', 'project_offices.project_id = Schemes.project_id')
+            ->leftJoin('projects', 'projects.id = Schemes.project_id')
+            ->leftJoin('districts', 'districts.id = Schemes.district_id')
+            ->leftJoin('upazilas', 'upazilas.id = Schemes.upazila_id')
+            ->leftJoin('scheme_progresses', 'scheme_progresses.scheme_id = Schemes.id')
+            ->leftJoin('upazilas', 'upazilas.id = Schemes.upazila_id')
+            ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id = Schemes.id')
+            ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
+            ->leftJoin('financial_year_estimates', 'financial_year_estimates.id = Schemes.financial_year_estimate_id')
+            ->where(['Schemes.status' => 1, 'project_offices.office_id' => $user['office_id']])
+            ->order(['Schemes.id' => 'desc'])
+            ->toArray();
         //echo "<pre>", print_r($schemes, 1), "</pre>";
         $sl = 1;
         foreach ($schemes as &$scheme) {
@@ -723,7 +723,7 @@ class SchemesController extends AppController {
               '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text-danger edit" > </button>'.''.
               '<button title="' . __('Work Order') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text workOrder" > </button>' . '' .
               '&nbsp;<a class="" title="Assign Contractors" href="' . $this->request->webroot . 'Schemes/assign_contractors/' . $scheme['scheme_id'] . '" ><i class="icon-user-plus"></i><a>'. '' .
-              '&nbsp;<a class="" title="Scheme Nothi" href="' . $this->request->webroot . 'note_sheet_events/view/' . $scheme['scheme_id'] . '" ><i class="icon-redo"></i><a>';
+              '&nbsp;<a class="" title="Scheme Nothi" href="' . $this->request->webroot . 'note_sheet_events/view/' . $scheme['scheme_id'] . '" target="_blank" ><i class="icon-redo"></i><a>';
 
           $sl++;
         }
@@ -748,7 +748,7 @@ class SchemesController extends AppController {
 
       $scheme = $this->Schemes->get($id, ['contain' => ['Projects', 'WorkTypes', 'WorkSubTypes', 'Districts', 'Upazilas', 'Municipalities', 'FinancialYearEstimates', 'ReceiveFileRegisters', 'SchemeDetails', 'SchemeProgresses' => function ($q) {
         return $q->where(['SchemeProgresses.status' => 1])
-                 ->limit(1);
+            ->limit(1);
       }]]);
 
       //  echo "<pre>";print_r($scheme);die();
@@ -863,8 +863,8 @@ class SchemesController extends AppController {
 
           $this->loadModel('nothi_assigns');
           $nothi_file = $this->nothi_assigns->find()
-                                            ->where(['scheme_id' => $id])
-                                            ->first();
+              ->where(['scheme_id' => $id])
+              ->first();
 
           if (!empty($nothi_file)) {
             $arr = array();
@@ -897,13 +897,13 @@ class SchemesController extends AppController {
     } else {
       $this->loadModel('Projects');
       $projects = $this->Projects->find('list')
-                                 ->InnerJoin('project_offices', 'project_offices.project_id = Projects.id')
-                                 ->where(['project_offices.office_id' => $user['office_id']]);
+          ->InnerJoin('project_offices', 'project_offices.project_id = Projects.id')
+          ->where(['project_offices.office_id' => $user['office_id']]);
 
       $this->loadModel('Offices');
       $office = $this->Offices->find()
-                              ->where(['id' => $user['office_id']])
-                              ->first();
+          ->where(['id' => $user['office_id']])
+          ->first();
       $office_type = $office->office_level;
       if (in_array($office->office_level, ['HEAD_QUARTER', 'DIVISION', 'ZONAL'])) {
         $districts = $this->Schemes->Districts->find('list');
@@ -911,18 +911,18 @@ class SchemesController extends AppController {
         $municipalities = [];
       } else {
         $districts = $this->Schemes->Districts->find('list')
-                                              ->where(['id' => $office['district_id']]);
+            ->where(['id' => $office['district_id']]);
         if (in_array($office->office_level, ['UPAZILA'])) {
           $upazilas = $this->Schemes->Upazilas->find('list')
-                                              ->where(['id' => $office['upazila_id']]);
+              ->where(['id' => $office['upazila_id']]);
 
         } else {
           $upazilas = $this->Schemes->Upazilas->find('list')
-                                              ->where(['district_id' => $office['district_id']]);
+              ->where(['district_id' => $office['district_id']]);
         }
 
         $municipalities = $this->Schemes->Municipalities->find('list')
-                                                        ->where(['district_id' => $office['district_id']]);
+            ->where(['district_id' => $office['district_id']]);
 
       }
 
@@ -940,18 +940,18 @@ class SchemesController extends AppController {
     $scheme_sub_types = $this->Schemes->SubSchemeTypes->find('list');
     $this->loadModel('NothiRegisters');
     $nothiRegisters = $this->NothiRegisters->find('list', ['conditions' => ['status' => 1, 'office_id' => $user['office_id'], 'parent_id' => 0],])
-                                           ->toArray();
+        ->toArray();
 
     $this->loadModel('nothi_assigns');
     $nothi = $this->nothi_assigns->find()
-                                 ->select(['nothi_register_id'])
-                                 ->where(['scheme_id' => $id])
-                                 ->first();
+        ->select(['nothi_register_id'])
+        ->where(['scheme_id' => $id])
+        ->first();
     if (!empty($nothi)) {
       $selected_nothi = $this->NothiRegisters->find()
-                                             ->select(['nothi_no'])
-                                             ->where(['id' => $nothi['nothi_register_id']])
-                                             ->first();
+          ->select(['nothi_no'])
+          ->where(['id' => $nothi['nothi_register_id']])
+          ->first();
       $this->set(compact('selected_nothi'));
     }
 
@@ -959,7 +959,7 @@ class SchemesController extends AppController {
 
     $this->loadModel('Files');
     $contractor_file = $this->Files->find('all', ['conditions' => ['table_key' => $id]])
-                                   ->toArray();
+        ->toArray();
 
     $this->set(compact('contractor_file', 'scheme_sub_types', 'nothiRegisters', 'scheme_types', 'scheme', 'projects', 'workTypes', 'workSubTypes', 'districts', 'upazilas', 'municipalities', 'financialYearEstimates', 'office_type', 'packages'));
 
@@ -969,14 +969,14 @@ class SchemesController extends AppController {
   }
 
   public function work_order_by_id($scheme_id) {
-      $this->layout = 'ajax';
-      $this->loadModel('Schemes');
-      $id = $scheme_id;
-      $result = TableRegistry::get('Schemes')
-          ->find('all')
-          ->where(['Schemes.id' => $scheme_id, 'Schemes.status' => 1])
-          ->contain(['Projects'])->toArray();
-      $this->set(compact('result'));
+    $this->layout = 'ajax';
+    $this->loadModel('Schemes');
+    $id = $scheme_id;
+    $result = TableRegistry::get('Schemes')
+        ->find('all')
+        ->where(['Schemes.id' => $scheme_id, 'Schemes.status' => 1])
+        ->contain(['Projects'])->toArray();
+    $this->set(compact('result'));
   }
   public function edit_scheme_progress($scheme_id) {
     $this->layout = 'ajax';
@@ -985,20 +985,20 @@ class SchemesController extends AppController {
     $schemeProgress = $this->SchemeProgresses->newEntity();
     $id = $scheme_id;
     $query = TableRegistry::get('SchemeProgresses')
-                          ->find()
-                          ->select(['progress_value'])
-                          ->where(['scheme_id' => $scheme_id, 'status' => 1]);
+        ->find()
+        ->select(['progress_value'])
+        ->where(['scheme_id' => $scheme_id, 'status' => 1]);
     $previous_scheme_progresses = $query->first();
 
     $query = TableRegistry::get('SchemeProgressPlans')
-                          ->find()
-                          ->where(['scheme_id' => $scheme_id]);
+        ->find()
+        ->where(['scheme_id' => $scheme_id]);
     // ->order(['date' => 'DESC']);
     $previous_scheme_progress_plans = $query->toArray();
 
     $query = TableRegistry::get('scheme_progresses')
-                          ->find()
-                          ->where(['scheme_id' => $scheme_id]);
+        ->find()
+        ->where(['scheme_id' => $scheme_id]);
     $actually_scheme_progress = $query->toArray();
 
     // echo "<pre>";print_r($actually_scheme_progress);die();
@@ -1011,9 +1011,9 @@ class SchemesController extends AppController {
       $scheme = TableRegistry::get('SchemeProgresses');
       $query = $scheme->query();
       $query->update()
-            ->set(['status' => 0])
-            ->where(['scheme_id' => $data['scheme_id']])
-            ->execute();
+          ->set(['status' => 0])
+          ->where(['scheme_id' => $data['scheme_id']])
+          ->execute();
 
       $schemeProgress = $this->SchemeProgresses->patchEntity($schemeProgress, $data);
       //  echo "<pre>";print_r($schemeProgress);die();
@@ -1086,9 +1086,9 @@ class SchemesController extends AppController {
 
         foreach ($inputs['item'] as $itm) {
           $item_info = TableRegistry::get('scheme_items_info')
-                                    ->find()
-                                    ->where(['item_display_code' => $itm['item_display_code']])
-                                    ->first();
+              ->find()
+              ->where(['item_display_code' => $itm['item_display_code']])
+              ->first();
 
           //   echo "<pre>";print_r($item_info);die();
           if (!$item_info) {
@@ -1124,9 +1124,9 @@ class SchemesController extends AppController {
     }
     //retrieve view data
     $itms = $this->SchemesItems->find()
-                               ->where(['scheme_id' => $scheme_id]);
+        ->where(['scheme_id' => $scheme_id]);
     $estimated_itms = $this->estimated_schemes_items->find()
-                                                    ->where(['scheme_id' => $scheme_id]);
+        ->where(['scheme_id' => $scheme_id]);
     $this->set('items', $itms);
     $this->set('estimated_itms', $estimated_itms);
     //    echo "<pre>";print_r($itms);die();
@@ -1144,9 +1144,9 @@ class SchemesController extends AppController {
 
         foreach ($inputs['item'] as $itm) {
           $item_info = TableRegistry::get('scheme_items_info')
-                                    ->find()
-                                    ->where(['item_display_code' => $itm['item_display_code']])
-                                    ->first();
+              ->find()
+              ->where(['item_display_code' => $itm['item_display_code']])
+              ->first();
 
           //   echo "<pre>";print_r($item_info);die();
           if (!$item_info) {
@@ -1195,9 +1195,9 @@ class SchemesController extends AppController {
       $data = $this->request->data;
 
       $item_info = TableRegistry::get('scheme_items_info')
-                                ->find()
-                                ->where(['item_display_code' => $data['itm_val']])
-                                ->first();
+          ->find()
+          ->where(['item_display_code' => $data['itm_val']])
+          ->first();
       //  echo "<pre>";print_r($item_info);die();
     }
     $this->response->body(json_encode($item_info));
@@ -1210,17 +1210,17 @@ class SchemesController extends AppController {
     $hired_vehicles = $this->get_hired_vehicles($scheme_id);
 
     $hire_charges = TableRegistry::get('hire_charges')
-                                 ->find()
-                                 ->where(['scheme_id' => $scheme_id]);
+        ->find()
+        ->where(['scheme_id' => $scheme_id]);
     $details = [];
     foreach ($hire_charges as $row) {
       $details[$row['id']]['info'] = $hire_charge_details = TableRegistry::get('hire_charge_details')
-                                                                         ->find()
-                                                                         ->select(['item_code' => 'schemes_items.item_display_code', 'description' => 'schemes_items.description', 'unit' => 'schemes_items.unit', 'rate' => 'schemes_items.rate', 'quantity_done' => 'hire_charge_details.quantity', 'item_total' => 'hire_charge_details.item_total'])
-                                                                         ->where(['hire_charge_details.hire_charge_id' => $row['id']])
-                                                                         ->leftJoin('schemes_items', 'schemes_items.item_display_code=hire_charge_details.item_code')
-                                                                         ->where(['schemes_items.scheme_id' => $row['scheme_id']])
-                                                                         ->toArray();
+          ->find()
+          ->select(['item_code' => 'schemes_items.item_display_code', 'description' => 'schemes_items.description', 'unit' => 'schemes_items.unit', 'rate' => 'schemes_items.rate', 'quantity_done' => 'hire_charge_details.quantity', 'item_total' => 'hire_charge_details.item_total'])
+          ->where(['hire_charge_details.hire_charge_id' => $row['id']])
+          ->leftJoin('schemes_items', 'schemes_items.item_display_code=hire_charge_details.item_code')
+          ->where(['schemes_items.scheme_id' => $row['scheme_id']])
+          ->toArray();
       $details[$row['id']]['total'] = $row['net_payable'];
 
     }
@@ -1354,10 +1354,10 @@ class SchemesController extends AppController {
     $user = $this->Auth->user();
     $vehicles_status = TableRegistry::get('vehicles_status');
     $vehicles = $vehicles_status->find()
-                                ->select(['title' => 'vehicles.title', 'location' => 'vehicles_status.vehicle_location', 'remark' => 'vehicles_status.remark', 'assign_date' => 'vehicles_status.assign_date'])
-                                ->where(['vehicles_status.scheme_id' => $id])
-                                ->leftJoin('vehicles', 'vehicles.id=vehicles_status.vehicle_id')
-                                ->toArray();
+        ->select(['title' => 'vehicles.title', 'location' => 'vehicles_status.vehicle_location', 'remark' => 'vehicles_status.remark', 'assign_date' => 'vehicles_status.assign_date'])
+        ->where(['vehicles_status.scheme_id' => $id])
+        ->leftJoin('vehicles', 'vehicles.id=vehicles_status.vehicle_id')
+        ->toArray();
     return $vehicles;
   }
 
@@ -1423,27 +1423,27 @@ class SchemesController extends AppController {
 
     }
     $measurement_head = TableRegistry::get('Measurements')
-                                     ->find()
-                                     ->select(['measurement_no', 'measurement_date'])
-                                     ->where(['scheme_id' => $scheme_id])
-                                     ->distinct(['measurement_no']);
+        ->find()
+        ->select(['measurement_no', 'measurement_date'])
+        ->where(['scheme_id' => $scheme_id])
+        ->distinct(['measurement_no']);
     //  echo "<pre>";print_r($measurement_head->toArray());die();
 
     $measurement_info = [];
     foreach ($measurement_head as $measurement_no) {
       $measurement_details = TableRegistry::get('Measurements')
-                                          ->find()
-                                          ->select(['measurement_date' => 'Measurements.measurement_date', 'measured_by' => 'Measurements.measured-by', 'quantity_of_work_done' => 'Measurements.quantity_of_work_done', 'item_display_code' => 'schemes_items.item_display_code', 'unit' => 'schemes_items.unit', 'quantity' => 'schemes_items.quantity', 'description' => 'schemes_items.description'])
-                                          ->where(['Measurements.status' => 1, 'Measurements.measurement_no' => $measurement_no['measurement_no'], 'Measurements.scheme_id' => $scheme_id])
-                                          ->leftJoin('schemes_items', 'schemes_items.id=Measurements.item_id');
+          ->find()
+          ->select(['measurement_date' => 'Measurements.measurement_date', 'measured_by' => 'Measurements.measured-by', 'quantity_of_work_done' => 'Measurements.quantity_of_work_done', 'item_display_code' => 'schemes_items.item_display_code', 'unit' => 'schemes_items.unit', 'quantity' => 'schemes_items.quantity', 'description' => 'schemes_items.description'])
+          ->where(['Measurements.status' => 1, 'Measurements.measurement_no' => $measurement_no['measurement_no'], 'Measurements.scheme_id' => $scheme_id])
+          ->leftJoin('schemes_items', 'schemes_items.id=Measurements.item_id');
       $measurement_info[$measurement_no['measurement_no'] . '-Date-' . date('d-M-Y', $measurement_no['measurement_date'])]['info'] = $measurement_details->toArray();
     }
 
     // echo "<pre>";print_r($measurement_info);die();
 
     $items = TableRegistry::get('SchemesItems')
-                          ->find()// ->select(['vehicle_id' => 'vehicle_id'])
-                          ->where(['status' => 1, 'scheme_id' => $scheme_id]);
+        ->find()// ->select(['vehicle_id' => 'vehicle_id'])
+        ->where(['status' => 1, 'scheme_id' => $scheme_id]);
 
     // echo "<pre>";print_r($items->toArray());die();
     //s   echo "<pre>";print_r($items->toArray());die();
@@ -1460,8 +1460,8 @@ class SchemesController extends AppController {
       $item_bbq = TableRegistry::get('schemes_items');
       $query = $item_bbq->query();
       $query->delete()
-            ->where(['id' => $id])
-            ->execute();
+          ->where(['id' => $id])
+          ->execute();
       if ($query) {
         $this->response->body(json_encode([]));
         return $this->response;
@@ -1474,7 +1474,7 @@ class SchemesController extends AppController {
     $this->layout = 'ajax';
 
     $project_images = TableRegistry::get('project_images')
-                                   ->find('all');
+        ->find('all');
     $project_images->select(['users.name_bn', 'users.picture']);
     $project_images->autoFields(TRUE);
 
@@ -1485,7 +1485,7 @@ class SchemesController extends AppController {
     $project_images = $project_images->toArray();
     // echo "<pre>";print_r($project_images);die();
     $project_videos = TableRegistry::get('project_videos')
-                                   ->find('all');
+        ->find('all');
     $project_videos->select(['users.name_bn', 'users.picture']);
     $project_videos->autoFields(TRUE);
     $project_videos->where(['project_videos.scheme_id' => $id]);
@@ -1504,9 +1504,9 @@ class SchemesController extends AppController {
     $this->loadModel('LabBills');
 
     $labBills = $this->LabBills->find()
-                               ->where(['type' => 'scheme', 'reference_id' => $scheme_id])
-                               ->order(['created_date' => 'desc'])
-                               ->toArray();
+        ->where(['type' => 'scheme', 'reference_id' => $scheme_id])
+        ->order(['created_date' => 'desc'])
+        ->toArray();
 
     //  echo "<pre>";print_r($labBills);die();
 
@@ -1520,7 +1520,7 @@ class SchemesController extends AppController {
 
     $user = $this->Auth->user();
     $labLetterRegisters = $this->LabLetterRegisters->find('all', ['conditions' => ['scheme_id' => $scheme_id, 'LabLetterRegisters.status !=' => 99], 'order' => ['LabLetterRegisters.id' => 'DESC']])
-                                                   ->toArray();
+        ->toArray();
     foreach ($labLetterRegisters as &$labLetterRegister) {
       $labLetterRegister['action'] = '<a class="icon-newspaper"  target="_blank" href="' . $this->request->webroot . 'LabLetterRegisters/view/' . $labLetterRegister['id'] . '" ><a>';
       $labLetterRegister['created_date'] = date('d/m/Y', $labLetterRegister['created_date']);
@@ -1544,14 +1544,14 @@ class SchemesController extends AppController {
 
     $this->loadModel('LabBills');
     $labBills = $this->LabBills->find()
-                               ->hydrate(FALSE)
-                               ->where(['LabBills.id ' => $bill_id, 'LabBills.type' => $type, 'LabBills.reference_id' => $reference_id])
-                               ->contain(['LabBillDetails' => function ($q) {
-                                 return $q->group(['LabBillDetails.lab_test_group_id'])
-                                          ->contain(['LabActualTests'])
-                                          ->autoFields(TRUE);
-                               }])//            ->group(['LabBillDetails.lab_bill_id'])
-                               ->order(['LabBills.id' => 'desc']);
+        ->hydrate(FALSE)
+        ->where(['LabBills.id ' => $bill_id, 'LabBills.type' => $type, 'LabBills.reference_id' => $reference_id])
+        ->contain(['LabBillDetails' => function ($q) {
+          return $q->group(['LabBillDetails.lab_test_group_id'])
+              ->contain(['LabActualTests'])
+              ->autoFields(TRUE);
+        }])//            ->group(['LabBillDetails.lab_bill_id'])
+        ->order(['LabBills.id' => 'desc']);
 
     // echo "<pre>";print_r($labBills->toArray());die();
 
@@ -1563,12 +1563,12 @@ class SchemesController extends AppController {
     } elseif ($type == 'scheme') {
       $this->loadModel('Schemes');
       $scheme = $this->Schemes->find()
-                              ->select(['contractors.contractor_title', 'projects.name_bn', 'Schemes.id', 'Schemes.name_bn'])
-                              ->where(['Schemes.id ' => $reference_id])
-                              ->leftJoin('projects', 'projects.id=Schemes.project_id')
-                              ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id=Schemes.id and scheme_contractors.is_lead=1')
-                              ->leftJoin('contractors', 'contractors.id=scheme_contractors.contractor_id')
-                              ->toArray();
+          ->select(['contractors.contractor_title', 'projects.name_bn', 'Schemes.id', 'Schemes.name_bn'])
+          ->where(['Schemes.id ' => $reference_id])
+          ->leftJoin('projects', 'projects.id=Schemes.project_id')
+          ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id=Schemes.id and scheme_contractors.is_lead=1')
+          ->leftJoin('contractors', 'contractors.id=scheme_contractors.contractor_id')
+          ->toArray();
       $this->set(compact('scheme'));
     }
     // echo "<pre>";print_r($labBills->toArray());die();
@@ -1625,8 +1625,8 @@ class SchemesController extends AppController {
     $this->layout = 'ajax';
     $this->loadModel('processed_ra_bills');
     $bill_info = $this->processed_ra_bills->find()
-                                          ->where(['scheme_id ' => $id])// ->order(['id' => 'desc'])
-                                          ->toArray();
+        ->where(['scheme_id ' => $id])// ->order(['id' => 'desc'])
+        ->toArray();
     $this->set(compact('bill_info', 'id'));
   }
 
@@ -1638,12 +1638,12 @@ class SchemesController extends AppController {
     ]);*/
 
     $messages = $this->MessageRegisters->find()
-                                       ->autoFields(TRUE)
-                                       ->Where(['MessageRegisters.msg_type' => 'RaBillApplication'])
-                                       ->Where(['MessageRegisters.scheme_id' => $id])
-                                       ->leftJoin('recipients', 'recipients.message_register_id=MessageRegisters.id')//->where(['recipients.user_id' => $user['id']])
-                                       ->order(['MessageRegisters.created_date' => "DESC"])
-                                       ->toArray();
+        ->autoFields(TRUE)
+        ->Where(['MessageRegisters.msg_type' => 'RaBillApplication'])
+        ->Where(['MessageRegisters.scheme_id' => $id])
+        ->leftJoin('recipients', 'recipients.message_register_id=MessageRegisters.id')//->where(['recipients.user_id' => $user['id']])
+        ->order(['MessageRegisters.created_date' => "DESC"])
+        ->toArray();
 
     foreach ($messages as $message) {
       if ($message->thread_id) {
@@ -1688,9 +1688,21 @@ class SchemesController extends AppController {
     return $this->response;
   }
 
+  // Contractor letter print
+  public function contractorLetter($id){
+    $this->loadModel('LetterIssueRegisters');
+    $letter_data = $this->LetterIssueRegisters->get($id, [
+      'contain' => ['Schemes']
+    ]);
+    $this->set('letter_data', $letter_data);
+  }
+
+
   // payoder assign for scheme
   public function payorder(){
 
   }
+
+
 
 }

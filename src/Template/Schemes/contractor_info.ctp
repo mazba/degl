@@ -59,7 +59,7 @@
                                     <td><?= $row['description']?></td>
                                     <td>
                                         <?php
-                                        echo $this->Html->link(__('View'), ['action' => 'view', $row['id']],['class'=>'btn btn-sm btn-info']);
+                                        echo $this->Html->link(__('View'), ['action' => 'contractorLetter', $row['id']],['class'=>'btn btn-sm btn-info', 'target' => '_blank']);
                                         ?>
                                     </td>
                                 </tr>
@@ -141,6 +141,7 @@
                 $responseWrp = $('#response-text-wrp');
                 $responseWrp.find('h2').html(response.msg);
                 $responseWrp.find('h2').addClass('btn-success');
+                $('.submit-letter').off('click')
             }
         });
     });
