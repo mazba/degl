@@ -49,14 +49,12 @@
                             <tr>
                                 <td><?= __('স্মারক নম্বর') ?></td>
                                 <td><?= __('বিষয়') ?> </td>
-                                <td><?= __('বর্ণনা') ?></td>
                                 <td><?= __('অ্যাকশন ') ?></td>
                             </tr>
                             <?php foreach($assign_letters  as $row):?>
                                 <tr>
                                     <td><?= $row['sarok_no']?></td>
                                     <td><?= $row['subject']?></td>
-                                    <td><?= $row['description']?></td>
                                     <td>
                                         <?php
                                         echo $this->Html->link(__('View'), ['action' => 'contractorLetter', $row['id']],['class'=>'btn btn-sm btn-info', 'target' => '_blank']);

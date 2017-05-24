@@ -17,9 +17,9 @@ class SchemePayorder extends Entity
     protected $_accessible = [
         'scheme_id' => true,
         'order_number' => true,
+        'order_medium' => true,
         'initial_date' => true,
         'expire_date' => true,
-        'medium' => true,
         'status' => true,
         'submit_date' => true,
         'created_by' => true,

@@ -52,9 +52,7 @@ class SchemePayordersTable extends Table
         $validator
             ->add('expire_date', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('expire_date');
-            
-        $validator
-            ->allowEmpty('medium');
+
             
         $validator
             ->add('status', 'valid', ['rule' => 'numeric'])

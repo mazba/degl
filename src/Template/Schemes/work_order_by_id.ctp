@@ -32,7 +32,7 @@
 		
 		<table style="width:100%">
 		  <tr>
-		    <td width="33%"><b>(গ)বরাদ্দ নং:</b>  <?php echo $result[0]['allotment_no'];  ?></td>
+		    <td width="33%"><b>(গ)প্রাক্কলন অনুমোদনের স্মারক নং:</b>  <?php echo $result[0]['allotment_no'];  ?></td>
 		    <td width="33%"><b>তারিখ:</b> <?php echo date('d-m-Y', $result[0]['allotment_date']); ?>  </td>    
 		    <td width="33%"><b>	টাকা:</b> <?php echo $result[0]['allotment_bill']; ?></td> 
 		  </tr>

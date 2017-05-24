@@ -202,7 +202,6 @@ class SchemesController extends AppController {
         $newspaper[$i]['name'] = $data['newspaper'][$i];
         $newspaper[$i]['date'] = $data['publicationdate'][$i];
       }
-
       $data['ads_paper'] = json_encode($newspaper);
       unset($data['newspaper']);
       unset($data['publicationdate']);
@@ -779,15 +778,12 @@ class SchemesController extends AppController {
     //echo "<pre>",print_r($scheme),"<pre>";die();
     if ($this->request->is(['patch', 'post', 'put'])) {
       $data = $this->request->data;
-
-      // echo "<pre>";print_r($data);die();
       $newspaper = array();
       for ($i = 0; $i < count($data['newspaper']); $i++) {
         $newspaper[$i]['name'] = $data['newspaper'][$i];
         $newspaper[$i]['date'] = $data['publicationdate'][$i];
       }
 
-      $data['ads_paper'] = json_encode($newspaper);
       unset($data['newspaper']);
       unset($data['publicationdate']);
       $user = $this->Auth->user();
@@ -855,7 +851,7 @@ class SchemesController extends AppController {
       } else {
         $data['work_order_date'] = '';
       }
-
+      $data['ads_paper'] = json_encode($newspaper);
       $scheme = $this->Schemes->patchEntity($scheme, $data);
 //            echo "<pre>";print_r($scheme);die();
       if ($this->Schemes->save($scheme)) {
@@ -955,13 +951,23 @@ class SchemesController extends AppController {
       $this->set(compact('selected_nothi'));
     }
 
-    //echo "<pre>";print_r($assigned_contractors);die();
-
+  // newspaper data read
+    $newspaperData = $this->Schemes->find()
+        ->select('ads_paper')
+        ->where(['id' => $id])
+        ->first();
+    $newspaperData = json_decode($newspaperData['ads_paper'],true);
+    
     $this->loadModel('Files');
     $contractor_file = $this->Files->find('all', ['conditions' => ['table_key' => $id]])
         ->toArray();
 
-    $this->set(compact('contractor_file', 'scheme_sub_types', 'nothiRegisters', 'scheme_types', 'scheme', 'projects', 'workTypes', 'workSubTypes', 'districts', 'upazilas', 'municipalities', 'financialYearEstimates', 'office_type', 'packages'));
+    // payorder data load
+    $this->loadModel('SchemePayorders');
+    $payorder = $this->SchemePayorders->find()
+          ->where(['scheme_id' => $id])
+          ->first();
+    $this->set(compact('contractor_file', 'scheme_sub_types', 'nothiRegisters', 'scheme_types', 'scheme', 'projects', 'workTypes', 'workSubTypes', 'districts', 'upazilas', 'municipalities', 'financialYearEstimates', 'office_type', 'packages','payorder','newspaperData'));
 
     //  echo "<pre>";print_r($scheme);die();
     // $this->set('scheme', $scheme);
@@ -971,11 +977,25 @@ class SchemesController extends AppController {
   public function work_order_by_id($scheme_id) {
     $this->layout = 'ajax';
     $this->loadModel('Schemes');
-    $id = $scheme_id;
-    $result = TableRegistry::get('Schemes')
-        ->find('all')
-        ->where(['Schemes.id' => $scheme_id, 'Schemes.status' => 1])
-        ->contain(['Projects'])->toArray();
+//    $result = TableRegistry::get('Schemes')
+//        ->find('all')
+//        ->where(['Schemes.id' => $scheme_id, 'Schemes.status' => 1])
+//        ->contain(['Projects'])->toArray();
+    $result = $this->Schemes->find('all')
+        ->select([
+            'work_order_date' => 'Schemes.work_order_date',
+            'work_name' => 'Schemes.name_en',
+            'etender_no' => 'Schemes.etender_no',
+            'estimation_sarok_no' => 'Schemes.allotment_no',
+            'estimation_date' => 'Schemes.allotment_date',
+            'estimation_taka' => 'Schemes.allotment_bill',
+            'e_tender_no' => 'Schemes.etender_no',
+            'e_tender_date' => 'Schemes.etender_date',
+            'obtain_tender_no' => 'Schemes.number_of_tender',
+            'customary_tender_no' => 'Schemes.habitual_number_of_tender',
+            'performance_security' => 'Schemes.performance_security',
+        ])->toArray();
+pr($result);die;
     $this->set(compact('result'));
   }
   public function edit_scheme_progress($scheme_id) {
@@ -1700,9 +1720,34 @@ class SchemesController extends AppController {
 
   // payoder assign for scheme
   public function payorder(){
-
+    $user = $this->Auth->user();
+    $this->loadModel('SchemePayorders');
+    $inputs = $this->request->data();
+    $id = $inputs['payorder'];
+    if($id){
+      $payorders = $this->SchemePayorders->get($id);
+    }else{
+      $payorders = $this->SchemePayorders->newEntity();
+    }
+    $inputs['initial_date'] = strtotime($inputs['initial_date']);
+    $inputs['expire_date'] = strtotime($inputs['expire_date']);
+    $inputs['submit_date'] = strtotime($inputs['submit_date']);
+    $inputs['status'] = 1;
+    $inputs['created_by'] = $user['id'];
+    $inputs['created_date'] = time();
+    $payorders = $this->SchemePayorders->patchEntity($payorders, $inputs);
+    if($this->SchemePayorders->save($payorders)){
+      $response_text = __('সফলভাবে পে-অর্ডারটি গ্রহণ করা হলো');
+    }
+    else{
+      $response_text = __('সমস্যা হয়েছে আবার চেষ্টা করুন');
+    }
+    $response = [
+      'success' => true,
+      'msg' => $response_text,
+    ];
+    $this->response->body(json_encode($response));
+    return $this->response;
   }
-
-
 
 }

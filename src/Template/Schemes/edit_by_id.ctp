@@ -13,7 +13,7 @@
                 <label for="etender-no" class="col-sm-4 control-label text-right"><?= __('Newspaper Name') ?></label>
 
                 <div class="col-sm-8 container_etender_no">
-                    <input type="text" name="newspaper[]" class="form-control" id="etender-no" maxlength="100">
+                    <input type="text" name="newspaper[]"  class="form-control" id="etender-no" maxlength="100">
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
                 <label for="" class="col-sm-4 control-label text-right"><?= __('Publication Date') ?></label>
 
                 <div class="col-sm-8 container_etender_no">
-                    <input type="text" name="publicationdate[]" class="form-control date_input">
+                    <input type="text" name="publicationdate[]" class="form-control date_input" >
                 </div>
             </div>
         </div>
@@ -396,38 +396,75 @@ Configure::load('config_offices', 'default');
                                         </div>
                                     </div>
                                     <div id="newspaper">
-                                        <div class="loop">
-                                            <div class="col-sm-5">
-                                                <div class="form-group input text">
-                                                    <label for="etender-no"
-                                                           class="col-sm-4 control-label text-right"><?= __('Newspaper Name') ?></label>
+                                        <?php if(!empty($newspaperData)):?>
+                                            <?php foreach($newspaperData as $datum): ?>
+                                                <div class="loop">
+                                                    <div class="col-sm-5">
+                                                        <div class="form-group input text">
+                                                            <label for="etender-no"
+                                                                   class="col-sm-4 control-label text-right"><?= __('Newspaper Name') ?></label>
 
-                                                    <div class="col-sm-8 container_etender_no">
-                                                        <input type="text" name="newspaper[]" class="form-control"
-                                                               id="etender-no" maxlength="100">
+                                                            <div class="col-sm-8 container_etender_no">
+                                                                <input type="text" name="newspaper[]" class="form-control" value="<?= $datum['name'] ?>"
+                                                                       id="etender-no" maxlength="100">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group input text">
+                                                            <label for="etender-no"
+                                                                   class="col-sm-4 control-label text-right"><?= __('Publication Date') ?></label>
+
+                                                            <div class="col-sm-8 container_etender_no">
+                                                                <input type="text" name="publicationdate[]" value="<?= $datum['date'] ?>"
+                                                                       class="form-control hasdatepicker">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-1">
+                                                        <div class="">
+                                                            <div class="form-group input">
+                                                                <span id="addMore" class="btn btn-success icon-plus"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach ?>
+                                        <?php else: ?>
+                                            <div class="loop">
+                                                <div class="col-sm-5">
+                                                    <div class="form-group input text">
+                                                        <label for="etender-no"
+                                                               class="col-sm-4 control-label text-right"><?= __('Newspaper Name') ?></label>
+
+                                                        <div class="col-sm-8 container_etender_no">
+                                                            <input type="text" name="newspaper[]" class="form-control"
+                                                                   id="etender-no" maxlength="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group input text">
+                                                        <label for="etender-no"
+                                                               class="col-sm-4 control-label text-right"><?= __('Publication Date') ?></label>
+
+                                                        <div class="col-sm-8 container_etender_no">
+                                                            <input type="text" name="publicationdate[]"
+                                                                   class="form-control hasdatepicker">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-1">
+                                                    <div class="">
+                                                        <div class="form-group input">
+                                                            <span id="addMore" class="btn btn-success icon-plus"></span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group input text">
-                                                    <label for="etender-no"
-                                                           class="col-sm-4 control-label text-right"><?= __('Publication Date') ?></label>
-
-                                                    <div class="col-sm-8 container_etender_no">
-                                                        <input type="text" name="publicationdate[]"
-                                                               class="form-control hasdatepicker">
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-1">
-                                                <div class="">
-                                                    <div class="form-group input">
-                                                        <span id="addMore" class="btn btn-success icon-plus"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <?php endif; ?>
                                     </div>
 
                                     <div class="col-sm-5">
@@ -629,19 +666,20 @@ Configure::load('config_offices', 'default');
                             <div id="payorder" class="tab-pane fade">
                                 <div class="col-sm-12">
                                     <input id="scheme-payorders-scheme-id" class="form-control" type="hidden" value="<?= $scheme['id'] ?>">
+                                    <input id="scheme-payorders" class="form-control" type="hidden" value="<?= (!empty($payorder))?$payorder['id']:'' ?>">
                                     <?php
-                                    echo $this->Form->input('scheme_payorders.order_number');
-                                    echo $this->Form->input('scheme_payorders.initial_date', ['class' => 'form-control hasdatepicker']);
-                                    echo $this->Form->input('scheme_payorders.expire_date', ['class' => 'form-control hasdatepicker']);
-                                    echo $this->Form->input('scheme_payorders.medium');
-                                    echo $this->Form->input('scheme_payorders.submit_date', ['class' => 'form-control hasdatepicker']);
+                                    echo $this->Form->input('scheme_payorders.order_number', ['label' => 'পে অর্ডার নং', 'value' => $payorder['order_number']?$payorder['order_number']:'']);
+                                    echo $this->Form->input('scheme_payorders.initial_date', ['label' =>'তারিখ' ,'class' => 'form-control hasdatepicker', 'value' => $payorder['initial_date']?date('d-M-y', $payorder['initial_date']):'']);
+                                    echo $this->Form->input('scheme_payorders.expire_date', ['label' => 'মেয়াদ', 'class' => 'form-control hasdatepicker', 'value' => $payorder['expire_date']?date('d-M-y', $payorder['expire_date']):'']);
+                                    echo $this->Form->input('scheme_payorders.medium',['label' => 'ব্যাংকের নাম', 'value' => $payorder['order_medium']?$payorder['order_medium']:'']);
+                                    echo $this->Form->input('scheme_payorders.submit_date', ['label' => 'দাখিলকৃত তারিখ', 'class' => 'form-control hasdatepicker', 'value' => $payorder['submit_date']?date('d-M-y', $payorder['submit_date']):'']);
                                     ?>
                                 </div>
                                 <div class="col-sm-9 col-sm-offset-3 text-center"  id="payorder-text-wrp">
                                     <h2 style="padding: 6px"></h2>
                                 </div>
-                                <div class="col-sm-9 col-sm-offset-3 form-actions text-center">
-                                    <button class="btn btn-primary btn-block submit-payorder"><?= __('Save') ?></button>
+                                <div class="col-sm-9 col-sm-offset-3 form-actions pull-right">
+                                    <button type="button" class="btn btn-primary btn submit-payorder"><?= __('Save') ?></button>
                                 </div>
                             </div>
                             <div class="tab-pane" id="item_bbq">
@@ -829,6 +867,7 @@ Configure::load('config_offices', 'default');
 
         // payorder data save function
         $(document).on('click', ".submit-payorder", function(){
+            var payorder = $('#scheme-payorders').val();
             var scheme_id = $('#scheme-payorders-scheme-id').val();
             var order_number = $('#scheme-payorders-order-number').val();
             var initial_date = $('#scheme-payorders-initial-date').val();
@@ -838,9 +877,14 @@ Configure::load('config_offices', 'default');
             $.ajax({
                 type: 'POST',
                 url: "<?= $this->Url->build(['controller' => 'Schemes', 'action' => 'payorder']) ?>",
-                data: {scheme_id: scheme_id, order_number: order_number, initial_date: initial_date, expire_date: expire_date, order_medium: order_medium, submit_date: submit_date},
+                data: {payorder: payorder, cheme_id: scheme_id, order_number: order_number, initial_date: initial_date, expire_date: expire_date, order_medium: order_medium, submit_date: submit_date},
                 success: function(response){
-                    console.log(response);
+                    var response = JSON.parse(response);
+                    $('.submit-payorder').remove();
+                    $responseWrp = $('#payorder-text-wrp');
+                    $responseWrp.find('h2').html(response.msg);
+                    $responseWrp.find('h2').addClass('btn-success');
+                    $('.submit-payorder').off('click')
                 }
             })
         });
