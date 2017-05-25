@@ -957,7 +957,7 @@ class SchemesController extends AppController {
         ->where(['id' => $id])
         ->first();
     $newspaperData = json_decode($newspaperData['ads_paper'],true);
-    
+
     $this->loadModel('Files');
     $contractor_file = $this->Files->find('all', ['conditions' => ['table_key' => $id]])
         ->toArray();
@@ -977,10 +977,6 @@ class SchemesController extends AppController {
   public function work_order_by_id($scheme_id) {
     $this->layout = 'ajax';
     $this->loadModel('Schemes');
-//    $result = TableRegistry::get('Schemes')
-//        ->find('all')
-//        ->where(['Schemes.id' => $scheme_id, 'Schemes.status' => 1])
-//        ->contain(['Projects'])->toArray();
     $result = $this->Schemes->find('all')
         ->select([
             'work_order_date' => 'Schemes.work_order_date',
@@ -994,10 +990,29 @@ class SchemesController extends AppController {
             'obtain_tender_no' => 'Schemes.number_of_tender',
             'customary_tender_no' => 'Schemes.habitual_number_of_tender',
             'performance_security' => 'Schemes.performance_security',
-        ])->toArray();
-pr($result);die;
+            'newspaper' => 'Schemes.ads_paper',
+            'applied_tender_price' => 'Schemes.applied_tender_price',
+            'project_name' => 'projects.name_bn',
+            'nothi_name' => 'nothi_registers.nothi_no',
+            'contractor_id' => 'scheme_contractors.contractor_id',
+            'contractor_title' => 'contractors.contractor_title',
+            'order_number' => 'scheme_payorders.order_number',
+            'initial_date' => 'scheme_payorders.initial_date',
+            'expire_date' => 'scheme_payorders.expire_date',
+            'submit_date' => 'scheme_payorders.submit_date',
+            'order_medium' => 'scheme_payorders.order_medium',
+        ])
+        ->leftJoin('projects', 'projects.id = Schemes.project_id')
+        ->leftJoin('nothi_assigns', 'nothi_assigns.scheme_id = Schemes.id')
+        ->leftJoin('nothi_registers', 'nothi_registers.id = nothi_assigns.nothi_register_id')
+        ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id = Schemes.id')
+        ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
+        ->leftJoin('scheme_payorders', 'scheme_payorders.scheme_id = Schemes.id')
+        ->where(['Schemes.id' => $scheme_id])
+        ->first();
     $this->set(compact('result'));
   }
+
   public function edit_scheme_progress($scheme_id) {
     $this->layout = 'ajax';
     $this->loadModel('SchemeProgresses');
