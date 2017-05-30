@@ -85,14 +85,14 @@ $newspapers = json_decode($result['newspaper'], true);
 				<br/><br/>
 				<table style="width:100%">
 					<tr>
-						<td width="50%"><b>(ছ) প্রাপ্ত দরপত্র সংখ্যা :   </b> <?= $result['obtain_tender_no'];  ?> টি</td>
-						<td width="50%"><b> রীতিসিদ্ধ দরপত্র সংখ্যা :	</b>  <?= $result['customary_tender_no'];  ?> টি </td>
+						<td width="50%"><b>(ছ) প্রাপ্ত দরপত্র সংখ্যা :   </b> <?= $result['obtain_tender_no']?$result['obtain_tender_no']:'0';  ?> টি</td>
+						<td width="50%"><b> রীতিসিদ্ধ দরপত্র সংখ্যা :	</b>  <?= $result['customary_tender_no']?$result['customary_tender_no']:'0';  ?> টি </td>
 					</tr>
 				</table>
 				<br/>
-				<b>(জ) দাখিলকৃত দরপত্র মূল্য:  </b> <?= $result['applied_tender_price'];  ?> টাকা
+				<b>(জ) দাখিলকৃত দরপত্র মূল্য:  </b> <?= $result['applied_tender_price']?$result['applied_tender_price']:'0';  ?> টাকা
 				<br/><br/>
-				<b>(ঝ) 14% Performance Security:</b> <?= ($result['applied_tender_price']*10)/100;  ?> টাকা
+				<b>(ঝ) 14% Performance Security:</b> <?= $result['applied_tender_price']?($result['applied_tender_price']*10)/100:'0';  ?> টাকা
 				<br/><br/>
 
 				<b>(ঞ)নির্বাচিত ঠিকাদার :</b> <?= $result['contractor_title'] ?> এর নামে e-GP  এর মাধ্যমে  NOA  প্রদান করা হয় (কপি নথিতে সংরক্ষিত) ।
