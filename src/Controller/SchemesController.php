@@ -951,7 +951,7 @@ class SchemesController extends AppController {
       $this->set(compact('selected_nothi'));
     }
 
-  // newspaper data read
+    // newspaper data read
     $newspaperData = $this->Schemes->find()
         ->select('ads_paper')
         ->where(['id' => $id])
@@ -965,8 +965,8 @@ class SchemesController extends AppController {
     // payorder data load
     $this->loadModel('SchemePayorders');
     $payorder = $this->SchemePayorders->find()
-          ->where(['scheme_id' => $id])
-          ->first();
+        ->where(['scheme_id' => $id])
+        ->first();
     $this->set(compact('contractor_file', 'scheme_sub_types', 'nothiRegisters', 'scheme_types', 'scheme', 'projects', 'workTypes', 'workSubTypes', 'districts', 'upazilas', 'municipalities', 'financialYearEstimates', 'office_type', 'packages','payorder','newspaperData'));
 
     //  echo "<pre>";print_r($scheme);die();
@@ -1727,7 +1727,7 @@ class SchemesController extends AppController {
   public function contractorLetter($id){
     $this->loadModel('LetterIssueRegisters');
     $letter_data = $this->LetterIssueRegisters->get($id, [
-      'contain' => ['Schemes']
+        'contain' => ['Schemes']
     ]);
     $this->set('letter_data', $letter_data);
   }
@@ -1758,8 +1758,8 @@ class SchemesController extends AppController {
       $response_text = __('সমস্যা হয়েছে আবার চেষ্টা করুন');
     }
     $response = [
-      'success' => true,
-      'msg' => $response_text,
+        'success' => true,
+        'msg' => $response_text,
     ];
     $this->response->body(json_encode($response));
     return $this->response;

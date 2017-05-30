@@ -41,39 +41,39 @@ class SchemePayordersTable extends Table
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
-            
+
         $validator
             ->allowEmpty('order_number');
-            
+
         $validator
             ->add('initial_date', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('initial_date');
-            
+
         $validator
             ->add('expire_date', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('expire_date');
 
-            
+
         $validator
             ->add('status', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('status');
-            
+
         $validator
             ->add('submit_date', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('submit_date');
-            
+
         $validator
             ->add('created_by', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('created_by');
-            
+
         $validator
             ->add('created_date', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('created_date');
-            
+
         $validator
             ->add('updated_by', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('updated_by');
-            
+
         $validator
             ->add('updated_date', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('updated_date');

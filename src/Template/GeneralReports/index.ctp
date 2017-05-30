@@ -40,7 +40,7 @@ use Cake\Core\Configure;
 </div>
 
 <div class="row">
-    <?= $this->Form->create() ?>
+    <?= $this->Form->create(null, ['id' => 'my_form']) ?>
 
     <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
         <?= $this->Form->input('project_id', ['required'=>'required','options' => $projects, 'empty' => __('Select')]) ?>
@@ -117,6 +117,15 @@ use Cake\Core\Configure;
     <script type="text/javascript">
         $(function(){
             $("#fields").multiselect();
+        });
+        var form = $("form#my_form");
+        $(form).on('submit', function(){
+            $("ul.selected li").each(function(){
+                var selected_value = $(this).attr('data-selected-value');
+                if(selected_value){
+                    $(form).append("<input type='hidden' value='" + selected_value + "' name='selected_items_values_in_order[]' />");
+                }
+            });
         });
     </script>
     <style>
@@ -404,23 +413,23 @@ use Cake\Core\Configure;
         id = day.getTime();
         eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=yes,scrollbars=yes ,location=0,statusbar=0 ,menubar=yes,resizable=1,width=880,height=600,left = 20,top = 50');");
     }
-    $(function () {
-        var removeIntent = false;
-        $("#sortable").sortable({
-            over: function () {
-                removeIntent = false;
-            },
-            out: function () {
-                removeIntent = true;
-            },
-            beforeStop: function (event, ui) {
-                if (removeIntent == true) {
-                    ui.item.remove();
-                }
-            }
-        });
-        $("#sortable").disableSelection();
-    });
+//    $(function () {
+//        var removeIntent = false;
+//        $("#sortable").sortable({
+//            over: function () {
+//                removeIntent = false;
+//            },
+//            out: function () {
+//                removeIntent = true;
+//            },
+//            beforeStop: function (event, ui) {
+//                if (removeIntent == true) {
+//                    ui.item.remove();
+//                }
+//            }
+//        });
+//        $("#sortable").disableSelection();
+//    });
 </script>
 <script>
     $( function() {

@@ -190,7 +190,7 @@ Configure::load('config_offices', 'default');
                         </ul>
                     </div>
                     <div class="col-md-9">
-                        <?= $this->Form->create($scheme, ['class' => 'form-horizontal', 'role' => 'form']); ?>
+                        <?= $this->Form->create($scheme, ['class' => 'form-horizontal', 'role' => 'form', 'novalidate']); ?>
 
                         <div class="tab-content">
 
@@ -877,7 +877,7 @@ Configure::load('config_offices', 'default');
             $.ajax({
                 type: 'POST',
                 url: "<?= $this->Url->build(['controller' => 'Schemes', 'action' => 'payorder']) ?>",
-                data: {payorder: payorder, cheme_id: scheme_id, order_number: order_number, initial_date: initial_date, expire_date: expire_date, order_medium: order_medium, submit_date: submit_date},
+                data: {payorder: payorder, scheme_id: scheme_id, order_number: order_number, initial_date: initial_date, expire_date: expire_date, order_medium: order_medium, submit_date: submit_date},
                 success: function(response){
                     var response = JSON.parse(response);
                     $('.submit-payorder').remove();
