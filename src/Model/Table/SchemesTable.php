@@ -35,7 +35,7 @@ class SchemesTable extends Table
         ]);
         $this->belongsTo('WorkTypes', [
             'foreignKey' => 'work_type_id',
-            'joinType' => 'INNER'
+            'joinType' => 'LEFT'
         ]);
         $this->belongsTo('WorkSubTypes', [
             'foreignKey' => 'work_sub_type_id'

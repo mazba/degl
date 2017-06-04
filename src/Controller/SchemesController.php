@@ -774,7 +774,8 @@ class SchemesController extends AppController {
 //                }]
 //        ]);
 
-    $scheme = $this->Schemes->get($id, ['contain' => ['Projects', 'WorkTypes', 'WorkSubTypes', 'Districts', 'Upazilas', 'Municipalities', 'FinancialYearEstimates', 'SchemeDetails']]);
+    $scheme = $this->Schemes->get($id, ['contain' => ['Projects','WorkTypes', 'WorkSubTypes', 'Districts', 'Upazilas', 'Municipalities', 'FinancialYearEstimates', 'SchemeDetails']]);
+   
     //echo "<pre>",print_r($scheme),"<pre>";die();
     if ($this->request->is(['patch', 'post', 'put'])) {
       $data = $this->request->data;
@@ -788,9 +789,11 @@ class SchemesController extends AppController {
       unset($data['publicationdate']);
       $user = $this->Auth->user();
       $data = $this->request->data;
-      if (isset($data['contract_date'])) {
+//      pr($data);die;
+      if (isset($data['contract_date']) && $data['contract_date']) {
         $data['contract_date'] = strtotime($data['contract_date']);
       }
+//      pr($data['contract_date']);die;
       $data['updated_by'] = $user['id'];
       $data['updated_date'] = time();
       $x = strtotime($data['proposed_start_date']);
@@ -799,15 +802,6 @@ class SchemesController extends AppController {
       } else {
         $data['proposed_start_date'] = '';
       }
-      /*$x=strtotime($data['tender_date']);
-      if($x!==false)
-      {
-          $data['tender_date']=$x;
-      }
-      else
-      {
-          $data['tender_date']='';
-      }*/
       $x = strtotime($data['expected_complete_date']);
       if ($x !== FALSE) {
         $data['expected_complete_date'] = $x;
@@ -821,20 +815,6 @@ class SchemesController extends AppController {
       } else {
         $data['actual_start_date'] = '';
       }
-//            $x = strtotime($data['approve_extended_date']);
-//            if ($x !== false) {
-//                $data['approve_extended_date'] = $x;
-//                $data['completion_date'] = $x;
-//            } else {
-//                $data['approve_extended_date'] = '';
-//            }
-//            $x = strtotime($data['actual_complete_date']);
-//            if ($x !== false) {
-//                $data['actual_complete_date'] = $x;
-//                $data['completion_date'] = $x;
-//            } else {
-//                $data['actual_complete_date'] = '';
-//            }
       if (isset($data['allotment_date'])) {
         $data['allotment_date'] = strtotime($data['allotment_date']);
       }
@@ -853,7 +833,6 @@ class SchemesController extends AppController {
       }
       $data['ads_paper'] = json_encode($newspaper);
       $scheme = $this->Schemes->patchEntity($scheme, $data);
-//            echo "<pre>";print_r($scheme);die();
       if ($this->Schemes->save($scheme)) {
         if (!empty($data['parent_id'])) {
 
