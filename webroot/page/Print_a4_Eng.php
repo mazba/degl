@@ -7,21 +7,36 @@
     <title>Report</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
+            @font-face {
+                font-family: 'SutonnyOMJ';
+                src: url('../fontface/SutonnyOMJ.eot');
+                src: url('../fontface/SutonnyOMJ.woff2') format('woff2'),
+                url('../fontface/SutonnyOMJ.woff') format('woff'),
+                url('../fontface/SutonnyOMJ.ttf') format('truetype'),
+                url('../fontface/SutonnyOMJ.svg#SutonnyOMJ') format('svg'),
+                url('../fontface/SutonnyOMJ.eot?#iefix') format('embedded-opentype');
+                font-weight: normal;
+                font-style: normal;
+            }
+            body{
+                font-family: 'SutonnyOMJ';
+                font-size: 20px;
+            }
             .tablesorter {
                 font-size: 16px;
                 text-align: left;
-                font-family: Tahoma, Geneva, sans-serif;
+                font-family: 'SutonnyOMJ';
             }
 
             table tr thead th {
                 background-color: #FAFAFA;
                 font-size: 12px;
-                font-family: sans-serif;
+                font-family: 'SutonnyOMJ';
             }
 
             table tr td {
                 font-size: 11px;
-                font-family: sans-serif;
+                font-family: 'SutonnyOMJ';
             }
 
             table {

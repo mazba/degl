@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'SutonnyOMJ';
+  src: url('SutonnyOMJ.eot');
+  src: url('SutonnyOMJ.woff2') format('woff2'),
+       url('SutonnyOMJ.woff') format('woff'),
+       url('SutonnyOMJ.ttf') format('truetype'),
+       url('SutonnyOMJ.svg#SutonnyOMJ') format('svg'),
+       url('SutonnyOMJ.eot?#iefix') format('embedded-opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+

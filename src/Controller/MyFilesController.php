@@ -1060,12 +1060,13 @@ class MyFilesController extends AppController
         $id = $inputs['row_id'];
         if($id){
             $letterIssueRegister = $this->LetterIssueRegisters->get($id);
-            if($letterIssueRegister['created_by'] != $user['id']) goto end;
+//            if($letterIssueRegister['created_by'] != $user['id']) goto end;
         }
         else{
             $letterIssueRegister = $this->LetterIssueRegisters->newEntity();
         }
         $inputs['created_by'] = $user['id'];
+        $inputs['answer_date'] = strtotime($inputs['answer_date']);
         $inputs['created_date'] = $today;
         $inputs['number_of_pages'] = 1;
         $inputs['status'] = 2;
@@ -1081,7 +1082,7 @@ class MyFilesController extends AppController
         {
             $response_text =  __('সমস্যা হয়েছে আবার চেষ্টা করুন');
         }
-        end:
+//        end:
         $response_text = isset($response_text)?$response_text:__('আপনি এডিট করার অনুমতি প্রাপ্ত নন');
         $response = [
             'success'=>true,

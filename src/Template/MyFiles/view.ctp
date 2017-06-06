@@ -546,9 +546,25 @@ Configure::load('config_receive_file_registers', 'default');
         <div class="row">
             <div class="panel-body col-sm-12">
                 <div class="form-group input">
+                    <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('প্রাপক') ?></label>
+                    <div class="col-sm-11 container_description" style="width: 87.667%;">
+                        <textarea name="receiver_name" class="receiver" id="ckeditor3" cols="30" rows="10" required="required"><?= $letterIssueData['receiver_name']?$letterIssueData['receiver_name']:'' ?></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body col-sm-12">
+                <div class="form-group input">
                     <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('Reminder Number') ?></label>
                     <div class="col-sm-11 container_description" style="width: 87.667%;">
                         <input type="text" value="<?= $letterIssueData['reminder_number']?$letterIssueData['reminder_number']:'' ?>" name="reminder_number" class="reminder form-control" required="required"/>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body col-sm-12">
+                <div class="form-group input">
+                    <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('তারিখ') ?></label>
+                    <div class="col-sm-11 container_description" style="width: 87.667%;">
+                        <input type="text" value="<?= $letterIssueData['answer_date']?date('d-m-Y', $letterIssueData['answer_date']):'' ?>" name="answer_date" class="form-control hasdatepicker answer-date" required="required"/>
                     </div>
                 </div>
             </div>
@@ -567,6 +583,22 @@ Configure::load('config_receive_file_registers', 'default');
                     <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('Description') ?></label>
                     <div class="col-sm-11 container_description" style="width: 87.667%;">
                         <textarea name="description" class="description" id="ckeditor2" cols="30" rows="10" required="required"><?= $letterIssueData['description']?$letterIssueData['description']:'' ?></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body col-sm-12">
+                <div class="form-group input">
+                    <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('অনুলিপি আছে?') ?></label>
+                    <div class="col-sm-11 container_description" style="width: 87.667%;">
+                        <input <?= $letterIssueData['onulipi']?'checked':'' ?> type="checkbox" name="onulipi" id="onulipi" value="1" class="onulipi-checkbox"/>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body col-sm-12" style="display:none" id="onulipi-display">
+                <div class="form-group input">
+                    <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('অনুলিপি') ?></label>
+                    <div class="col-sm-11 container_description" style="width: 87.667%;">
+                        <textarea name="onulipi_data" class="onulipi_data" id="ckeditor4" cols="30" rows="10" required="required"><?= $letterIssueData['onulipi_data']?$letterIssueData['onulipi_data']:'' ?></textarea>
                     </div>
                 </div>
             </div>
@@ -639,18 +671,73 @@ Configure::load('config_receive_file_registers', 'default');
                 </div>
                 <div id="PrintAreaDraft">
                     <div class="col-sm-12">
-                        <h2 class="text-center"><?= __('Government of the People\'s Republic of Bangladesh') ?></h2>
-                        <h4 class="text-center"><?= __('Local Govt. Engineering Department') ?> </h4>
+                        <h2 class="text-center" style="line-height: 14px"><?= __('Government of the People\'s Republic of Bangladesh') ?></h2>
+                        <h4 class="text-center" style="line-height: 14px"><?= __('Local Govt. Engineering Department') ?> </h4>
+                        <h4 class="text-center" style="line-height: 14px"><?= __('Office of the Executive Engineer') ?></h4>
+                        <h4 class="text-center" style="line-height: 14px">নলজানী,<?= __('District: Gazipur') ?></h4>
+                        <h4 class="text-center" style="line-height: 14px"><a>www.lged.gov.bd</a></h4>
+                        <div class="shek-hasina">
+                            উন্নয়নের গণতন্ত্র<br/>শেখ হাসিনার মূলমন্ত্র
+                        </div>
                     </div>
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-sm-12">
                                 <p><b><?= __('Reminder Number') ?>: </b><?= $letterIssueData['reminder_number'] ?></p>
-                                <p><b><?= __('Subject') ?>: </b><?= $letterIssueData['subject'] ?></p>
+                                <p></p><?= $letterIssueData['receiver_name'] ?></p>
+
+                                <p><b><?= __('Subject') ?>: <?= $letterIssueData['subject'] ?></b></p>
                                 <p style="padding-left: 1em"><?= $letterIssueData['description'] ?></p>
+                            </div>
+                            </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="margin-top: 40px;">
+                                <p class="text-center" style="float: right;font-size:15px;">
+                                    নির্বাহী প্রকৌশলী<br>
+                                    এলজিইডি, গাজীপুর<br>
+                                    ফোনঃ ৯২৬৩৯৮৯, ফ্যাক্সঃ ৯২৬৪১২৮<br>
+                                    Email: xen.gazipur@lged.gov.bd<br>
+
+                                </p>
+                            </div>
+                            </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <?php if(!empty($letterIssueData['onulipi_data'])):?>
+                                    <p style="font-size: 16px"><b><?= __('অনুলিপি') ?>: </b><?= $letterIssueData['onulipi_data'] ?></p>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
+                    <style type="text/css">
+                        .shek-hasina {
+                            display: inline-block;
+                            position: absolute;
+                            right: 73px;
+                            top: 30px;
+                            border: 1px solid #ccc;
+                            padding: 5px;
+                            text-align: center;
+                            color: #ccc;
+                            font-size: 13px;
+                        }
+                        p{
+                            font-size: 15px;
+                        }
+                        @media print {
+                            .shek-hasina {
+                                display: inline-block;
+                                position: absolute;
+                                right: 50px;
+                                top: 10px;
+                                border: 1px solid #ccc;
+                                padding: 5px;
+                                text-align: center;
+                                color: #ccc;
+                                font-size: 13px;
+                            }
+                        }
+                    </style>
                 </div>
             </div>
         </div>
@@ -767,6 +854,8 @@ function EngToBanglaNum($input) {
 
     CKEDITOR.replace('ckeditor');
     CKEDITOR.replace('ckeditor2');
+    CKEDITOR.replace('ckeditor3');
+    CKEDITOR.replace('ckeditor4');
 
 </script>
 
@@ -792,16 +881,34 @@ function EngToBanglaNum($input) {
 </script>
 <!--Modal data ajax submit -->
 <script>
+    $(document).ready(function(){
+        if ( $('#onulipi').is(':checked') ) {
+            $('#onulipi-display').show();
+        }
+    });
     $(document).on('click','.draft',function(){
         var reminder_number = $('.reminder').val();
+        var receiver_name = CKEDITOR.instances['ckeditor3'].getData();
         var row_id = $('.row-id').val();
         var receive_file_register_id = $('.letter-id').val();
         var subject = $('.subject').val();
+        var answer_date = $('.answer-date').val();
         var description = CKEDITOR.instances['ckeditor2'].getData();
+        var onulipi = $('.onulipi-checkbox').val();
+        var onulipi_data = CKEDITOR.instances['ckeditor4'].getData();
+
         $.ajax({
             type: 'POST',
             url :"<?= $this->Url->build(['controller' => 'MyFiles', 'action' => 'newLetterAssign']) ?>",
-            data: {receive_file_register_id: receive_file_register_id, subject: subject, description: description, row_id: row_id, reminder_number: reminder_number},
+            data: {
+                receive_file_register_id: receive_file_register_id,
+                subject: subject, description: description,
+                row_id: row_id, reminder_number: reminder_number,
+                receiver_name: receiver_name,
+                answer_date:answer_date,
+                onulipi:onulipi,
+                onulipi_data:onulipi_data
+            },
             success: function(response){
                 var response = JSON.parse(response);
                 $('.draft').remove();
@@ -864,6 +971,18 @@ function EngToBanglaNum($input) {
             }
         });
 
+    });
+
+    $(document).on('focus', '.date_input', function () {
+        $(this).removeClass('hasDatepicker').datepicker();
+    });
+
+    $('#onulipi').change(function(){
+        if ( $(this).is(':checked') ) {
+            $('#onulipi-display').show();
+        } else {
+            $('#onulipi-display').hide();
+        }
     });
 
 </script>
