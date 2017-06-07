@@ -22,7 +22,7 @@
                 <label for="" class="col-sm-4 control-label text-right"><?= __('Publication Date') ?></label>
 
                 <div class="col-sm-8 container_etender_no">
-                    <input type="text" name="publicationdate[]" class="form-control date_input" >
+                    <input type="text" name="publicationdate[]" class="form-control date_input date-format" >
                 </div>
             </div>
         </div>
@@ -396,7 +396,7 @@ Configure::load('config_offices', 'default');
                                         </div>
                                     </div>
                                     <div id="newspaper">
-                                        <?php if(!empty($newspaperData)):?>
+                                        <?php if(!empty($newspaperData)):  ?>
                                             <?php foreach($newspaperData as $datum): ?>
                                                 <div class="loop">
                                                     <div class="col-sm-5">
@@ -796,21 +796,26 @@ Configure::load('config_offices', 'default');
 
         $(document).on('click', '#addMore', function () {
             var html = $('#addMoreNewspaper').html();
-            $('#newspaper').append(html)
-
+            $('#newspaper').append(html);
 
         });
         $(document).on('click', '#close', function () {
-
-
             $(this).parents('.loop').remove();
             $(this).remove();
-
         });
 
         $(document).on('focus', '.date_input', function () {
 
             $(this).removeClass('hasDatepicker').datepicker();
+        });
+        $(document).on('focus', '.date-format', function () {
+            var display_date_format = "dd-M-yy";
+            $(this).removeClass('hasDatepicker').datepicker({
+                dateFormat: display_date_format,
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-50:+10"
+            });
         });
         //        mazba
 
