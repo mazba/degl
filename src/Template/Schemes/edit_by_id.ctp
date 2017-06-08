@@ -500,7 +500,16 @@ Configure::load('config_offices', 'default');
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group input number">
+                                            <label for="habitual-number-of-tender"
+                                                   class="col-sm-4 control-label text-right"><?= __('দরপত্র গ্রহণের তারিখ') ?></label>
 
+                                            <div class="col-sm-8 container_habitual_number_of_tender">
+                                                <input type="text" name="applied_etender_date"   value="<?= $this->System->display_date($scheme->applied_etender_date) ;?>" id="applied-etender-date" maxlength="11" class="form-control hasdatepicker">
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>

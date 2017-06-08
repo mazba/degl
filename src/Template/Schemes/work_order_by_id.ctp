@@ -1,5 +1,6 @@
 <?php
 $newspapers = json_decode($result['newspaper'], true);
+//pr(date('d-m-Y',$result['applied_etender_date']));die;
 ?>
 
 <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
@@ -75,7 +76,7 @@ $newspapers = json_decode($result['newspaper'], true);
 
 				</table>
 				<br/>
-				(চ) দরপত্র গ্রহণের তারিখঃ
+				(চ) দরপত্র গ্রহণের তারিখঃ <?= $result['applied_etender_date']?$this->Common->EngToBanglaNum(date('d-m-Y',$result['applied_etender_date'])).'ইং':'.....'?>
 				<br/><br/>
 				<table style="width:100%; font-size: 15px">
 					<tr>
@@ -110,7 +111,7 @@ $newspapers = json_decode($result['newspaper'], true);
 
 				<br/><br/><br/>
 
-				<table style="width:100%;  font-size: 15px" align="center">
+				<table style="width:100%;  font-size: 15px; margin-bottom: -15px; margin-top: 15px" align="center" >
 					<tr>
 						<td width="20%" align="center">উচ্চমান সহকারী<br/>
 							এলজিইডি, গাজীপুর    </td>

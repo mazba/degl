@@ -264,6 +264,10 @@ class SchemesController extends AppController {
         $data['etender_date'] = strtotime($data['etender_date']);
       }
 
+      if (isset($data['applied_etender_date'])) {
+        $data['applied_etender_date'] = strtotime($data['applied_etender_date']);
+      }
+
       $x = strtotime($data['work_order_date']);
       if ($x !== FALSE) {
         $data['work_order_date'] = $x;
@@ -824,6 +828,9 @@ class SchemesController extends AppController {
       if (isset($data['etender_date'])) {
         $data['etender_date'] = strtotime($data['etender_date']);
       }
+      if (isset($data['applied_etender_date'])) {
+        $data['applied_etender_date'] = strtotime($data['applied_etender_date']);
+      }
 
       $x = strtotime($data['work_order_date']);
       if ($x !== FALSE) {
@@ -970,6 +977,7 @@ class SchemesController extends AppController {
             'customary_tender_no' => 'Schemes.habitual_number_of_tender',
             'performance_security' => 'Schemes.performance_security',
             'newspaper' => 'Schemes.ads_paper',
+            'applied_etender_date' => 'Schemes.applied_etender_date',
             'applied_tender_price' => 'Schemes.contract_amount',
             'project_name' => 'projects.name_bn',
             'nothi_name' => 'nothi_registers.nothi_no',
