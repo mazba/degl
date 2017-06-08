@@ -22,7 +22,7 @@ $newspapers = json_decode($result['newspaper'], true);
 
 				</tr>
 			</table>
-			<br/><br/><br/>
+			<br/>
 
 			<div  style="width:100%; text-align: left; margin-left:3%; padding-right:3%;">
 				<b>১। বিষয়: Contract Agreement (চুক্তিপত্র) সহ কার্যাদেশ প্রদান প্রসঙ্গে। </b>
@@ -108,7 +108,7 @@ $newspapers = json_decode($result['newspaper'], true);
 				সদয় অনুমোদিত হলে চুক্তিপত্রসহ প্রস্তুতকৃত Letter of Proceed  স্বাক্ষর করা যেতে পারে।
 
 
-				<br/><br/><br/> <br/><br/><br/>
+				<br/><br/><br/>
 
 				<table style="width:100%;  font-size: 15px" align="center">
 					<tr>

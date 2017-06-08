@@ -970,7 +970,7 @@ class SchemesController extends AppController {
             'customary_tender_no' => 'Schemes.habitual_number_of_tender',
             'performance_security' => 'Schemes.performance_security',
             'newspaper' => 'Schemes.ads_paper',
-            'applied_tender_price' => 'Schemes.applied_tender_price',
+            'applied_tender_price' => 'Schemes.contract_amount',
             'project_name' => 'projects.name_bn',
             'nothi_name' => 'nothi_registers.nothi_no',
             'contractor_id' => 'scheme_contractors.contractor_id',
