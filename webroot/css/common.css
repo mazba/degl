@@ -17,3 +17,14 @@
     left: 737px;
     z-index: 9999;
 }
+@font-face {
+    font-family: 'SutonnyOMJ';
+    src: url('../fontface/SutonnyOMJ.eot');
+    src: url('../fontface/SutonnyOMJ.woff2') format('woff2'),
+    url('../fontface/SutonnyOMJ.woff') format('woff'),
+    url('../fontface/SutonnyOMJ.ttf') format('truetype'),
+    url('../fontface/SutonnyOMJ.svg#SutonnyOMJ') format('svg'),
+    url('../fontface/SutonnyOMJ.eot?#iefix') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
+}

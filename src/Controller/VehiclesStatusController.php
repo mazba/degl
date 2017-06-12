@@ -173,7 +173,6 @@ class VehiclesStatusController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
 
             $data = $this->request->data;
-            echo "<pre>";print_r($data);die();
             $data['end_date']=strtotime( $data['end_date']);
 
 

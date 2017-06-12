@@ -135,8 +135,7 @@ class VehicleServicingsController extends AppController {
     $vehicles = $this->VehicleServicings->Vehicles->find()
                                                   ->select(['id', 'title', 'registration_no', 'type', 'equipment_id_no', 'equipment_category'])
                                                   ->where(['office_id' => $user['office_id']])
-                                                  ->where(['status' => 1])
-                                                  ->where('(vehicle_status ="READY" OR vehicle_status ="IN_USE")');
+                                                  ->where(['status' => 1]);
 
     $this->set(compact('vehicleServicing', 'offices', 'vehicles'));
     $this->set('_serialize', ['vehicleServicing']);
