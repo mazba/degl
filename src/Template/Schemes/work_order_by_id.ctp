@@ -31,24 +31,24 @@ $newspapers = json_decode($result['newspaper'], true);
 				<b>১। বিষয়: Contract Agreement (চুক্তিপত্র) সহ কার্যাদেশ প্রদান প্রসঙ্গে। </b>
 
 				<br/><br/>
-				<table style="width: 100%">
+				<table style="width: 100%; margin-left: 15px">
 					<tr>
 						<td style="width: 96px !important; vertical-align: top"><b>ক) প্রকল্পের নাম: </b></td>
 						<td><?= $result['project_name']?$result['project_name']:'....' ?></td>
 					</tr>
 				</table>
 				<br/>
-				<table style="width:100%">
+				<table style="width:100%; margin-left: 15px">
 					<tr>
 						<td style="width: 91px !important; vertical-align: top"><b>খ) কাজের নাম: </b></td>
 						<td><?= $result['work_name']?$result['work_name']:'....' ;?></td>
 					</tr>
 				</table>
 				<br/>
-				<b><span style="margin-left: 25px">e-Tender ID No:</span></b>&nbsp;<?= $result['etender_no']?$result['etender_no']:'....';  ?>
+				<b><span style="margin-left: 35px">e-Tender ID No:</span></b>&nbsp;<?= $result['etender_no']?$result['etender_no']:'....';  ?>
 				<br/><br/>
 
-				<table style="width:100%;">
+				<table style="width:100%; margin-left: 15px">
 					<tr>
 						<td width="45%"><b>(গ) প্রাক্কলন অনুমোদনের স্মারক নং:</b>  <?= $result['estimation_sarok_no']?$result['estimation_sarok_no']:'....';  ?></td>
 						<td width="25%">তারিখ:
@@ -58,14 +58,14 @@ $newspapers = json_decode($result['newspaper'], true);
 					</tr>
 				</table>
 				<br/>
-				<table style="width:100%;">
+				<table style="width:100%;margin-left: 15px">
 					<tr>
 						<td style="width: 50%; vertical-align: top"><b>(ঘ) e-Tender দরপত্র বিজ্ঞপ্তি নং: </b><?= $result['e_tender_no']?$result['e_tender_no']:'....';  ?> </td>
 						<td width="50%">তারিখঃ   <?= $result['e_tender_date']?$this->Common->EngToBanglaNum(date('d-m-Y', $result['e_tender_date'])). ' ইং':'....'; ?> </td>
 				</tr>
 				</table>
 				<br/>
-				<table style="width:100%; font-size: 15px">
+				<table style="width:100%; font-size: 15px; margin-left: 15px">
 					<tr>
 						<td style="margin-bottom: 5px" colspan="5"><b>(ঙ) বিজ্ঞপ্তি প্রকাশিত পত্রিকার নামঃ </b> </td>
 					</tr>
@@ -88,7 +88,7 @@ $newspapers = json_decode($result['newspaper'], true);
 
 				</table>
 				<br/>
-				<table style="width:100%;">
+				<table style="width:100%; margin-left: 15px">
 					<tr>
 						<td width="33%"><b>(চ) দরপত্র গ্রহণের তারিখঃ </b><?= $result['applied_etender_date']?$this->Common->EngToBanglaNum(date('d-m-Y',$result['applied_etender_date'])).'ইং':'.....'?></td>
 						<td width="33%"> প্রাপ্ত দরপত্র সংখ্যা :    <?= $result['obtain_tender_no']?sprintf("%02d", $result['obtain_tender_no']).'টি':'....';  ?> </td>
@@ -96,7 +96,7 @@ $newspapers = json_decode($result['newspaper'], true);
 					</tr>
 				</table>
 				<br/>
-				<table style="width: 100%">
+				<table style="width: 100%; margin-left: 15px">
 					<tr>
 						<td style="width: 149px !important; vertical-align: top"><b>(ছ) দাখিলকৃত দরপত্র মূল্য: </b></td>
 						<td>
@@ -113,14 +113,14 @@ $newspapers = json_decode($result['newspaper'], true);
 					</tr>
 				</table>
 				<br/>
-				<table>
+				<table style=" margin-left: 15px">
 					<tr>
 						<td style="width: 230px; vertical-align: top"><b>(জ) <?= $result['performance_security']?(int)$result['performance_security']:'....' ?>% Performance Security:</b></td>
 						<td><?= $result['applied_tender_price']?number_format(($result['applied_tender_price']*$result['performance_security'])/100):'....';  ?> টাকা</td>
 					</tr>
 				</table>
 				<br/>
-				<table>
+				<table style="margin-left: 15px">
 					<tr>
 						<td style="vertical-align: top"><b>(ঝ) </b></td>
 						<td><b>&nbsp;নির্বাচিত ঠিকাদার :</b><?= $result['contractor_title']?$result['contractor_title']:'....' ?> এর নামে e-GP  এর মাধ্যমে  NOA  প্রদান করা হয় (কপি নথিতে সংরক্ষিত) ।
@@ -138,7 +138,7 @@ $newspapers = json_decode($result['newspaper'], true);
 
 				<br/><br/><br/><br/>
 
-				<table style="width:100%;  font-size: 15px; margin-bottom: -15px; margin-top: 15px" align="center" >
+				<table style="width:100%;  font-size: 15px; margin-bottom: -15px; margin-top: 15px ; margin-left: 15px"  align="center" >
 					<tr>
 						<td width="20%" align="center">উচ্চমান সহকারী<br/>
 							এলজিইডি, গাজীপুর    </td>
