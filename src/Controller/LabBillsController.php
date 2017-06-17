@@ -340,8 +340,9 @@ class LabBillsController extends AppController
 
             $this->loadModel('Schemes');
             $scheme = $this->Schemes->find()
-                ->select(['contractors.contractor_title', 'projects.name_bn', 'Schemes.id', 'Schemes.name_bn'])
+                ->select(['contractors.contractor_title', 'projects.name_bn',  'packages.name_bn', 'Schemes.id', 'Schemes.name_bn'])
                 ->where(['Schemes.id' => $id])
+                ->leftJoin('packages', 'packages.id=Schemes.package_id')
                 ->leftJoin('projects', 'projects.id=Schemes.project_id')
                 ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id=Schemes.id and scheme_contractors.is_lead=1')
                 ->leftJoin('contractors', 'contractors.id=scheme_contractors.contractor_id');

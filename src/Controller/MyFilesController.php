@@ -159,7 +159,6 @@ class MyFilesController extends AppController
 //pr($receiveFileRegister);die;
         if ($this->request->is(['post', 'put', 'patch'])) {
             $inputs = $this->request->data();
-
             $data = array();
 
             if (!empty($inputs['parent_id'])) {
@@ -273,7 +272,6 @@ class MyFilesController extends AppController
             }
 
             // Forward file
-
             if (isset($inputs['name'])) {
 
                 $this->loadModel('Users');
@@ -320,7 +318,6 @@ class MyFilesController extends AppController
                     }
 
                     /*Insert Data into Lab Letter Register table*/
-
                     if ($value['departments']['keyword'] == Configure::read('departments.LAB') && $receiveFileRegister['message_registers']['attachment_type'] == Configure::read('attachment_type.4')) {
                         $lab['subject'] = $inputs['subject'];
                         $lab['office_id'] = $user['office_id'];
@@ -350,7 +347,6 @@ class MyFilesController extends AppController
 
                     }
                 }
-
                 if (isset($inputs['individual_msg'])) {
                     $arr['sender_id'] = $user['id'];
                     $arr['subject'] = $inputs['subject'];
@@ -528,7 +524,7 @@ class MyFilesController extends AppController
             ->order(['Departments.order_no' => 'asc', 'designations.order_no' => 'asc']);
         $this->loadModel('DirectionSetups');
         $directions = $this->DirectionSetups->find('all');
-        $this->set(compact('receiveFileRegister', 'projects', 'schemes', 'files', 'nothiRegisters', 'departments', 'directions'));
+        $this->set(compact('receiveFileRegister', 'projects', 'schemes', 'files', 'nothiRegisters', 'departments', 'directions', 'user'));
     }
 
     public function ajax($action = null)

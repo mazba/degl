@@ -32,6 +32,7 @@
         </div>
         <div id="PrintArea">
             <div class="col-sm-12 text-center" style="font-size: 16px;margin-bottom:20px">
+                <span>Government of the People's Republic of Bangladesh</span><br>
                 <span>Local Government Engineering Department</span><br>
                 <span>Office of the Executive Engineer</span><br>
                 <span>Gazipur</span><br>
@@ -232,7 +233,7 @@
                                     + '<span><b>Name of Project: </b>' + (scheme[0].projects.name_bn ? scheme[0].projects.name_bn : "") + ' </span><br>'
                                     + '<span><b>Name of Work: </b>' + (scheme[0].name_bn ? scheme[0].name_bn : "") + ' </span><br>'
                                     + '<span><b>Name of Contractor: </b>' + (isNaN(scheme[0].contractors.contractor_title) ? scheme[0].contractors.contractor_title : "") + '</span><br>'
-                                    + '<span><b>Package No: </b></span><br>';
+                                    + '<span><b>Name of Package: </b>' + (scheme[0].packages.name_bn ? scheme[0].packages.name_bn : "") + ' </span>';
                             }
 
                             net_total = total - previous;

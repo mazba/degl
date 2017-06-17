@@ -89,7 +89,15 @@ use Cake\Routing\Router;
     </table>
 
 
-    <b><span style="margin-left:100px; margin-right: 500px">Taka in word: (</span><span> ....)</span></b>
+    <b><span style="margin-left:100px; margin-right: 500px">Taka in word: (
+            <?php if(!empty($hireCharge->net_payable)){
+             $f = new NumberFormatter("en", NumberFormatter::SPELLOUT);
+echo $f->format($hireCharge->net_payable);
+
+            }?>
+
+
+            )</span></b>
 
     <table class="table" style="margin-top: 100px;margin-left: 35px">
         <tr>
