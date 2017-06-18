@@ -3,65 +3,74 @@ use Cake\Core\Configure;
 //pr($measurements);die;
 
 ?>
-<div class="form-group input col-md-12 pull-right" id="measurement_book_wrp" style="padding-right: 1.5em; text-align: right">
-    <p><?= __('RA Bills No: ') ?><?= $ra_bill_no?><span>&nbsp;<?= $bil_type?$bil_type:'' ?></span></p>
+<div class="form-group input col-md-4 pull-right" id="measurement_book_wrp">
+    <label class="col-sm-4 control-label text-right"><?= __('RA Bills No') ?></label>
+    <div class="col-sm-6">
+        <label class="form-control"><?php echo $ra_bill_no; ?></label>
+    </div>
 </div>
 <table class="table table-bordered show-grid">
     <thead>
+    <tr>
+        <td>Item of work</td>
+        <td colspan="3">As Estimated</td>
+        <td colspan="3">As Excepted</td>
+        <td colspan="4">Difference</td>
+    </tr>
     <tr style="background: #eea236; color: #fff; font-weight: bold;text-align: center;">
-        <td><?= 'Items' ?></td>
-        <td><?= __('Quantity as per Contract') ?></td>
-        <td><?= __('Previous R/A Bill Quantity') ?></td>
-        <td><?= __('Total Bill Quantity (Quantity Executed or Supplied since last Certificate)') ?></td>
-        <td><?= __('This Bill Quantity (Quantity Executed or Supplied upto date as per MB)') ?></td>
-        <td><?= 'Unit' ?></td>
-        <td><?= __('Description of Works(item)') ?></td>
-        <td><?= 'Rate' ?></td>
-        <td><?= __('Amount as per contract (Tk)') ?></td>
-        <td><?= __('Previous R/A Bill Amount (Tk)') ?></td>
-        <td><?= __('Total Bill/Upto date Bill/Amount (Tk)') ?></td>
-        <td><?= __('This Bill (Since Last Certificate Amount (Tk.))') ?></td>
+        <td><?= __('Items') ?></td>
+        <td>Quantity</td>
+        <td>Rate</td>
+        <td>Amount</td>
+
+        <td>Quantity</td>
+        <td>Rate</td>
+        <td>Amount</td>
+
+
+        <td>Quantity</td>
+        <td>Rate</td>
+        <td>Amount</td>
+
+        <td>explaning deference</td>
+
     </tr>
     </thead>
     <tbody>
-    <?php $i =0; foreach($measurements as $key => $measurement_data):  ?>
-        <input type="hidden" name="details[<?=$i?>][scheme_item_id]" value="<?=$key?>">
-        <input type="hidden" name="details[<?=$i?>][serial_number]" value="<?=$i?>">
-        <input type="hidden" name="details[<?=$i?>][short_description]" value="<?= $measurement_data['description']?>">
-        <?php
-        $item_count=count($measurement_data['item']);
-        $current_index=0;
+    <?php
+    $total = 0;
+    $i =0;
+    foreach($scheme_details as $scheme_detail)
+    {
+        $i++;
         ?>
-        <?php $k= 0; foreach($measurement_data['item'] as $key => $measurement):  ?>
-            <?php
-            ++$k;
-            $current_index++;
-            if($k == 1){
-                $previous = '0';
-            }else{
-                $previous = $temp;
-            }
-            $temp = $measurement['quantity_of_work_done'];
-            if($item_count!=$current_index)
-                continue;
-            ?>
-            <tr>
-                <td><?= ++$i ?></td>
-                <td><?= $measurement_data['quantity']; ?></td>
-                <td><?= $previous ?></td>
-                <td><?= $total = $measurement['quantity_of_work_done']?></td>
-                <td><?= $current = $total - $previous; ?></td>
-                <td><?= $measurement_data['unit']?></td>
-                <td><?= substr($measurement_data['description'], 0, 80).'...';?></td>
-                <td><?= number_format( $measurement_data['rate'], 2, '.', '')?></td>
-                <td><?= number_format( $measurement_data['quantity']*$measurement_data['rate'], 2, '.', '') ?></td>
-                <td><?= number_format( $previous * $measurement_data['rate'], 2, '.', '')?></td>
-                <td><?= number_format( $total * $measurement_data['rate'], 2, '.', '')?></td>
-                <td><?= number_format( $current * $measurement_data['rate'], 2, '.', '')?></td>
-            </tr>
+        <tr>
+            <input type="hidden" name="details[<?=$i?>][scheme_item_id]" value="<?=$scheme_detail['id']?>">
+            <td>                 <input type="hidden" name="details[<?=$i?>][serial_number]" value="<?=$i?>"><span class="label label-info"> Item <?php echo $i; ?> </span>
+                <textarea name="details[<?=$i?>][short_description]" class="form-control" rows="3"><?php echo $scheme_detail['description']; ?></textarea>
+            </td>
+            <td><?php echo $scheme_detail['quantity']; ?></td>
+            <td><?php echo $scheme_detail['rate']; ?></td>
+            <td><?php echo number_format( $scheme_detail['quantity']*$scheme_detail['rate'], 2, '.', ''); ?></td>
 
-        <?php endforeach; ?>
-    <?php endforeach; ?>
+            <td><?php echo $scheme_detail['quantity_executed']; ?></td>
+            <td><?php echo $scheme_detail['rate']; ?></td>
+            <td class="payable"><?php echo number_format( $scheme_detail['quantity_executed']*$scheme_detail['rate'], 2, '.', ''); ?></td>
+
+            <td><?php echo $scheme_detail['quantity']-$scheme_detail['quantity_executed']; ?></td>
+            <td><?php echo $scheme_detail['rate']-$scheme_detail['rate']; ?></td>
+            <td><?php echo number_format( ($scheme_detail['quantity']*$scheme_detail['rate'])-( $scheme_detail['quantity_executed']*$scheme_detail['rate']), 2, '.', ''); ?></td>
+
+            <td ></td>
+        </tr>
+        <?php
+        $total += $scheme_detail['quantity_executed']*$scheme_detail['rate'];
+    }
+    ?>
+    <tr>
+        <td colspan="6"><?= __('Total Work done to Date') ?></td><td id="show_total"><?php //echo $total; ?></td>
+        <td>&nbsp;</td>
+    </tr>
     </tbody>
 </table>
 

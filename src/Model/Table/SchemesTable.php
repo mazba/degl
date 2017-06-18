@@ -79,6 +79,10 @@ class SchemesTable extends Table
             'foreignKey' => 'scheme_id'
         ]);
 
+        $this->hasMany('SchemeContractors', [
+            'foreignKey' => 'scheme_id'
+        ]);
+
         $this->hasMany('SchemeProgressPlans', [
             'foreignKey' => 'scheme_id'
         ]);
