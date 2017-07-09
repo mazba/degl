@@ -46,93 +46,104 @@ use Cake\Core\Configure;
             </div>
             <div class="col-sm-12">
                 <table class="table table-bordered show-grid">
-                    <thead>
-                    <tr style="background: #eea236; color: #fff; font-weight: bold;text-align: center;">
-                        <td><?= 'Items' ?></td>
-                        <td><?= __('Quantity as per Contract') ?></td>
-                        <td><?= __('Previous R/A Bill Quantity') ?></td>
-                        <td><?= __('Total Bill Quantity (Quantity Executed or Supplied since last Certificate)') ?></td>
-                        <td><?= __('This Bill Quantity (Quantity Executed or Supplied upto date as per MB)') ?></td>
-                        <td><?= 'Unit' ?></td>
-                        <td><?= __('Description of Works(item)') ?></td>
-                        <td><?= 'Rate' ?></td>
-                        <td><?= __('Amount as per contract (Tk)') ?></td>
-                        <td><?= __('Previous R/A Bill Amount (Tk)') ?></td>
-                        <td><?= __('Total Bill/Upto date Bill/Amount (Tk)') ?></td>
-                        <td><?= __('This Bill (Since Last Certificate Amount (Tk.))') ?></td>
+                    <thead class="cell-design">
+                    <tr>
+                        <th style="vertical-align: middle">Items</th>
+                        <th style="vertical-align: middle">Unit</th>
+                        <th style="vertical-align: middle">Description of Works (item)</th>
+                        <th style="vertical-align: middle">Quantity as per Contract</th>
+                        <th style="vertical-align: middle">Previous R/A Bill Quantity</th>
+                        <th style="vertical-align: middle">Total Bill Quantity (Quantity Executed or Supplied since last Certificate</th>
+                        <th style="vertical-align: middle">This Bill Quantity (Quantity Executed or Supplied upto date as per MB</th>
+                        <th style="vertical-align: middle">Rate</th>
+                        <th style="vertical-align: middle">Amount as per contract (Tk)</th>
+                        <th style="vertical-align: middle">Previous R/A Bill Amount (Tk)</th>
+                        <th style="vertical-align: middle">Total Bill/Upto date Bill/Amount (Tk)</th>
+                        <th style="vertical-align: middle">This Bill (Since Last Certificate Amount (Tk.))</th>
+                        <th style="vertical-align: middle">Remarks</th>
                     </tr>
+
                     </thead>
                     <tbody>
-                    <?php $i =0; foreach($measurements as $key => $measurement_data): $i++; ?>
+                    <?php $i =0; foreach($measurements as $key => $measurement_data):  ?>
                         <input type="hidden" name="details[<?=$i?>][scheme_item_id]" value="<?=$key?>">
                         <input type="hidden" name="details[<?=$i?>][serial_number]" value="<?=$i?>">
                         <input type="hidden" name="details[<?=$i?>][short_description]" value="<?= $measurement_data['description']?>">
+                        <?php
+                        $item_count=count($measurement_data['item']);
+                        $current_index=0;
+                        ?>
                         <?php $k= 0; foreach($measurement_data['item'] as $key => $measurement):  ?>
+                            <?php
+                            ++$k;
+                            $current_index++;
+                            if($k == 1){
+                                $previous = '0';
+                            }else{
+                                $previous = $temp;
+                            }
+                            $temp = $measurement['quantity_of_work_done'];
+                            if($item_count!=$current_index)
+                                continue;
+                            ?>
                             <tr>
-                                <td><?= ++$k ?></td>
+                                <td><?= ++$i ?></td>
+                                <td><?= $measurement_data['unit']?></td>
+                                <td><?= substr($measurement_data['description'], 0, 60).'...';?></td>
                                 <td><?= $measurement_data['quantity']; ?></td>
-                                <td><?php
-                                    if($k == 1){
-                                        echo $previous = '0';
-                                    }else{
-                                        echo $previous = $temp;
-                                    }
-                                    ?></td>
+                                <td><?= $previous ?></td>
                                 <td><?= $total = $measurement['quantity_of_work_done']?></td>
                                 <td><?= $current = $total - $previous; ?></td>
-                                <td><?= $measurement_data['unit']?></td>
-                                <td><?= substr($measurement_data['description'], 0, 80).'...';?></td>
+
                                 <td><?= number_format( $measurement_data['rate'], 2, '.', '')?></td>
                                 <td><?= number_format( $measurement_data['quantity']*$measurement_data['rate'], 2, '.', '') ?></td>
                                 <td><?= number_format( $previous * $measurement_data['rate'], 2, '.', '')?></td>
                                 <td><?= number_format( $total * $measurement_data['rate'], 2, '.', '')?></td>
                                 <td><?= number_format( $current * $measurement_data['rate'], 2, '.', '')?></td>
+                                <td></td>
                             </tr>
-                            <?php $temp = $measurement['quantity_of_work_done']; ?>
+
                         <?php endforeach; ?>
                     <?php endforeach; ?>
                     </tbody>
                 </table>
+                <style>
+                    .table td:nth-child(3){
+                        width: 250px !important;
+                    }
+                </style>
+                <!--<style>
+                    .table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td {
+                        border: 1px solid #000 !important;
+                    }
+                    .textd {
+
+                    }
+                    .rotate-cell{
+                        height:200px;
+                        vertical-align: bottom !important;
+                        position: relative;
+                        /*text-align: center !important;*/
+                    }
+                    .rotate{
+                        transform: rotate(-90deg) !important;
+                        -moz-transform:rotate(-90deg)  !important;;
+                        -moz-transform-origin: top left;
+                        -webkit-transform: rotate(-90deg)  !important;;
+                        -webkit-transform-origin: top left;
+                        -o-transform: rotate(-90deg)  !important;;
+                        -o-transform-origin:  top left;
+                        position: absolute;
+                        width: 180px;
+                        text-align: left !important;
+                    }
+                    .cell-design > tr {
+                        border: 1px solid #000;
+                    }
+                </style>-->
             </div>
 
             <!--            <div class="col-sm-8"></div>-->
-            <div class="col-sm-12">
-                <table class="table" style="width: 33.33333333%; float: right;">
-                    <tr>
-                        <td> <?= __('Above or Less') ?></td>
-                        <td>  <?= $proposedRaBill['above_or_less']?> </td>
-                    </tr>
-
-                    <tr>
-                        <td> <?= __('Percentage') ?></td>
-                        <td>    <?= $proposedRaBill['percentage']?>% </td>
-                    </tr>
-
-                    <tr>
-                        <td> <?= __('Percentage Value') ?></td>
-                        <td>   <?php echo $Percentage_Value=($total*$proposedRaBill['percentage'])/100?> </td>
-                    </tr>
-
-                    <tr>
-                        <td><?= __('So Far Payable')  ?></td>
-                        <td>    <?php if($proposedRaBill['above_or_less']=='ABOVE'){
-                                echo $Bill_Amoun =$total+$Percentage_Value;
-                            }else{
-                                echo $Bill_Amoun =$total-$Percentage_Value;
-                            }?></td>
-                    </tr>
-
-                    <tr>
-                        <td><?= __('Upto date Approved') ?></td>
-                        <td>   <?=$up_to_date_approved?$up_to_date_approved:0?> </td>
-                    </tr>
-
-                    <tr>
-                        <td><?= __('Bill Amount') ?></td>
-                        <td>   <?=$Bill_Amoun -$up_to_date_approved?> </td>
-                    </tr>
-                </table>
-            </div>
         </div>
     </div>
 </div>

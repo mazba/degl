@@ -71,10 +71,6 @@ class SchemesTable extends Table
             'foreignKey' => 'scheme_id'
         ]);
 
-        $this->hasOne('ProposedRaBills', [
-            'foreignKey' => 'scheme_id'
-        ]);
-
         $this->hasMany('SchemeProgresses', [
             'foreignKey' => 'scheme_id'
         ]);

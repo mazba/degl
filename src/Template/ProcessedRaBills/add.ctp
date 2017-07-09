@@ -5,15 +5,15 @@ use Cake\Core\Configure;
     <ul class="breadcrumb">
         <li><a href="<?= $this->Url->build(('/Dashboard'), true); ?>">Dashboard</a></li>
         <li><?= $this->Html->link(__('Processed Ra Bills'), ['action' => 'index']) ?></li>
-                    <li class="active">New Processed Ra Bill</li>
-        
+        <li class="active">New Processed Ra Bill</li>
+
     </ul>
 </div>
 <div class="tabbable page-tabs">
     <ul class="nav nav-tabs">
         <li><?= $this->Html->link(__('List of Processed Ra Bills'), ['action' => 'index']) ?></li>
-                    <li class="active"><?= $this->Html->link(__('New Processed Ra Bill'), ['action' => 'add']) ?></li>
-        
+        <li class="active"><?= $this->Html->link(__('New Processed Ra Bill'), ['action' => 'add']) ?></li>
+
 
     </ul>
 </div>
@@ -30,7 +30,7 @@ use Cake\Core\Configure;
         <div class="form-group input text">
             <label class="col-sm-3 control-label text-right" for="security">Bill Amount</label>
             <div class="col-sm-9 container_security">
-                <input id="" class="form-control" value="<?=$measurementInfo['approve_bill_amount']?>" name="" type="text" readonly>
+                <input id="" class="form-control" value="<?=$measurementInfo['approve_bill_amount']?>" name="bill_amount" type="text" readonly>
                 <input value="<?=$measurementInfo['scheme_id']?>" name="scheme_id" type="hidden" readonly>
             </div>
         </div>
@@ -43,9 +43,16 @@ use Cake\Core\Configure;
         </div>
 
         <div class="form-group input text">
-            <label class="col-sm-3 control-label text-right" for="security">Income Tex</label>
+            <label class="col-sm-3 control-label text-right" for="security">Income Tax</label>
             <div class="col-sm-9 container_security">
                 <input id="income_tex" class="form-control common" name="income_tex" type="text">
+            </div>
+        </div>
+
+        <div class="form-group input text">
+            <label class="col-sm-3 control-label text-right" for="security">Cost Of Material</label>
+            <div class="col-sm-9 container_security">
+                <input id="cost_of_material" class="form-control common" name="cost_of_material" type="text">
             </div>
         </div>
 
@@ -53,6 +60,34 @@ use Cake\Core\Configure;
             <label class="col-sm-3 control-label text-right" for="security">Vat</label>
             <div class="col-sm-9 container_security">
                 <input id="vat" class="form-control common" name="vat" type="text">
+            </div>
+        </div>
+
+        <div class="form-group input text">
+            <label class="col-sm-3 control-label text-right" for="security">Etc</label>
+            <div class="col-sm-9 container_security">
+                <input id="etc_fee" class="form-control common" name="etc_fee" type="text">
+            </div>
+        </div>
+        <!-- Custom field added -->
+        <div class="form-group input text">
+            <label for="has_others" class="col-sm-3 control-label text-right"><?= __('Has Others:') ?></label>
+            <div class="col-sm-9 container_etender_date">
+                <input type="checkbox" name="checkbox" id="checkbox" value="1" style="margin-top: 13px;"/>
+            </div>
+        </div>
+        <div id="showthis">
+            <div class="form-group input text">
+                <label for="edo_completion" class="col-sm-3 control-label text-right"><?= __('Text:') ?></label>
+                <div class="col-sm-9 container_etender_date">
+                    <input type="text" name="e_field"   value="" id="e_field" maxlength="11" class="form-control">
+                </div>
+            </div>
+            <div class="form-group input text">
+                <label for="e_value:" class="col-sm-3 control-label text-right"><?= __('Value:') ?></label>
+                <div class="col-sm-9 container_etender_date">
+                    <input type="text" name="e_value"   value="" id="e_value" maxlength="11" class="form-control">
+                </div>
             </div>
         </div>
 
@@ -97,17 +132,16 @@ use Cake\Core\Configure;
             var net_amount=net_payable-security;
             $('#net_payable').val(net_amount)
 
-    });
+        });
 
         $(document).on("change", "#income_tex", function(event)
         {
             var net_payable= parseInt($('#net_payable').val());
-
             var income_tex= parseInt($('#income_tex').val());
             var net_amount=net_payable-income_tex;
             $('#net_payable').val(net_amount)
 
-    });
+        });
 
         $(document).on("change", "#vat", function(event)
         {
@@ -117,7 +151,50 @@ use Cake\Core\Configure;
             var net_amount=net_payable-vat;
             $('#net_payable').val(net_amount)
 
-    });
+        });
+
+
+        $(document).on("change", "#cost_of_material", function(event)
+        {
+            var net_payable= parseInt($('#net_payable').val());
+
+            var cost_of_material= parseInt($('#cost_of_material').val());
+            var net_amount=net_payable-cost_of_material;
+            $('#net_payable').val(net_amount)
+
+        });
+
+        $(document).on("change", "#etc_fee", function(event)
+        {
+            var net_payable= parseInt($('#net_payable').val());
+
+            var etc_fee= parseInt($('#etc_fee').val());
+            var net_amount=net_payable-etc_fee;
+            $('#net_payable').val(net_amount)
+
+        });
+        // Extra field
+        $(document).on("change", "#e_value", function(event)
+        {
+            var net_payable= parseInt($('#net_payable').val());
+            var etc_fee= parseInt($('#e_value').val());
+            var net_amount=net_payable-etc_fee;
+            $('#net_payable').val(net_amount)
+
+        });
+
+        // show field based on checkbox
+        $(function () {
+            $('#showthis').hide();
+
+            $('#checkbox').on('click', function () {
+                if ($(this).prop('checked')) {
+                    $('#showthis').fadeIn();
+                } else {
+                    $('#showthis').hide();
+                }
+            });
+        });
 
     });
 

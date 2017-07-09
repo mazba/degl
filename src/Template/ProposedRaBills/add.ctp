@@ -162,7 +162,7 @@ use Cake\Core\Configure;
                                 if (data) {
                                     $('#items_wrp').html(data);
                                 }
-                                calculate_total();
+//                                calculate_total();
                             },
                             error: function (xhr, desc, err) {
                                 console.log("error");
@@ -182,7 +182,7 @@ use Cake\Core\Configure;
                                 if (data) {
                                     $('#items_wrp').html(data);
                                 }
-                                calculate_total();
+//                                calculate_total();
                             },
                             error: function (xhr, desc, err) {
                                 console.log("error");
@@ -201,7 +201,7 @@ use Cake\Core\Configure;
             event.preventDefault();
             var id = $(this).data('item-id');
             $(this).closest('tr').remove();
-            calculate_total();
+//            calculate_total();
             $("#above_or_less").val('');
             $('#percentage_wrp').hide();
             $('#so_far_payable_wrp').hide();
@@ -234,6 +234,7 @@ use Cake\Core\Configure;
             var percentage = parseFloat($(this).val());
             var above_or_less = $('#above_or_less').val();
             var total_payable = parseFloat($('#total_payable').val());
+            console.log(total_payable);
             var up_to_date_approved = parseFloat($('#up_to_date_approved').html());
             // console.log(up_to_date_approved);
             var so_far_payable = 0;
@@ -295,7 +296,7 @@ use Cake\Core\Configure;
         });
     });
 
-    function calculate_total() {
+   /* function calculate_total() {
         var total = 0;
         $(".payable").each(function (index) {
             total += parseInt($(this).text());
@@ -304,7 +305,7 @@ use Cake\Core\Configure;
         console.log(total);
         $('#show_total').html(total);
         $('#total_payable').val(total);
-    }
+    }*/
 
     //    function so_far_payable(){
     //        var total= $('#show_total').html();

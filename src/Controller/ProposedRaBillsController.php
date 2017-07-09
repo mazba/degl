@@ -214,11 +214,28 @@ class ProposedRaBillsController extends AppController
         $proposedRaBill = $this->ProposedRaBills->newEntity();
         if ($this->request->is('post')) {
             $data = $this->request->data;
+//            pr($data['previous_value']);die;
             $data['office_id'] = $user['office_id'];
             $data['created_by'] = $user['id'];
             $data['created_date'] = time();
             $proposedRaBill = $this->ProposedRaBills->patchEntity($proposedRaBill, $data);
             $ra_bill_id = $this->ProposedRaBills->save($proposedRaBill);
+            // process report data
+            $this->loadModel('ProcessedReports');
+            if(!empty(trim($data['previous_value']))){
+                $ProcessedReport = $this->ProcessedReports->get($data['previous_value']);
+            }else{
+                $ProcessedReport = $this->ProcessedReports->newEntity();
+            }
+            $inputs['processed_ra_bill_id'] = $ra_bill_id['id'];
+            $inputs['scheme_id'] = $data['scheme_id'];
+            $inputs['do_commencement'] = strtotime($data['do_commencement']);
+            $inputs['do_completion'] = strtotime($data['do_completion']);
+            $inputs['edo_completion'] = strtotime($data['edo_completion']);
+            $inputs['ado_completion'] = strtotime($data['ado_completion']);
+            $inputs['status'] = 1;
+            $ProcessedReport = $this->ProcessedReports->patchEntity($ProcessedReport, $inputs);
+            $ProcessedReport = $this->ProcessedReports->save($ProcessedReport);
 
             foreach ($data['details'] as $row) {
                 $this->loadModel('RaBillDetails');
@@ -323,7 +340,11 @@ class ProposedRaBillsController extends AppController
             $measurements_table = TableRegistry::get('measurements');
             $last_measurement = true;
 
-
+            $this->loadModel('ProcessedReports');
+            $processReport = $this->ProcessedReports->find()
+                ->where(['scheme_id' => $input['scheme_id']])
+                ->first();
+//            pr($processReport);die;
             if ($last_measurement) {
                 $this->loadModel('Measurements');
                 //find item latest measurement wise
@@ -429,9 +450,9 @@ class ProposedRaBillsController extends AppController
                 }
                 //   echo "<pre>";print_r($up_to_date_approved);die();
             }
-
+            $scheme_id = $input['scheme_id'];
             $bil_type = null;
-            $this->set(compact('scheme_details', 'last_measurement', 'last_ra_bills_items', 'up_to_date_approved', 'ra_bill_no','measurements','bil_type'));
+            $this->set(compact('scheme_details', 'last_measurement', 'last_ra_bills_items', 'up_to_date_approved', 'ra_bill_no','measurements','bil_type','scheme_id','processReport'));
         }
 
         elseif ($task == 'get_final_items') {
@@ -443,6 +464,11 @@ class ProposedRaBillsController extends AppController
             $measurements_table = TableRegistry::get('measurements');
             $last_measurement = true;
 
+            // process report
+            $this->loadModel('ProcessedReports');
+            $processReport = $this->ProcessedReports->find()
+                ->where(['scheme_id' => $input['scheme_id']])
+                ->first();
 
             if ($last_measurement) {
                 $this->loadModel('Measurements');
@@ -550,9 +576,9 @@ class ProposedRaBillsController extends AppController
                 }
                 //   echo "<pre>";print_r($up_to_date_approved);die();
             }
-
+            $scheme_id = $input['scheme_id'];
             $bil_type = 'Final';
-            $this->set(compact('scheme_details', 'last_measurement', 'last_ra_bills_items', 'up_to_date_approved', 'ra_bill_no','measurements','bil_type'));
+            $this->set(compact('scheme_details', 'last_measurement', 'last_ra_bills_items', 'up_to_date_approved', 'ra_bill_no','measurements','bil_type','scheme_id','processReport'));
         }
     }
 }

@@ -37,6 +37,11 @@ class ProcessedRaBillsTable extends Table
             'foreignKey' => 'updated_by',
             'joinType' => 'LEFT'
         ]);
+
+        $this->hasOne('ProcessedReports', [
+            'foreignKey' => 'scheme_id',
+            'joinType' => 'LEFT'
+        ]);
     }
 
     /**
@@ -74,6 +79,18 @@ class ProcessedRaBillsTable extends Table
         $validator
             ->add('net_payable', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('net_payable');
+
+        $validator
+            ->add('cost_of_material', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('cost_of_material');
+
+        $validator
+            ->add('etc_fee', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('etc_fee');
+
+        $validator
+            ->add('e_value', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('e_value');
 
         return $validator;
     }
