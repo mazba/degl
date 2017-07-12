@@ -4,20 +4,30 @@
         <li class="active"><?= __('Vehicles') ?></li>
     </ul>
 </div>
-<div class="tabbable page-tabs">
-    <ul class="nav nav-tabs">
-        <li class="active"><?= $this->Html->link(__('List of Vehicles'), ['action' => 'index']) ?></li>
-        <?php
-        if ($user_roles['add'] == 1)
-        {
-            ?>
-            <li><?= $this->Html->link(__('New Vehicle'), ['action' => 'add']) ?></li>
-        <?php
-        }
-        ?>
+<div class="row">
+    <div class="col-sm-10">
+        <div class="tabbable page-tabs">
+            <ul class="nav nav-tabs">
+                <li class="active"><?= $this->Html->link(__('List of Vehicles'), ['action' => 'index']) ?></li>
+                <?php
+                if ($user_roles['add'] == 1)
+                {
+                    ?>
+                    <li><?= $this->Html->link(__('New Vehicle'), ['action' => 'add']) ?></li>
+                    <?php
+                }
+                ?>
 
-    </ul>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="pull-right">
+            <a class="vehicle-list" href="<?= $this->Url->build(['action' => 'vehicleList'])?>"><?= __('Vehicle List Report') ?></a>
+        </div>
+    </div>
 </div>
+
 
 <div class="well text-center">
     <div id="dataTable" style="margin-top:5px ">
@@ -77,3 +87,13 @@
             });
     });
 </script>
+
+<style>
+.vehicle-list {
+    font-weight: bold;
+    background: mediumseagreen;
+    padding: 10px 12px;
+    color: #fff;
+    border-radius: 3px;
+}
+</style>

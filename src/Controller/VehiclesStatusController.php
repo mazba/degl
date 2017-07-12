@@ -140,9 +140,8 @@ class VehiclesStatusController extends AppController
             }
         }
         $employees = $this->VehiclesStatus->Employees->find('list',['conditions' => ['status' => 1]]);
-//        $schemes = $this->VehiclesStatus->Schemes->find('list');
-//        $location = $this->VehiclesStatus->Schemes->find()
-//            ->
+
+        $this->loadModel('AssignVehicles');
         $this->set(compact('vehiclesStatus', 'employees','scheme_name'));
         $this->set('_serialize', ['vehiclesStatus']);
     }

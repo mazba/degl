@@ -17,6 +17,7 @@ class VehicleServicing extends Entity
     protected $_accessible = [
         'office_id' => true,
         'vehicle_id' => true,
+        'financial_year_estimate_id' => true,
         'breakdown_date' => true,
         'km_hr' => true,
         'is_periodic_maintenance' => true,

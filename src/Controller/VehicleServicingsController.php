@@ -52,12 +52,7 @@ class VehicleServicingsController extends AppController {
     $user = $this->Auth->user();
     $vehicleServicing = $this->VehicleServicings->newEntity();
     if ($this->request->is('post')) {
-//            echo "<pre>";
-//             print_r($this->request->data);
-//             echo "</pre>";
-//             die;
       $time = time();
-
       $data = $this->request->data;
       $parts = $data['parts'];
       unset($data['parts']);
@@ -88,16 +83,6 @@ class VehicleServicingsController extends AppController {
       } else {
         $data['servicing_end_date'] = '';
       }
-
-      /*$x=strtotime($data['servicing_end_date']);
-      if($x!==false)
-      {
-          $data['servicing_end_date']=$x;
-      }
-      else
-      {
-          $data['servicing_end_date']='';
-      }*/
       $vehicleServicing = $this->VehicleServicings->patchEntity($vehicleServicing, $data);
       if ($this->VehicleServicings->save($vehicleServicing)) {
         $this->loadModel('VehicleServicingDetails');
@@ -136,8 +121,10 @@ class VehicleServicingsController extends AppController {
                                                   ->select(['id', 'title', 'registration_no', 'type', 'equipment_id_no', 'equipment_category'])
                                                   ->where(['office_id' => $user['office_id']])
                                                   ->where(['status' => 1]);
+    $this->loadModel('FinancialYearEstimates');
+    $finalcialYears = $this->FinancialYearEstimates->find('list')->where(['status !='=> 99])->toArray();
 
-    $this->set(compact('vehicleServicing', 'offices', 'vehicles'));
+    $this->set(compact('vehicleServicing', 'offices', 'vehicles','finalcialYears'));
     $this->set('_serialize', ['vehicleServicing']);
   }
 
@@ -225,8 +212,10 @@ class VehicleServicingsController extends AppController {
                                                   ->where(['office_id' => $user['office_id']])
                                                   ->where(['status' => 1])
                                                   ->where('(vehicle_status ="READY" OR vehicle_status ="IN_USE")');
+    $this->loadModel('FinancialYearEstimates');
+    $finalcialYears = $this->FinancialYearEstimates->find('list')->where(['status !='=> 99])->toArray();
 
-    $this->set(compact('vehicleServicing', 'offices', 'vehicles'));
+    $this->set(compact('vehicleServicing', 'offices', 'vehicles','finalcialYears'));
     $this->set('_serialize', ['vehicleServicing']);
   }
 

@@ -29,6 +29,10 @@ class VehiclesTable extends Table
             'foreignKey' => 'vehicle_id'
         ]);
 
+        $this->hasMany('VehicleServicings', [
+            'foreignKey' => 'vehicle_id'
+        ]);
+
         $this->belongsTo('Offices', [
             'foreignKey' => 'office_id',
             'joinType' => 'INNER'

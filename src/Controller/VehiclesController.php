@@ -201,4 +201,66 @@ class VehiclesController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
+
+    /**
+     * Vehicle list controller
+     */
+    public function vehicleList(){
+
+        if($this->request->is(['post'])){
+            $data = $this->request->data();
+            $this->loadModel('VehicleServicings');
+            $user = $this->Auth->user();
+            $query = TableRegistry::get('vehicles')->find();
+
+            if(isset($data['financial_year_estimate_id']) && !empty($data['financial_year_estimate_id'])){
+                $vehicles = $query->select([
+                    'id' => 'vehicles.id',
+                    'title' => 'vehicles.title',
+                    'type' => 'vehicles.type',
+                    'registration_no' => 'vehicles.registration_no',
+                    'equipment_engine_capacity' => 'vehicles.equipment_engine_capacity',
+                    'country_of_origin' => 'vehicles.country_of_origin',
+                    'equipment_source' => 'vehicles.equipment_source',
+                    'vehicle_status' => 'vehicles.vehicle_status',
+                    'serviceCost' => $query->func()->sum('vehicle_servicings.service_charge')
+                ])
+                    ->leftJoin('vehicle_servicings', 'vehicle_servicings.vehicle_id = vehicles.id')
+                    ->where([
+                        'vehicles.status !=' =>99,
+                        'vehicle_servicings.status !=' =>99,
+                        'vehicle_servicings.financial_year_estimate_id ' => $data['financial_year_estimate_id'],
+                    ])
+                    ->group(['vehicle_servicings.vehicle_id'])
+                    ->hydrate(false)
+                    ->toArray();
+                $this->loadModel('FinancialYearEstimates');
+                $finalcialYear = $this->FinancialYearEstimates->find('all')->select(['name'])->where(['id' => $data['financial_year_estimate_id']])->first();
+                $this->set(compact('vehicles','finalcialYear'));
+            }
+            else{
+                $vehicles = $query->select([
+                    'id' => 'vehicles.id',
+                    'title' => 'vehicles.title',
+                    'type' => 'vehicles.type',
+                    'registration_no' => 'vehicles.registration_no',
+                    'equipment_engine_capacity' => 'vehicles.equipment_engine_capacity',
+                    'country_of_origin' => 'vehicles.country_of_origin',
+                    'equipment_source' => 'vehicles.equipment_source',
+                    'vehicle_status' => 'vehicles.vehicle_status',
+                    'serviceCost' => $query->func()->sum('vehicle_servicings.service_charge')
+                ])
+                    ->leftJoin('vehicle_servicings', 'vehicle_servicings.vehicle_id = vehicles.id')
+                    ->where(['vehicles.status !=' =>99,'vehicle_servicings.status !=' =>99])
+                    ->group(['vehicle_servicings.vehicle_id'])
+                    ->hydrate(false)
+                    ->toArray();
+                $this->set(compact('vehicles'));
+            }
+
+        }
+        $this->loadModel('FinancialYearEstimates');
+        $finalcialYears = $this->FinancialYearEstimates->find('list')->where(['status !='=> 99])->toArray();
+        $this->set(compact('finalcialYears'));
+    }
 }

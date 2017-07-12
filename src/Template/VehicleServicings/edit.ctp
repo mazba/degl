@@ -55,6 +55,7 @@ use Cake\Core\Configure;
       <?php
       echo $this->Form->input('servicing_start_date', ['type' => 'text', 'value' => $this->System->display_date($vehicleServicing->servicing_start_date), 'class' => 'form-control hasdatepicker']);
       echo $this->Form->input('servicing_end_date', ['type' => 'text', 'value' => $this->System->display_date($vehicleServicing->servicing_end_date), 'class' => 'form-control hasdatepicker']);
+      echo $this->Form->input('financial_year_estimate_id', ['options' => $finalcialYears, 'empty' => 'Select']);
       echo $this->Form->input('job_card');
       echo $this->Form->input('defects');
       echo $this->Form->input('vehicle_place_of_user');
