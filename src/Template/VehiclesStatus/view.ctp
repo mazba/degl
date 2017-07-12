@@ -38,41 +38,72 @@ use Cake\Core\Configure;
             </tr>
         </table>
         <hr/>
-        <h3>History</h3>
-        <table class="table table-bordered">
-            <tr>
-                <td>#</td>
-                <td>Scheme</td>
-                <td>Driver</td>
-                <td>Location</td>
-                <td>Assign Date</td>
-                <td>Return Date</td>
-                <td>Remark</td>
-                <td>Status</td>
-            </tr>
-            <?php $i=1;?>
-            <?php foreach($vehiclesStatus['vehicles_status'] as $row):?>
-                <tr>
-                    <td><?= $i;?></td>
-                    <td><?= $row['scheme']['name_bn'];?></td>
-                    <td><?= $row['employee']['name_bn'];?></td>
-                    <td><?= $row['vehicle_location'];?></td>
-                    <td><?= date('d/m/Y',$row['assign_date']);?></td>
-                    <td><?=$row['end_date']?date('d/m/Y', $row['end_date']):'';?></td>
-                    <td><?= $row['remark'];?></td>
-                    <td><?= $row['status']?'On Hire':'Closed';?></td>
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>History</h3>
+                <div class="col-sm-12">
+                    <button style="float: right" onclick="print_rpt()">Print</button>
+                </div>
+                <div id="PrintArea">
+                    <h2 class="text-center"><?= __('LOCAL GOVERNMENT ENGINEERING DEPARTMENT') ?></h2>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Sl No</td>
+                            <td>Equipment Or Vehicle Description</td>
+                            <td>Scheme</td>
+                            <td>Driver</td>
+                            <td>Location</td>
+                            <td>Assign Date</td>
+                            <td>Return Date</td>
+                            <td>Working Days</td>
+                            <td>Total Cost</td>
+                            <td>Remark</td>
+                            <td>Status</td>
+                        </tr>
+                        <?php $i=1;?>
+                        <?php foreach($vehiclesStatus['vehicles_status'] as $row):
+                            if($row['end_date'] >= $row['assign_date']){
+                                $diff = $row['end_date'] - $row['assign_date'];
+                                $days = round(abs($diff)/86400);
+                            }
+                            if($row['end_date'] < $row['assign_date']){
+                                $days = "Wrong Date";
+                            }
+                            if($row['end_date'] == ""){
+                                $days = "Running";
+                            }
+                            ?>
+                            <tr>
+                                <td><?= $i;?></td>
+                                <td><?= $vehiclesStatus['title'] ?></td>
+                                <td><?= $row['scheme']['name_bn'];?></td>
+                                <td><?= $row['employee']['name_bn'];?></td>
+                                <td><?= $row['vehicle_location'];?></td>
+                                <td><?= date('d/m/Y',$row['assign_date']);?></td>
+                                <td><?=$row['end_date']?date('d/m/Y', $row['end_date']):'';?></td>
+                                <td><?= $days ?></td>
+                                <td><?php if($days>0){
+                                        echo $income = $days * $vehiclesStatus['daily_cost_ratio'];
+                                    } ?>
+                                </td>
+                                <td><?= $row['remark'];?></td>
+                                <td><?= $row['status']?'On Hire':'Closed';?></td>
 
-                </tr>
-                <?php $i++;?>
-            <?php endforeach ?>
-        </table>
-
-    </div>
-    <div class="panel-body col-sm-12">
-
-    </div>
-    <div class="col-sm-12 form-actions text-right">
-        <input type="submit" value="<?= __('Save') ?>" class="btn btn-primary">
+                            </tr>
+                            <?php $i++;?>
+                        <?php endforeach ?>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
+<script>
+    function print_rpt() {
+        URL = "<?php echo $this->request->webroot; ?>page/Print_a4_Eng.php?selLayer=PrintArea";
+        day = new Date();
+        id = day.getTime();
+        eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=yes,scrollbars=yes ,location=0,statusbar=0 ,menubar=yes,resizable=1,width=880,height=600,left = 20,top = 50');");
+    }
+</script>

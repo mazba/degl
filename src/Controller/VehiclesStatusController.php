@@ -120,12 +120,18 @@ class VehiclesStatusController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $vehiclesStatus = $this->VehiclesStatus->newEntity();
             $data = $this->request->data;
+//            pr($data);die;
             $data['vehicle_id'] = $id;
             $data['status'] = 1;
             $data['assign_date'] = strtotime($data['assign_date']);
 
             $vehicle = TableRegistry::get('VehiclesStatus');
             $query = $vehicle->query();
+            $query->update()
+                ->set(['end_date' => $data['assign_date']])
+                ->where(['vehicle_id' => $id, 'status' => 1])
+                ->execute();
+
             $query->update()
                 ->set(['status' => 0])
                 ->where(['vehicle_id' => $id])
