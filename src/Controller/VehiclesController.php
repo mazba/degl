@@ -210,35 +210,19 @@ class VehiclesController extends AppController
         if($this->request->is(['post'])){
             $data = $this->request->data();
             $this->loadModel('VehicleServicings');
+            $this->loadModel('FinancialYearEstimates');
             $user = $this->Auth->user();
             $query = TableRegistry::get('vehicles')->find();
 
-            if(isset($data['financial_year_estimate_id']) && !empty($data['financial_year_estimate_id'])){
-                $vehicles = $query->select([
-                    'id' => 'vehicles.id',
-                    'title' => 'vehicles.title',
-                    'type' => 'vehicles.type',
-                    'registration_no' => 'vehicles.registration_no',
-                    'equipment_engine_capacity' => 'vehicles.equipment_engine_capacity',
-                    'country_of_origin' => 'vehicles.country_of_origin',
-                    'equipment_source' => 'vehicles.equipment_source',
-                    'vehicle_status' => 'vehicles.vehicle_status',
-                    'serviceCost' => $query->func()->sum('vehicle_servicings.service_charge')
-                ])
-                    ->leftJoin('vehicle_servicings', 'vehicle_servicings.vehicle_id = vehicles.id')
-                    ->where([
-                        'vehicles.status !=' =>99,
-                        'vehicle_servicings.status !=' =>99,
-                        'vehicle_servicings.financial_year_estimate_id ' => $data['financial_year_estimate_id'],
-                    ])
-                    ->group(['vehicle_servicings.vehicle_id'])
-                    ->hydrate(false)
-                    ->toArray();
-                $this->loadModel('FinancialYearEstimates');
+            $conditions = [
+                'vehicles.status !=' =>99,
+                'vehicle_servicings.status !=' =>99,
+            ];
+            if(isset($data['financial_year_estimate_id']) && !empty($data['financial_year_estimate_id']))
+            {
+                $conditions['vehicle_servicings.financial_year_estimate_id'] = $data['financial_year_estimate_id'];
                 $finalcialYear = $this->FinancialYearEstimates->find('all')->select(['name'])->where(['id' => $data['financial_year_estimate_id']])->first();
-                $this->set(compact('vehicles','finalcialYear'));
             }
-            else{
                 $vehicles = $query->select([
                     'id' => 'vehicles.id',
                     'title' => 'vehicles.title',
@@ -248,17 +232,39 @@ class VehiclesController extends AppController
                     'country_of_origin' => 'vehicles.country_of_origin',
                     'equipment_source' => 'vehicles.equipment_source',
                     'vehicle_status' => 'vehicles.vehicle_status',
+                ])
+                    ->where(['vehicles.status !=' =>99])
+                    ->hydrate(false)
+                    ->toArray();
+
+            $vehiclesCosts = TableRegistry::get('vehicles')->find()->select([
+                    'vehicle_id' => 'vehicle_servicings.vehicle_id',
                     'serviceCost' => $query->func()->sum('vehicle_servicings.service_charge')
                 ])
                     ->leftJoin('vehicle_servicings', 'vehicle_servicings.vehicle_id = vehicles.id')
-                    ->where(['vehicles.status !=' =>99,'vehicle_servicings.status !=' =>99])
+                    ->where($conditions)
                     ->group(['vehicle_servicings.vehicle_id'])
                     ->hydrate(false)
                     ->toArray();
-                $this->set(compact('vehicles'));
-            }
 
-        }
+            $results = array();
+            foreach($vehicles as $key => $vehicle){
+                $results[$key]['title'] = $vehicle['title'];
+                $results[$key]['type'] = $vehicle['type'];
+                $results[$key]['registration_no'] = $vehicle['registration_no'];
+                $results[$key]['equipment_engine_capacity'] = $vehicle['equipment_engine_capacity'];
+                $results[$key]['country_of_origin'] = $vehicle['country_of_origin'];
+                $results[$key]['equipment_source'] = $vehicle['equipment_source'];
+                $results[$key]['vehicle_status'] = $vehicle['vehicle_status'];
+
+                foreach($vehiclesCosts as $vehiclesCost){
+                    if($vehiclesCost['vehicle_id'] == $vehicle['id']){
+                        $results[$key]['serviceCost'] = $vehiclesCost['serviceCost'];
+                    }
+                }
+            }
+                $this->set(compact('results','finalcialYear'));
+            }
         $this->loadModel('FinancialYearEstimates');
         $finalcialYears = $this->FinancialYearEstimates->find('list')->where(['status !='=> 99])->toArray();
         $this->set(compact('finalcialYears'));

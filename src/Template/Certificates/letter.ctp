@@ -1,4 +1,5 @@
 <?php
+use Cake\Routing\Router;
 ?>
 <div class="col-md-12">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
@@ -8,7 +9,9 @@
 </div>
 <div id="PrintArea">
     <div class="col-sm-12">
-        <h2 class="text-center" style="line-height: 14px"><?= __('Government of the People\'s Republic of Bangladesh') ?></h2>
+        <h2 class="text-center" style="line-height: 14px"><?=
+
+            __('Government of the People\'s Republic of Bangladesh') ?></h2>
         <h4 class="text-center" style="line-height: 14px"><?= __('Local Govt. Engineering Department') ?> </h4>
         <h4 class="text-center" style="line-height: 14px"><?= __('Office of the Executive Engineer') ?></h4>
         <h4 class="text-center" style="line-height: 14px">নলজানী,<?= __('District: Gazipur') ?></h4>
@@ -23,7 +26,7 @@
                 <p>স্মারক নং - <span contenteditable="true">এখানে স্মারক নং লিখুন</span></p>
             </div>
             <div class="col-sm-4">
-                <p style="float: right">তারিখ: <?= $this->Common->EngToBanglaNum(date('d-m-Y')). ' ইং' ?></p>
+                <p style="float: right">তারিখ: <span contenteditable="true"><?= $this->Common->EngToBanglaNum(date('d-m-Y')). ' ইং' ?></span></p>
             </div>
         </div>
     </div>
@@ -59,7 +62,13 @@
                         <td>১</td>
                         <td><?= $result['scheme_name'] ?></td>
                         <td><?= $result['contract_amount'] ?></td>
-                        <td><?= $result['serve_amount'] ?></td>
+                        <td>
+                            <?php if(!empty(trim($result['serve_amount']))): ?>
+                                <?= $result['serve_amount'] ?>
+                            <?php else: ?>
+                                <span contenteditable="true">পরিশোধিত মূল্য লিখুন</span>
+                            <?php endif; ?>
+                        </td>
                         <td></td>
                     </tr>
                     </tbody>
@@ -67,16 +76,17 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12" style="margin-top: 40px;">
-                <p class="text-center" style="float: right;font-size:15px;">
+            <div style="margin-top: 40px; width: 100% !important;">
+                <img style="padding-left: 20px !important;" src="<?php echo Router::url('/', true) . 'img/qr_code/' . $result['qr_image']; ?>" alt="" height="150px" width="170px">
+                <p class="text-center" style="float: right;font-size:15px; padding-right: 20px">
                     (মো: আমিরুল ইসলাম খান)<br>
                     নির্বাহী প্রকৌশলী<br>
                     এলজিইডি, গাজীপুর<br>
                     ফোনঃ ৯২৬৩৯৮৯, ফ্যাক্সঃ ৯২৬৪১২৮<br>
                     Email: xen.gazipur@lged.gov.bd<br>
-
                 </p>
             </div>
+
         </div>
     </div>
     <style type="text/css">

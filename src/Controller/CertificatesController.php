@@ -78,12 +78,15 @@ class CertificatesController extends AppController
                 'contractor_person_name' => 'contractors.contact_person_name',
                 'contractor_address' => 'contractors.contractor_address',
                 'contractor_tin_no' => 'contractors.tin_no',
+                'qr_image' => 'qr_images.qr_image',
                 'serve_amount' => $query->func()->sum('processed_ra_bills.bill_amount'),
             ])
             ->leftJoin('processed_ra_bills', 'processed_ra_bills.scheme_id = schemes.id')
             ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id = schemes.id')
             ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
+            ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
             ->leftJoin('financial_year_estimates', 'financial_year_estimates.id = schemes.financial_year_estimate_id')
+            ->leftJoin('qr_images', 'qr_images.scheme_id = schemes.id')
             ->where(['schemes.id' => $scheme['id'], 'scheme_contractors.is_lead' => 1 ])
             ->first();
         $this->set(compact('result'));

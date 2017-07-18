@@ -1,5 +1,5 @@
 <?php
-//pr($vehicles);die;
+//pr($results);die;
 ?>
     <div class="breadcrumb-line">
         <ul class="breadcrumb">
@@ -18,7 +18,7 @@
         <?= $this->Form->end() ?>
     </div>
 
-<?php if(isset($vehicles)): ?>
+<?php if(isset($results)): ?>
     <!-- Report -->
     <div class="col-sm-12">
         <button style="float: right;margin-top: 5px" onclick="print_rpt()">Print</button>
@@ -40,7 +40,7 @@
                             <th><?= 'Source off Fund' ?></th>
                             <th><?= 'P/Position' ?></th>
                             <th> Cost
-                                <?php if(isset($finalcialYear)){
+                                <?php if(isset($finalcialYear) && !empty(trim($finalcialYear))){
                                     echo $finalcialYear['name'].' Financial Year';
                                 }else{
                                     echo 'Total';
@@ -51,21 +51,29 @@
                         </tr>
                         </thead>
                         <tbody class="test_list">
-                        <?php foreach($vehicles as $key => $vehicle):?>
+                        <?php foreach($results as $key => $result):?>
                             <tr>
                                 <td><?= $key+1 ?></td>
-                                <td><?= $vehicle['title'] ?></td>
-                                <td><?php if($vehicle['type'] == 'vehicles'){
-                                        echo $vehicle['registration_no'];
+                                <td><?= $result['title'] ?></td>
+                                <td><?php if($result['type'] == 'vehicles'){
+                                        echo $result['registration_no'];
                                     }else{
-                                        echo $vehicle['equipment_engine_capacity'];
+                                        echo $result['equipment_engine_capacity'];
                                     }
                                     ?>
                                 </td>
-                                <td><?= $vehicle['country_of_origin']?></td>
-                                <td><?= $vehicle['equipment_source']?></td>
-                                <td><?= $vehicle['vehicle_status']?></td>
-                                <td><?= $vehicle['serviceCost']?></td>
+                                <td><?= $result['country_of_origin']?></td>
+                                <td><?= $result['equipment_source']?></td>
+                                <td><?= $result['vehicle_status']?></td>
+                                <td>
+                                    <?php
+                                        if(isset($result['serviceCost'])){
+                                            echo $result['serviceCost'];
+                                        }else{
+                                            echo '0';
+                                        }
+                                    ?>
+                                </td>
                                 <td></td>
                             </tr>
                         <?php endforeach; ?>
