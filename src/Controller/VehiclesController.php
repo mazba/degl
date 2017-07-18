@@ -112,7 +112,7 @@ class VehiclesController extends AppController
                 $this->Flash->error(__('The vehicle could not be saved. Please, try again.'));
             }
         }
-
+//        pr($vehicle);die;
         $this->set(compact('vehicle'));
         $this->set('_serialize', ['vehicle']);
     }
@@ -260,6 +260,178 @@ class VehiclesController extends AppController
 
         }
         $this->loadModel('FinancialYearEstimates');
+        $finalcialYears = $this->FinancialYearEstimates->find('list')->where(['status !='=> 99])->toArray();
+        $this->set(compact('finalcialYears'));
+    }
+
+    /**
+     *  Revenue And Others Information
+     */
+    public function revenueOthers(){
+        $this->loadModel('FinancialYearEstimates');
+        if($this->request->is(['post'])) {
+
+            $data = $this->request->data();
+            $this->loadModel('vehicles');
+            $mechanical_status = [];
+            // active vt roller 3.5
+            $vt_roller_three_five = $this->vehicles->find()->select([
+                'vt_roller_three_five' => 'equipment_type'
+            ])
+                ->where([
+                    'type' => 'equipments',
+                    'equipment_type' => 'vt',
+                    'equipment_engine_capacity' => '3.5',
+                    'vehicle_status !=' => 'DAMAGE',
+                ])->count();
+
+            // active vt roller 7
+            $vt_roller_seven = $this->vehicles->find()->select([
+                'vt_roller_seven' => 'equipment_type'
+            ])
+                ->where([
+                    'type' => 'equipments',
+                    'equipment_type' => 'vt',
+                    'equipment_engine_capacity' => '7',
+                    'vehicle_status !=' => 'DAMAGE',
+                ])->count();
+
+            // active static roller 8-10
+            $static_roller_eight_ten = $this->vehicles->find()->select([
+                'static_roller_eight_ten' => 'equipment_type'
+            ])
+                ->where([
+                    'type' => 'equipments',
+                    'equipment_type' => 'static',
+                    'equipment_engine_capacity' => '8-10',
+                    'vehicle_status !=' => 'DAMAGE',
+                ])->count();
+
+            // active Tyre roller
+            $tyre_roller = $this->vehicles->find()->select([
+                'tyre_roller' => 'equipment_type'
+            ])
+                ->where([
+                    'type' => 'equipments',
+                    'equipment_type' => 'tyre',
+                    'vehicle_status !=' => 'DAMAGE',
+                ])->count();
+
+            // deactivate Tyre roller
+            $vt_roller_damage = $this->vehicles->find()->select([
+                'vt_roller_damage' => 'equipment_type'
+            ])
+                ->where([
+                    'type' => 'equipments',
+                    'equipment_type' => 'vt',
+                    'vehicle_status ' => 'DAMAGE',
+                ])->count();
+
+            $static_roller_damage = $this->vehicles->find()->select([
+                'static_roller_damage' => 'equipment_type'
+            ])
+                ->where([
+                    'type' => 'equipments',
+                    'equipment_type' => 'static',
+                    'vehicle_status' => 'DAMAGE',
+                ])->count();
+
+            // active vehicle zip
+            $active_zip = $this->vehicles->find()->select([
+                'active_zip' => 'vehicle_type'
+            ])
+                ->where([
+                    'type' => 'vehicles',
+                    'vehicle_type' => 'zip',
+                    'vehicle_status !=' => 'DAMAGE',
+                ])->count();
+
+            // active vehicle pickup
+            $active_pickup = $this->vehicles->find()->select([
+                'active_pickup' => 'vehicle_type'
+            ])
+                ->where([
+                    'type' => 'vehicles',
+                    'vehicle_type' => 'pickup',
+                    'vehicle_status !=' => 'DAMAGE',
+                ])->count();
+
+            // active Motor cycle
+            $active_motorcycle = $this->vehicles->find()->select([
+                'active_motorcycle' => 'vehicle_type'
+            ])
+                ->where([
+                    'type' => 'vehicles',
+                    'vehicle_type' => 'motorcycle',
+                    'vehicle_status !=' => 'DAMAGE',
+                ])->count();
+
+            // active vehicle truck
+            $active_truck = $this->vehicles->find()->select([
+                'active_truck' => 'vehicle_type'
+            ])
+                ->where([
+                    'type' => 'vehicles',
+                    'vehicle_type' => 'truck',
+                    'vehicle_status !=' => 'DAMAGE',
+                ])->count();
+
+            // active vehicle clunker
+            $active_clunker = $this->vehicles->find()->select([
+                'active_clunker' => 'vehicle_type'
+            ])
+                ->where([
+                    'type' => 'vehicles',
+                    'vehicle_type' => 'clunker',
+                    'vehicle_status !=' => 'DAMAGE',
+                ])->count();
+
+            // deactivated vehicle clunker
+            $deactivated_vehicle = $this->vehicles->find()->select([
+                'deactivated_vehicle' => 'vehicle_type'
+            ])
+                ->where([
+                    'type' => 'vehicles',
+                    'vehicle_status ' => 'DAMAGE',
+                ])->count();
+
+            $mechanical_status = [
+                'vt_roller_three_five' => $vt_roller_three_five,
+                'vt_roller_seven' => $vt_roller_seven,
+                'static_roller_eight_ten' => $static_roller_eight_ten,
+                'tyre_roller' => $tyre_roller,
+                'vt_roller_damage' => $vt_roller_damage,
+                'static_roller_damage' => $static_roller_damage,
+                'active_zip' => $active_zip,
+                'active_pickup' => $active_pickup,
+                'active_motorcycle' => $active_motorcycle,
+                'active_truck' => $active_truck,
+                'active_clunker' => $active_clunker,
+                'deactivated_vehicle' => $deactivated_vehicle,
+            ];
+
+            // Financial year info
+            $finalcialYearData = $this->FinancialYearEstimates->find('all')->select(['name'])->where(['id' => $data['financial_year_estimate_id']])->first();
+            // hire charges
+            $this->loadModel('HireCharges');
+            $hireChargeQuery = $this->HireCharges->find('all');
+            $hireChargeResult = $hireChargeQuery
+                ->select(['total_amount' => $hireChargeQuery->func()->sum('total_amount')])
+                ->where(['financial_year_id' => $data['financial_year_estimate_id'], 'status !=' =>99])
+                ->group('financial_year_id')
+                ->first();
+
+            // cost charges
+            $this->loadModel('VehicleServicings');
+            $vehicleCostQuery = $this->VehicleServicings->find('all');
+            $vehicleCostResult = $vehicleCostQuery
+                ->select(['service_charge' => $vehicleCostQuery->func()->sum('service_charge')])
+                ->where(['financial_year_estimate_id' => $data['financial_year_estimate_id'], 'status !=' =>99])
+                ->group('financial_year_estimate_id')
+                ->first();
+
+            $this->set(compact('mechanical_status','finalcialYearData','hireChargeResult','vehicleCostResult'));
+        }
         $finalcialYears = $this->FinancialYearEstimates->find('list')->where(['status !='=> 99])->toArray();
         $this->set(compact('finalcialYears'));
     }

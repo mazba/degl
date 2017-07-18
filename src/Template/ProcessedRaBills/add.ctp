@@ -34,7 +34,9 @@ use Cake\Core\Configure;
                 <input value="<?=$measurementInfo['scheme_id']?>" name="scheme_id" type="hidden" readonly>
             </div>
         </div>
-
+        <?php
+        echo $this->Form->input('financial_year_estimate_id',['label' => 'Financial Year', 'options' =>$financial_year_estimate_id ,'class'=>'form-control', 'required' => 'required', 'empty' => 'Select']);
+        ?>
         <div class="form-group input text">
             <label class="col-sm-3 control-label text-right" for="security">Security</label>
             <div class="col-sm-9 container_security">

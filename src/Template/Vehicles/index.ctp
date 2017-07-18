@@ -5,7 +5,7 @@
     </ul>
 </div>
 <div class="row">
-    <div class="col-sm-10">
+    <div class="col-sm-8">
         <div class="tabbable page-tabs">
             <ul class="nav nav-tabs">
                 <li class="active"><?= $this->Html->link(__('List of Vehicles'), ['action' => 'index']) ?></li>
@@ -21,9 +21,10 @@
             </ul>
         </div>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-4">
         <div class="pull-right">
             <a class="vehicle-list" href="<?= $this->Url->build(['action' => 'vehicleList'])?>"><?= __('Vehicle List Report') ?></a>
+            <a class="vehicle-list" href="<?= $this->Url->build(['action' => 'revenueOthers'])?>"><?= __('Revenue And Others') ?></a>
         </div>
     </div>
 </div>
@@ -95,5 +96,8 @@
     padding: 10px 12px;
     color: #fff;
     border-radius: 3px;
+}
+.vehicle-list:hover{
+    color: #fff !important;
 }
 </style>

@@ -170,22 +170,16 @@ class AllotmentRegistersController extends AppController
             $allotment_registers = $this->AllotmentRegisters->find()
                 ->autoFields(true)
                 ->select(['schemes.name_bn', 'projects.name_bn'])
-                ->where(['AllotmentRegisters.project_id' => $inputs['project_id'], 'AllotmentRegisters.financial_year_id' => $inputs['financial_year_id']])
+                ->where(['AllotmentRegisters.financial_year_id' => $inputs['financial_year_id']])
                 ->leftJoin('projects', 'projects.id=AllotmentRegisters.project_id')
                 ->leftJoin('schemes', 'schemes.id=AllotmentRegisters.scheme_id')
                 ->toArray();
 
             if ($allotment_registers) {
-                $info['project_name'] = $allotment_registers[0]['projects']['name_bn'];
                 $financial_year = $this->FinancialYearEstimates->get($inputs['financial_year_id']);
                 $info['financial_year_name'] = $financial_year['name'];
-                $office = $this->Offices->get($user['office_id']);
-                $info['office_name'] = $office['name_bn'];
-
                 $this->set(compact(['allotment_registers', 'info']));
             }
-
-
         }
 
         $this->loadModel('Projects');

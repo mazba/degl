@@ -15,8 +15,6 @@ Configure::load('config_vehicles', 'default');
     <ul class="nav nav-tabs">
         <li><?= $this->Html->link(__('List of Vehicles'), ['action' => 'index']) ?></li>
         <li class="active"><?= $this->Html->link(__('New Vehicle'), ['action' => 'add']) ?></li>
-
-
     </ul>
 </div>
 
@@ -24,25 +22,22 @@ Configure::load('config_vehicles', 'default');
 <?= $this->Form->create($vehicle, ['class' => 'form-horizontal', 'role' => 'form', 'type' => 'file']); ?>
 <div class="row panel panel-default">
 
-    <div class="panel-heading"><h6 class="panel-title"><i
-                class="icon-paragraph-right2"></i><?= __('Add Vehicle') ?>
+    <div class="panel-heading"><h6 class="panel-title"><i class="icon-paragraph-right2"></i><?= __('Add Vehicle') ?>
         </h6></div>
     <div class="panel-body col-sm-6">
         <?php
-        echo $this->Form->input('type', ['options' => ['vehicles' => 'Vehicles', 'equipments' => 'Equipments']]);
+        echo $this->Form->input('type', ['options' => ['vehicles' => 'Vehicles', 'equipments' => 'Equipments'],'empty' => __('Select') ,'id' =>'vehicle-type']);
+        echo $this->Form->input('vehicle_type', ['options' => Configure::read('vehicle_type'), 'class' => 'vehicle-hide form-control vehicle_type', 'label' => 'যানবাহন ধরন', 'empty' => __('Select')]);
+        echo $this->Form->input('equipment_type', ['options' => Configure::read('equipment_type'), 'class' => 'vehicle-hide form-control equipment_type', 'label' => 'রোলার ধরন', 'empty' => __('Select')]);
         echo $this->Form->input('title', ['class' => 'form-control vehicles']);
         echo $this->Form->input('serial_no', ['class' => 'form-control vehicles']);
         echo $this->Form->input('registration_no', ['class' => 'form-control vehicles']);
-        //        echo $this->Form->input('prefix_no',['class'=>'form-control vehicles']);
         echo $this->Form->input('engine_no', ['class' => 'form-control vehicles']);
         echo $this->Form->input('chasis_no', ['class' => 'form-control vehicles']);
         echo $this->Form->input('vehicle_location', ['class' => 'form-control']);
-        //        echo $this->Form->input('vehicle_place_of_user',['class'=>'form-control']);
         ?>
         <?php
         echo $this->Form->input('equipment_id_no', ['class' => 'form-control equipment']);
-        //        echo $this->Form->input('equipment_category',['class'=>'form-control equipment']);
-        //        echo $this->Form->input('equipment_capacity',['class'=>'form-control equipment']);
         echo $this->Form->input('others',['label'=>_('Others / Lubricant Oil Capacity')]);
         echo $this->Form->input('daily_cost_ratio',['class' => 'form-control vehicles']);
         ?>
@@ -53,8 +48,6 @@ Configure::load('config_vehicles', 'default');
         echo $this->Form->input('make_and_model', ['class' => 'form-control vehicles']);
         echo $this->Form->input('country_of_origin', ['class' => 'form-control vehicles']);
         echo $this->Form->input('fuel_tank_capacity', ['class' => 'form-control vehicles']);
-        //        echo $this->Form->input('oil_sump_capacity',['class'=>'form-control vehicles']);
-        //        echo $this->Form->input('load_capacity',['class'=>'form-control vehicles']);
         echo $this->Form->input('vehicle_status', ['options' => Configure::read('vehicle_status')]);
         ?>
         <?php
@@ -93,5 +86,22 @@ Configure::load('config_vehicles', 'default');
                 }
             }
         });
+    });
+
+    $('.vehicle-hide').closest('.form-group').hide();
+
+    // show based on type
+    $('#vehicle-type').on('change',function(){
+        if( $(this).val()=="vehicles"){
+            $(".vehicle_type").closest('.form-group').show();
+            $(".equipment_type").closest('.form-group').hide();
+        }
+        else if($(this).val()=="equipments"){
+            $(".equipment_type").closest('.form-group').show();
+            $(".vehicle_type").closest('.form-group').hide();
+        }
+        else{
+            $('.vehicle-hide').closest('.form-group').hide();
+        }
     });
 </script>

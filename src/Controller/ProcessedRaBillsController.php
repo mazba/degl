@@ -58,7 +58,7 @@ class ProcessedRaBillsController extends AppController
         $this->loadModel('hire_charges');
         $this->loadModel('lab_bills');
         $this->loadModel('lab_actual_tests');
-
+        $this->loadModel('FinancialYearEstimates');
         $measurementInfo = $this->proposed_ra_bills->find()
             ->where(['id ' =>$id])
             ->where(['status !=' =>99])
@@ -86,7 +86,6 @@ class ProcessedRaBillsController extends AppController
         if ($this->request->is('post'))
         {
             $processedRaBill = $this->ProcessedRaBills->newEntity();
-
             $data=$this->request->data;
             $hire_charge = TableRegistry::get('hire_charges');
             $query = $hire_charge->query();
@@ -123,7 +122,8 @@ class ProcessedRaBillsController extends AppController
                 $this->Flash->error('The processed ra bill could not be saved. Please, try again.');
             }
         }
-        $this->set(compact('measurementInfo', 'hire_charge', 'lab_actual_tests','id'));
+        $financial_year_estimate_id = $this->FinancialYearEstimates->find('list')->where(['status !=' => 99]);
+        $this->set(compact('measurementInfo', 'hire_charge', 'lab_actual_tests','id','financial_year_estimate_id'));
         $this->set('_serialize', ['processedRaBill']);
     }
 

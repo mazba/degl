@@ -49,19 +49,24 @@ Configure::load('config_vehicles', 'default');
 
     <div class="panel-body col-sm-6">
         <?php
-        echo $this->Form->input('type', ['options' => ['vehicles' => 'Vehicles', 'equipments' => 'Equipments']]);
+        echo $this->Form->input('type', ['options' => ['vehicles' => 'Vehicles', 'equipments' => 'Equipments'],  'empty' => __('Select'), 'id' =>'vehicle-type']);
+        if($vehicle['type'] == 'vehicles'){
+            echo $this->Form->input('vehicle_type', ['options' => Configure::read('vehicle_type'), 'class' => 'vehicle-hide form-control vehicle_type', 'label' => 'যানবাহন ধরন', 'empty' => __('Select')]);
+        }else{
+            echo $this->Form->input('equipment_type', ['options' => Configure::read('equipment_type'), 'class' => 'vehicle-hide form-control equipment_type', 'label' => 'রোলার ধরন', 'empty' => __('Select')]);
+        }
         echo $this->Form->input('title');
         echo $this->Form->input('serial_no');
         echo $this->Form->input('registration_no');
-//        echo $this->Form->input('prefix_no');
+        //        echo $this->Form->input('prefix_no');
         echo $this->Form->input('engine_no');
         echo $this->Form->input('chasis_no');
         echo $this->Form->input('equipment_id_no', ['class' => 'form-control equipment']);
-//        echo $this->Form->input('equipment_category', ['class' => 'form-control equipment']);
+        //        echo $this->Form->input('equipment_category', ['class' => 'form-control equipment']);
         echo $this->Form->input('equipment_brand', ['class' => 'form-control equipment']);
-//        echo $this->Form->input('equipment_capacity', ['class' => 'form-control equipment']);
+        //        echo $this->Form->input('equipment_capacity', ['class' => 'form-control equipment']);
         echo $this->Form->input('vehicle_location', ['class' => 'form-control']);
-//        echo $this->Form->input('vehicle_place_of_user', ['class' => 'form-control']);
+        //        echo $this->Form->input('vehicle_place_of_user', ['class' => 'form-control']);
         echo $this->Form->input('others',['label'=>_('Others / Lubricant Oil Capacity')]);
         echo $this->Form->input('daily_cost_ratio',['class' => 'form-control vehicles']);
         ?>
@@ -72,8 +77,8 @@ Configure::load('config_vehicles', 'default');
         echo $this->Form->input('make_and_model');
         echo $this->Form->input('country_of_origin');
         echo $this->Form->input('fuel_tank_capacity');
-//        echo $this->Form->input('oil_sump_capacity');
-//        echo $this->Form->input('load_cap?acity');
+        //        echo $this->Form->input('oil_sump_capacity');
+        //        echo $this->Form->input('load_cap?acity');
         echo $this->Form->input('equipment_engine_capacity', ['class' => 'form-control equipment']);
         echo $this->Form->input('equipment_fuel_type', ['class' => 'form-control equipment', 'options' => ['Petrol' => 'Petrol', 'Octane' => 'Octane', 'Diesel' => 'Diesel', 'CNG' => 'CNG'],'empty'=>__('Select')]);
         echo $this->Form->input('equipment_source', ['class' => 'form-control equipment']);
@@ -96,3 +101,21 @@ Configure::load('config_vehicles', 'default');
 </div>
 <?= $this->Form->end() ?>
 
+<script>
+//    $('.vehicle-hide').closest('.form-group').hide();
+
+    // show based on type
+    $('#vehicle-type').on('change',function(){
+        if( $(this).val()=="vehicles"){
+            $(".vehicle_type").closest('.form-group').show();
+            $(".equipment_type").closest('.form-group').hide();
+        }
+        else if($(this).val()=="equipments"){
+            $(".equipment_type").closest('.form-group').show();
+            $(".vehicle_type").closest('.form-group').hide();
+        }
+        else{
+            $('.vehicle-hide').closest('.form-group').hide();
+        }
+    });
+</script>
