@@ -1,5 +1,5 @@
 <?php
-//pr($processRaBills_two);die;
+//pr($processRaBills);die;
 if(!empty($processRaBills)){
     $year = '';
     $temp = count($finalYears);
@@ -12,7 +12,7 @@ if(!empty($processRaBills)){
             }
         }
     }else{
-        $year = $this->Common->EngToBanglaNum($finalYears['fiscal_year']).' ইং';
+        $year = $this->Common->EngToBanglaNum($finalYears[0]['fiscal_year']).' ইং';
     }
 }
 ?>

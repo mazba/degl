@@ -16,6 +16,7 @@ class ProcessedRaBill extends Entity
      */
     protected $_accessible = [
         'scheme_id' => true,
+        'contractor_id' => true,
         'proposed_ra_bill_id' => true,
         'financial_year_estimate_id' => true,
         'security' => true,
