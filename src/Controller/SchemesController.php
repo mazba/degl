@@ -779,7 +779,7 @@ class SchemesController extends AppController {
 //        ]);
 
     $scheme = $this->Schemes->get($id, ['contain' => ['Projects','WorkTypes', 'WorkSubTypes', 'Districts', 'Upazilas', 'Municipalities', 'FinancialYearEstimates', 'SchemeDetails']]);
-   
+
     //echo "<pre>",print_r($scheme),"<pre>";die();
     if ($this->request->is(['patch', 'post', 'put'])) {
       $data = $this->request->data;
@@ -972,7 +972,9 @@ class SchemesController extends AppController {
             'estimation_date' => 'Schemes.allotment_date',
             'estimation_taka' => 'Schemes.allotment_bill',
             'e_tender_no' => 'Schemes.etender_no',
+            'etender_notice' => 'Schemes.etender_notice',
             'e_tender_date' => 'Schemes.etender_date',
+            'package_id' => 'Schemes.package_id',
             'obtain_tender_no' => 'Schemes.number_of_tender',
             'customary_tender_no' => 'Schemes.habitual_number_of_tender',
             'performance_security' => 'Schemes.performance_security',
@@ -981,6 +983,8 @@ class SchemesController extends AppController {
             'applied_tender_price' => 'Schemes.contract_amount',
             'project_name' => 'projects.name_bn',
             'nothi_name' => 'nothi_registers.nothi_no',
+            'id' => 'packages.id',
+            'name_en' => 'packages.name_en',
             'contractor_id' => 'scheme_contractors.contractor_id',
             'contractor_title' => 'contractors.contractor_title',
             'order_number' => 'scheme_payorders.order_number',
@@ -988,9 +992,11 @@ class SchemesController extends AppController {
             'expire_date' => 'scheme_payorders.expire_date',
             'submit_date' => 'scheme_payorders.submit_date',
             'order_medium' => 'scheme_payorders.order_medium',
+            'order_branch' => 'scheme_payorders.order_branch',
         ])
         ->leftJoin('projects', 'projects.id = Schemes.project_id')
         ->leftJoin('nothi_assigns', 'nothi_assigns.scheme_id = Schemes.id')
+        ->leftJoin('packages', 'packages.id = Schemes.package_id')
         ->leftJoin('nothi_registers', 'nothi_registers.id = nothi_assigns.nothi_register_id')
         ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id = Schemes.id')
         ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')

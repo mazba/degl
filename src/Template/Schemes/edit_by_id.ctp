@@ -375,23 +375,33 @@ Configure::load('config_offices', 'default');
 
                             <div id="tender" class="tab-pane fade">
                                 <div class="col-sm-12">
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-4">
                                         <div class="form-group input text">
                                             <label for="etender-no"
                                                    class="col-sm-4 control-label text-right"><?= __('e-Tender No') ?></label>
 
                                             <div class="col-sm-8 container_etender_no">
-                                                <input type="text" name="etender_no"   value="<?= $scheme->etender_no ;?>" class="form-control"id="etender-no"maxlength="100">
+                                                <input type="text" name="etender_no"   value="<?= $scheme->etender_no ;?>" class="form-control" id="etender-no"maxlength="100">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <div class="form-group input text">
                                             <label for="etender-date"
                                                    class="col-sm-4 control-label text-right"><?= __('e-Tender Date') ?></label>
 
                                             <div class="col-sm-8 container_etender_date">
                                                 <input type="text" name="etender_date"   value="<?= $this->System->display_date($scheme->etender_date) ;?>" id="etender-date" maxlength="11" class="form-control hasdatepicker">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group input text">
+                                            <label for="etender-date"
+                                                   class="col-sm-4 control-label text-right"><?= 'e-Tender বিজ্ঞপ্তি নং' ?></label>
+
+                                            <div class="col-sm-8 container_etender_notice">
+                                                <input type="text" name="etender_notice"   value="<?= $scheme->etender_notice ?>" id="etender-notice" maxlength="100" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -681,6 +691,7 @@ Configure::load('config_offices', 'default');
                                     echo $this->Form->input('scheme_payorders.initial_date', ['label' =>'তারিখ' ,'class' => 'form-control hasdatepicker', 'value' => $payorder['initial_date']?date('d-M-y', $payorder['initial_date']):'']);
                                     echo $this->Form->input('scheme_payorders.expire_date', ['label' => 'মেয়াদ', 'class' => 'form-control hasdatepicker', 'value' => $payorder['expire_date']?date('d-M-y', $payorder['expire_date']):'']);
                                     echo $this->Form->input('scheme_payorders.medium',['label' => 'ব্যাংকের নাম', 'value' => $payorder['order_medium']?$payorder['order_medium']:'']);
+                                    echo $this->Form->input('scheme_payorders.order_branch',['label' => 'ব্যাংকের শাখা', 'value' => $payorder['order_branch']?$payorder['order_branch']:'']);
                                     echo $this->Form->input('scheme_payorders.submit_date', ['label' => 'দাখিলকৃত তারিখ', 'class' => 'form-control hasdatepicker', 'value' => $payorder['submit_date']?date('d-M-y', $payorder['submit_date']):'']);
                                     ?>
                                 </div>
@@ -887,11 +898,12 @@ Configure::load('config_offices', 'default');
             var initial_date = $('#scheme-payorders-initial-date').val();
             var expire_date = $('#scheme-payorders-expire-date').val();
             var order_medium = $('#scheme-payorders-medium').val();
+            var order_branch = $('#scheme-payorders-order-branch').val();
             var submit_date = $('#scheme-payorders-submit-date').val();
             $.ajax({
                 type: 'POST',
                 url: "<?= $this->Url->build(['controller' => 'Schemes', 'action' => 'payorder']) ?>",
-                data: {payorder: payorder, scheme_id: scheme_id, order_number: order_number, initial_date: initial_date, expire_date: expire_date, order_medium: order_medium, submit_date: submit_date},
+                data: {payorder: payorder, scheme_id: scheme_id, order_number: order_number, initial_date: initial_date, expire_date: expire_date, order_medium: order_medium, order_branch:order_branch, submit_date: submit_date},
                 success: function(response){
                     var response = JSON.parse(response);
                     $('.submit-payorder').remove();

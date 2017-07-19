@@ -12,7 +12,7 @@ $newspapers = json_decode($result['newspaper'], true);
 	<button style="float: right;margin-top: 5px" onclick="print_rpt()">Print</button>
 </div>
 <div id="PrintArea">
-	<div class="panel-body font-size-work" align="center" style="background-color: #DBEAF9;color: #0c0c0c;">
+	<div class="panel-body font-size-work" align="center" style="background-color: #DBEAF9;color: #0c0c0c;padding:0px 30px;">
 		<h4 align="center" style="line-height: 16px">=নোট সীট=</h4>
 		<h1 align="center" style="line-height: 16px">নির্বাহী প্রকৌশলী </h1>
 		<h2 align="center" style="line-height: 16px"> স্থানীয় সরকার প্রকৌশল অধিদপ্তর, গাজীপুর</h2>
@@ -20,8 +20,8 @@ $newspapers = json_decode($result['newspaper'], true);
 		<div  style="width:100%; text-align: center;">
 			<table style="width:100%; font-size: 15px" >
 				<tr>
-					<td width="50%" style="text-align: left; padding-left: 1.7em;">নথি নং-  <?= $result['nothi_name']?$result['nothi_name']:'....' ?></td>
-					<td width="50%" style="text-align: right;">তারিখঃ-  <?= $result['work_order_date']?$this->Common->EngToBanglaNum(date('d-m-Y', $result['work_order_date'])). ' ইং':'....'; ?>  </td>
+					<td width="80%" style="text-align: left; padding-left: 1.7em;">নথি নং-  <?= $result['nothi_name']?$result['nothi_name']:'....' ?></td>
+					<td width="20%" style="text-align: right;">তারিখঃ-  <?= $result['work_order_date']?$this->Common->EngToBanglaNum(date('d-m-Y', $result['work_order_date'])). ' ইং':'....'; ?>  </td>
 
 				</tr>
 			</table>
@@ -41,7 +41,7 @@ $newspapers = json_decode($result['newspaper'], true);
 				<table style="width:100%; margin-left: 15px">
 					<tr>
 						<td style="width: 91px !important; vertical-align: top"><b>খ) কাজের নাম: </b></td>
-						<td><?= $result['work_name']?$result['work_name']:'....' ;?></td>
+						<td><?= $result['work_name']?$result['work_name']:'....' ;?><?php echo " (Contract Package No: ".$result['name_en'].")";?></td>
 					</tr>
 				</table>
 				<br/>
@@ -60,9 +60,9 @@ $newspapers = json_decode($result['newspaper'], true);
 				<br/>
 				<table style="width:100%;margin-left: 15px">
 					<tr>
-						<td style="width: 50%; vertical-align: top"><b>(ঘ) e-Tender দরপত্র বিজ্ঞপ্তি নং: </b><?= $result['e_tender_no']?$result['e_tender_no']:'....';  ?> </td>
+						<td style="width: 50%; vertical-align: top"><b>(ঘ) e-Tender দরপত্র বিজ্ঞপ্তি নং: </b><?= $result['etender_notice']?$result['etender_notice']:'....';  ?> </td>
 						<td width="50%">তারিখঃ   <?= $result['e_tender_date']?$this->Common->EngToBanglaNum(date('d-m-Y', $result['e_tender_date'])). ' ইং':'....'; ?> </td>
-				</tr>
+					</tr>
 				</table>
 				<br/>
 				<table style="width:100%; font-size: 15px; margin-left: 15px">
@@ -123,12 +123,14 @@ $newspapers = json_decode($result['newspaper'], true);
 				<table style="margin-left: 15px">
 					<tr>
 						<td style="vertical-align: top"><b>(ঝ) </b></td>
-						<td><b>&nbsp;নির্বাচিত ঠিকাদার :</b><?= $result['contractor_title']?$result['contractor_title']:'....' ?> এর নামে e-GP  এর মাধ্যমে  NOA  প্রদান করা হয় (কপি নথিতে সংরক্ষিত) ।
+						<td style="text-align: justify !important"><b>&nbsp;নির্বাচিত ঠিকাদার :</b><?= $result['contractor_title']?$result['contractor_title']:'....' ?> এর নামে e-GP  এর মাধ্যমে  NOA  প্রদান করা হয় (কপি নথিতে সংরক্ষিত) ।
 							NOA প্রাপ্তির পর ঠিকাদার <?= $result['contractor_title']?$result['contractor_title']:'.....' ?>  চুক্তি সম্পাদনের নিমিত্তে P/S হিসাবে <?= $result['applied_tender_price']?number_format(($result['applied_tender_price']*$result['performance_security'])/100):'....'; ?>
 							টাকার  পে অর্ডার (পে অর্ডার নং <?= $result['order_number']?$result['order_number']:'....' ?> তারিখ <?= $result['initial_date']?$this->Common->EngToBanglaNum(date('d-m-Y', $result['initial_date'])):'....' ?>
 							মেয়াদ <?= $result['expire_date']?$this->Common->EngToBanglaNum(date('d-m-Y',$result['expire_date'])):'....'?> <?= $result['order_medium']?$result['order_medium']:'....'?> ) e-GP এর মাধ্যমে গত
-							<?= $result['submit_date']?$this->Common->EngToBanglaNum(date('d-m-Y',$result['submit_date'])):'....'?> তারিখে <?= $result['order_medium']?$result['order_medium']:'....'?> শাখায় দাখিল করেছেন
+							<?= $result['submit_date']?$this->Common->EngToBanglaNum(date('d-m-Y',$result['submit_date'])):'....'?> তারিখে <?= $result['order_branch']?$result['order_branch']:'....'?> শাখায় দাখিল করেছেন
 							(কপি নথিতে সংরক্ষিত)।
+							<br/><br/>
+							<b>The Particulars of the Bank Account Nominated.</b>
 							<br/><br/>
 							এমতাবস্থায়, চাহিত ব্যাংক গ্যারান্টি দাখিল করায় <?= $result['contractor_title']?$result['contractor_title']:'....' ?> এর দাখিলকৃত দর- <?= $result['applied_tender_price']?number_format($result['applied_tender_price']):'....';  ?>  টাকার Contract Agreement  (চুক্তিপত্র স্বাক্ষরের নিমিত্তে নথি পেশ করা হলো।
 							সদয় অনুমোদিত হলে চুক্তিপত্রসহ প্রস্তুতকৃত Letter of Proceed  স্বাক্ষর করা যেতে পারে।</td>
@@ -172,6 +174,7 @@ $newspapers = json_decode($result['newspaper'], true);
 		}
 		table tr td {
 			font-size: 17px !important;
+			text-align: left !important;
 		}
 	</style>
 </div>
@@ -190,9 +193,10 @@ $newspapers = json_decode($result['newspaper'], true);
 	}
 
 	table tr td {
-		font-family: 'SutonnyOMJ' !important;;
+		font-family: 'SutonnyOMJ' !important;
+		text-align: left !important;;
 	}
-	</style>
+</style>
 <script>
 	function print_rpt() {
 		URL = "<?php echo $this->request->webroot; ?>page/Print_a4_Eng.php?selLayer=PrintArea";

@@ -18,6 +18,7 @@ class SchemePayorder extends Entity
         'scheme_id' => true,
         'order_number' => true,
         'order_medium' => true,
+        'order_branch' => true,
         'initial_date' => true,
         'expire_date' => true,
         'status' => true,
