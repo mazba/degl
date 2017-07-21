@@ -2,7 +2,11 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Filesystem\File;
+use Cake\Network\Http\Client;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Route\Route;
+use Cake\Routing\Router;
 
 /**
  * Certificates Controller
@@ -51,7 +55,8 @@ class CertificatesController extends AppController
             //$scheme['action'] = '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text-danger edit" > </button>';
             $scheme['action'] =
                 '<button title="' . __('কার্য সম্পাদন সনদ') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text-danger letter" > </button>'.' '.
-                '<button title="' . __('প্রত্যয়ন পত্র') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-user-plus text-danger report" > </button>';
+                '<button title="' . __('প্রত্যয়ন পত্র') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-user-plus text-danger report" > </button>'.' '.
+                '<button title="' . __('আপলোড করুন') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-plus text-danger upload" > </button>';
             $sl++;
         }
 
@@ -65,28 +70,60 @@ class CertificatesController extends AppController
     public function letter(){
         $this->layout = 'ajax';
         $user = $this->Auth->user();
-        $scheme = $this->request->data();
         $this->loadModel('Schemes');
+        $this->loadModel('QrImages');
+        $scheme = $this->request->data();
+
+        $previous_data = $this->QrImages->find('all')->where(['scheme_id' => $scheme['id']])->first();
+        if(empty(trim($previous_data))){
+            //qr code test
+            $query = [
+                'size'=>'170x170',
+                'data'=>Router::url('/', true).'evidence/index/' . $scheme['id']
+            ];
+            $query = http_build_query($query);
+            $qrData = file_get_contents("https://api.qrserver.com/v1/create-qr-code/?$query");
+            $file = new File(WWW_ROOT.'img/qr_code/qr_'.$scheme['id'].'.jpg', true);
+            $file->write($qrData);
+            //end qr code
+            $qrimagedata = $this->QrImages->newEntity();
+            $inputs['scheme_id'] = $scheme['id'];
+            $inputs['qr_image'] = 'qr_'.$scheme['id'].'.jpg';
+            $qrimagedata = $this->QrImages->patchEntity($qrimagedata, $inputs);
+            $this->QrImages->save($qrimagedata);
+        }
         $query = TableRegistry::get('schemes')->find();
         $result = $query
             ->select([
                 'scheme_name' => 'schemes.name_en',
                 'scheme_code' => 'schemes.scheme_code',
                 'contract_amount' => 'schemes.contract_amount',
+                'noa_date' => 'schemes.noa_date',
+                'district' => 'districts.name_en',
+                'upazila' => 'upazilas.name_en',
                 'fiscal_year' => 'financial_year_estimates.name',
                 'contractor_title' => 'contractors.contractor_title',
+                'contractor_phone' => 'contractors.contractor_phone',
                 'contractor_person_name' => 'contractors.contact_person_name',
                 'contractor_address' => 'contractors.contractor_address',
                 'contractor_tin_no' => 'contractors.tin_no',
+                'trade_licence_no' => 'contractors.trade_licence_no',
                 'qr_image' => 'qr_images.qr_image',
                 'serve_amount' => $query->func()->sum('processed_ra_bills.bill_amount'),
+                'original_commencemen' => 'processed_reports.do_commencement',
+                'original_completion' => 'processed_reports.do_completion',
+                'actual_commencemen' => 'processed_reports.edo_completion',
+                'actual_completion' => 'processed_reports.ado_completion',
             ])
+            ->leftJoin('districts', 'districts.id = schemes.district_id')
+            ->leftJoin('upazilas', 'upazilas.id = schemes.upazila_id')
             ->leftJoin('processed_ra_bills', 'processed_ra_bills.scheme_id = schemes.id')
             ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id = schemes.id')
             ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
             ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
             ->leftJoin('financial_year_estimates', 'financial_year_estimates.id = schemes.financial_year_estimate_id')
             ->leftJoin('qr_images', 'qr_images.scheme_id = schemes.id')
+            ->leftJoin('processed_reports', 'processed_reports.scheme_id = schemes.id')
             ->where(['schemes.id' => $scheme['id'], 'scheme_contractors.is_lead' => 1 ])
             ->first();
         $this->set(compact('result'));
@@ -145,5 +182,27 @@ class CertificatesController extends AppController
             $finalYears = $this->FinancialYearEstimates->find('list')->where(['status !=' => 99])->order(['id' => 'DESC'])->first();
         }
         $this->set(compact('processRaBills','finalYears','processRaBills_two'));
+    }
+
+    /*
+     * Upload function
+     */
+    public function upload($id){
+        $this->layout = 'ajax';
+        $user = $this->Auth->user();
+        $this->loadModel('Documents');
+        $document = $this->Documents->newEntity();
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $data = $this->request->data;
+            $data['scheme_id'] = $id;
+            $document = $this->Documents->patchEntity($document, $data);
+            if ($this->Documents->save($document)) {
+                $this->Flash->success(__('The document has been uploaded.'));
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The document could not be uploaded. Please, try again.'));
+            }
+        }
+        $this->set(compact('document'));
     }
 }

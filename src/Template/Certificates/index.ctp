@@ -131,5 +131,19 @@
                 }
             });
         });
+
+        // protoyon potro
+        $(document).on ('click', ".upload", function () {
+            var id = $(this).data('scheme_id');
+            var url = '<?= $this->Url->build("/Certificates/upload/")?>'+id;
+            $.ajax({
+                type: 'GET',
+                url:url,
+                success: function (data, status) {
+                    $('#modal-content-letter').html(data);
+                    $('#scheme-modal-main-letter').modal('show')
+                }
+            });
+        });
     });
 </script>

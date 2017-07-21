@@ -27,7 +27,7 @@ if(!empty($processRaBills)){
         <div class="form-group input" >
             <label class="col-sm-3 control-label text-right"><?= __('ঠিকাদার') ?></label>
             <div class="col-sm-9 actual_complete_date" >
-                <select class="form-control" name="contractor_id" id="scheme_id" required>
+                <select class="form-control" name="contractor_id" id="scheme-id" required>
                     <option value=""><?= __('Select') ?></option>
                     <?php
                     foreach ($contractors as $contractors_id => $contractor) {
