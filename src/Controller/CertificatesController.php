@@ -191,9 +191,14 @@ class CertificatesController extends AppController
         $this->layout = 'ajax';
         $user = $this->Auth->user();
         $this->loadModel('Documents');
-        $document = $this->Documents->newEntity();
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->data;
+            $previous = $this->Documents->find('all')->select(['id'])->where(['scheme_id' => $id])->first();
+            if($previous['id']){
+                $document = $this->Documents->get($previous['id']);
+            }else{
+                $document = $this->Documents->newEntity();
+            }
             $data['scheme_id'] = $id;
             $document = $this->Documents->patchEntity($document, $data);
             if ($this->Documents->save($document)) {
@@ -203,6 +208,8 @@ class CertificatesController extends AppController
                 $this->Flash->error(__('The document could not be uploaded. Please, try again.'));
             }
         }
-        $this->set(compact('document'));
+        $file = $this->Documents->find('all')->where(['scheme_id' => $id])->first();
+//        pr($file);die;
+        $this->set(compact('document','file'));
     }
 }
