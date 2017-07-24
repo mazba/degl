@@ -1,4 +1,5 @@
 <?php
+//pr($processRaBills);die;
 if(!empty($processRaBills)){
     $year = '';
     $temp = count($finalYears);
@@ -103,7 +104,7 @@ if(!empty($processRaBills)){
                         </tr>
                         </thead>
                         <tbody>
-                        <?php foreach($processRaBills as $key => $processRaBill):?>
+                        <?php $sum_bill_amount = 0; $sum_vat = 0; $sum_income_tex = 0; foreach($processRaBills as $key => $processRaBill):?>
                             <tr>
                                 <td><?= $key+1 ?></td>
                                 <td><?= $processRaBill['fiscal_year'] ?></td>
@@ -111,8 +112,17 @@ if(!empty($processRaBills)){
                                 <td><?= $processRaBill['vat'] ?></td>
                                 <td><?= $processRaBill['income_tex'] ?></td>
                                 <td></td>
+                                <?php $sum_bill_amount += $processRaBill['bill_amount']; $sum_vat += $processRaBill['vat']; $sum_income_tex += $processRaBill['income_tex'] ?>
                             </tr>
+
                         <?php endforeach; ?>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td><?= $sum_bill_amount ?></td>
+                            <td><?= $sum_vat ?></td>
+                            <td><?= $sum_income_tex ?></td>
+                            <td></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
