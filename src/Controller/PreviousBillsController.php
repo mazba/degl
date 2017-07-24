@@ -11,13 +11,49 @@ use Cake\ORM\TableRegistry;
  */
 class PreviousBillsController extends AppController
 {
-
     /**
-     * Index method
+     * index method
+     */
+    public function index(){
+
+    }
+
+    public function index_ajax($action = null){
+        $query = TableRegistry::get('processed_ra_bills')->find();
+        $data = $query
+            ->select([
+                'bill_id' => 'processed_ra_bills.id',
+                'scheme_name' => 'schemes.name_en',
+                'financial_year_estimates' => 'financial_year_estimates.name',
+                'contractor_name' => 'contractors.contractor_title',
+                'bill_amount' => 'processed_ra_bills.bill_amount',
+                'income_tex' => 'processed_ra_bills.income_tex',
+                'vat' => 'processed_ra_bills.vat',
+            ])
+            ->leftJoin('schemes', 'schemes.id = processed_ra_bills.scheme_id')
+            ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id = schemes.id')
+            ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
+            ->leftJoin('financial_year_estimates', 'financial_year_estimates.id = processed_ra_bills.financial_year_estimate_id')
+            ->where(['processed_ra_bills.status !=' => 99, 'scheme_contractors.is_lead' => 1 ])
+            ->hydrate(false)
+            ->order(['processed_ra_bills.id' => 'desc'])
+            ->toArray();
+        $sl = 1;
+        foreach ($data as &$datum) {
+            $datum['sl'] = $sl;
+            $datum['action'] =
+                '<button title="' . __('বাতিল করুন') . ' " data-bill_id="' . $datum['bill_id'] . '" class="icon-minus text-danger delete" onclick = "return confirm(\' Are you sure want to Delete ? \')"> </button>';
+            $sl++;
+        }
+        $this->response->body(json_encode($data));
+        return $this->response;
+    }
+    /**
+     * add method
      *
      * @return void
      */
-    public function index()
+    public function add()
     {
         $user= $this->Auth->user();
         $this->loadModel('ProcessedRaBills');
@@ -59,7 +95,27 @@ class PreviousBillsController extends AppController
         $this->loadModel('FinancialYearEstimates');
         $financial_year_estimate_id = $this->FinancialYearEstimates->find('list')->where(['status !=' => 99]);
         $this->set(compact('financial_year_estimate_id','schemes'));
+    }
 
+    /*
+     * delete
+     */
+    public function delete($id){
+        $this->loadModel('ProcessedRaBills');
+        $processBill = $this->ProcessedRaBills->get($id);
+        $user=$this->Auth->user();
+        $data=$this->request->data;
+        $data['status']=99;
+        $processBill = $this->ProcessedRaBills->patchEntity($processBill, $data);
+        if ($this->ProcessedRaBills->save($processBill))
+        {
+            $this->Flash->success('The process bill has been deleted.');
+        }
+        else
+        {
+            $this->Flash->error('The process bill could not be deleted. Please, try again.');
+        }
+        return $this->redirect(['action' => 'index']);
     }
 
 }
