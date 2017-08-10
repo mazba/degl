@@ -2,7 +2,11 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use Cake\Filesystem\File;
+use Cake\Network\Http\Client;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Route\Route;
+use Cake\Routing\Router;
 
 /**
  * ConstructorLetters Controller
@@ -20,6 +24,7 @@ class ConstructorLettersController extends AppController
     public function index()
     {
         if($this->request->is(['post'])){
+            $this->loadModel('ContractorQrImages');
             $data = $this->request->data();
             $query = TableRegistry::get('processed_ra_bills')->find();
             $conditions = [
@@ -47,26 +52,26 @@ class ConstructorLettersController extends AppController
                 ->order(['financial_year_estimates.id' => 'ASC'])
                 ->hydrate(false)
                 ->toArray();
-
-            pr($data['contractor_id']);die;
-            $previous_data = $this->QrImages->find('all')->where(['scheme_id' => $scheme['id']])->first();
+            $previous_data = $this->ContractorQrImages->find('all')->where(['contractor_id' => $data['contractor_id']])->first();
             if(empty(trim($previous_data))){
                 //qr code test
                 $query = [
                     'size'=>'170x170',
-                    'data'=>Router::url('/', true).'evidence/index/' . $scheme['id']
+                    'data'=>Router::url('/', true).'contractorqr/index/' . $data['contractor_id']
                 ];
                 $query = http_build_query($query);
                 $qrData = file_get_contents("https://api.qrserver.com/v1/create-qr-code/?$query");
-                $file = new File(WWW_ROOT.'img/qr_code/qr_'.$scheme['id'].'.jpg', true);
+                $file = new File(WWW_ROOT.'img/qr_contractor/qr_'.$data['contractor_id'].'.jpg', true);
                 $file->write($qrData);
                 //end qr code
-                $qrimagedata = $this->QrImages->newEntity();
-                $inputs['scheme_id'] = $scheme['id'];
-                $inputs['qr_image'] = 'qr_'.$scheme['id'].'.jpg';
-                $qrimagedata = $this->QrImages->patchEntity($qrimagedata, $inputs);
-                $this->QrImages->save($qrimagedata);
+                $qrimagedata = $this->ContractorQrImages->newEntity();
+                $inputs['contractor_id'] = $data['contractor_id'];
+                $inputs['qr_image'] = 'qr_'.$data['contractor_id'].'.jpg';
+                $qrimagedata = $this->ContractorQrImages->patchEntity($qrimagedata, $inputs);
+                $this->ContractorQrImages->save($qrimagedata);
             }
+            $qr_image = $this->ContractorQrImages->find()->select(['qr_image','contractor_id'])->where(['contractor_id' => $data['contractor_id']])->first();
+
             // Facial year
             $rules = [
                 'processed_ra_bills.contractor_id' => $data['contractor_id']
@@ -83,7 +88,7 @@ class ConstructorLettersController extends AppController
                 ->group(['financial_year_estimates.name'])
                 ->hydrate(false)
                 ->toArray();
-            $this->set(compact('processRaBills', 'finalYears'));
+            $this->set(compact('processRaBills', 'finalYears','qr_image'));
         }
         $this->loadModel('Contractors');
         $this->loadModel('FinancialYearEstimates');
@@ -92,5 +97,26 @@ class ConstructorLettersController extends AppController
         $this->set(compact('finalcialYears','contractors'));
     }
 
-
+    /*
+     * upload
+     */
+    public function upload(){
+        $this->loadModel('ContractorDocuments');
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $data = $this->request->data;
+            $previous = $this->ContractorDocuments->find('all')->select(['id'])->where(['contractor_id' => $data['contractor_id']])->first();
+            if($previous['id']){
+                $document = $this->ContractorDocuments->get($previous['id']);
+            }else{
+                $document = $this->ContractorDocuments->newEntity();
+            }
+            $document = $this->ContractorDocuments->patchEntity($document, $data);
+            if ($this->ContractorDocuments->save($document)) {
+                $this->Flash->success(__('The document has been uploaded.'));
+                return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Flash->error(__('The document could not be uploaded. Please, try again.'));
+            }
+        }
+    }
 }
