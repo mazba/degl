@@ -48,7 +48,6 @@ use Cake\Routing\Router;
         <div class="row">
             <div class="col-sm-12">
                 <table class="table table-bordered show-grid" style="width:100%;">
-
                     <tr>
                         <td colspan="4" style="padding:0px !important; margin:0px !important;">
                             <table class="table table-bordered show-grid" style="width:100%;    margin: 0px;">

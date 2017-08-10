@@ -24,6 +24,7 @@ class ConstructorLettersController extends AppController
             $query = TableRegistry::get('processed_ra_bills')->find();
             $conditions = [
                 'processed_ra_bills.contractor_id' => $data['contractor_id'],
+                'processed_ra_bills.status !=' => 99,
             ];
             if(isset($data['financial_year_estimate_id']) && !empty($data['financial_year_estimate_id']))
             {
@@ -47,6 +48,26 @@ class ConstructorLettersController extends AppController
                 ->hydrate(false)
                 ->toArray();
 
+            pr($data['contractor_id']);die;
+            $previous_data = $this->QrImages->find('all')->where(['scheme_id' => $scheme['id']])->first();
+            if(empty(trim($previous_data))){
+                //qr code test
+                $query = [
+                    'size'=>'170x170',
+                    'data'=>Router::url('/', true).'evidence/index/' . $scheme['id']
+                ];
+                $query = http_build_query($query);
+                $qrData = file_get_contents("https://api.qrserver.com/v1/create-qr-code/?$query");
+                $file = new File(WWW_ROOT.'img/qr_code/qr_'.$scheme['id'].'.jpg', true);
+                $file->write($qrData);
+                //end qr code
+                $qrimagedata = $this->QrImages->newEntity();
+                $inputs['scheme_id'] = $scheme['id'];
+                $inputs['qr_image'] = 'qr_'.$scheme['id'].'.jpg';
+                $qrimagedata = $this->QrImages->patchEntity($qrimagedata, $inputs);
+                $this->QrImages->save($qrimagedata);
+            }
+            // Facial year
             $rules = [
                 'processed_ra_bills.contractor_id' => $data['contractor_id']
             ];
