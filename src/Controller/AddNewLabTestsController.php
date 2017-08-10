@@ -32,10 +32,10 @@ class AddNewLabTestsController extends AppController
 
             $inputs = $this->request->data;
             //  echo "<pre>";print_r($inputs);die();
-           // $i = 0;
+            // $i = 0;
             $flag = 0;
             for ($i=0; $i < count($inputs['rate']); $i++) {
-            $time= time();
+                $time= time();
                 for ($j = 1; $j <= $inputs['number_of_test'][$i]; $j++) {
                     $data = array();
                     $data['lab_letter_registers_id'] = $inputs['lab_letter_registers_id'];
@@ -272,41 +272,41 @@ class AddNewLabTestsController extends AppController
     public function get_previous_number_of_test(){
         $this->loadModel('LabActualTests');
         $data=$this->request->data;
-       if($data['scheme_id']){
-           $tests = $this->LabActualTests->find()
-               ->select(['test_number' => 'number_of_test'])
-               ->autoFields(false)
-               ->where(['scheme_id'=>$data['scheme_id'],'lab_test_group_id'=>$data['lab_test_group'],'lab_test_list_id' => $data['test_list_id']])
-               ->group(['lab_test_group_id','lab_test_list_id','created_date'])
-               ->toArray();
-         //  echo "<pre>";print_r($tests);die();
+        if($data['scheme_id']){
+            $tests = $this->LabActualTests->find()
+                ->select(['test_number' => 'number_of_test'])
+                ->autoFields(false)
+                ->where(['scheme_id'=>$data['scheme_id'],'lab_test_group_id'=>$data['lab_test_group'],'lab_test_list_id' => $data['test_list_id']])
+                ->group(['lab_test_group_id','lab_test_list_id','created_date'])
+                ->toArray();
+            //  echo "<pre>";print_r($tests);die();
 
-           $total=0;
-           foreach($tests as $test){
-               $total+= $test['test_number'];
-           }
-          // echo $total;die();
-           $this->response->body(json_encode($total));
-           return $this->response;
+            $total=0;
+            foreach($tests as $test){
+                $total+= $test['test_number'];
+            }
+            // echo $total;die();
+            $this->response->body(json_encode($total));
+            return $this->response;
 
-       }else{
-           $tests = $this->LabActualTests->find()
-               ->select(['test_number' => 'number_of_test'])
-               ->autoFields(false)
-               ->where(['lab_letter_registers_id'=>$data['lab_letter_registers_id'],'lab_test_group_id'=>$data['lab_test_group'],'lab_test_list_id' => $data['test_list_id']])
-               ->group(['lab_test_group_id','lab_test_list_id','created_date'])
-               ->toArray();
-           //  echo "<pre>";print_r($tests);die();
+        }else{
+            $tests = $this->LabActualTests->find()
+                ->select(['test_number' => 'number_of_test'])
+                ->autoFields(false)
+                ->where(['lab_letter_registers_id'=>$data['lab_letter_registers_id'],'lab_test_group_id'=>$data['lab_test_group'],'lab_test_list_id' => $data['test_list_id']])
+                ->group(['lab_test_group_id','lab_test_list_id','created_date'])
+                ->toArray();
+            //  echo "<pre>";print_r($tests);die();
 
-           $total=0;
-           foreach($tests as $test){
-               $total+= $test['test_number'];
-           }
-         //  echo $total;die();
-           $this->response->body(json_encode($total));
-           return $this->response;
+            $total=0;
+            foreach($tests as $test){
+                $total+= $test['test_number'];
+            }
+            //  echo $total;die();
+            $this->response->body(json_encode($total));
+            return $this->response;
 
-       }
+        }
     }
 
     public function getRate()
@@ -353,6 +353,8 @@ class AddNewLabTestsController extends AppController
                 ->leftJoin('lab_test_group', 'lab_test_group.id=LabActualTests.lab_test_group_id')
                 ->group(['LabActualTests.lab_test_list_id','LabActualTests.created_date'])
                 ->toArray();
+
+            pr($tests);die;
         } else {
             $scheme = "";
 
@@ -367,6 +369,7 @@ class AddNewLabTestsController extends AppController
                 ->leftJoin('lab_test_group', 'lab_test_group.id=LabActualTests.lab_test_group_id')
                 ->group(['LabActualTests.lab_test_list_id','LabActualTests.created_date'])
                 ->toArray();
+//            pr($tests);die;
         }
 
 
@@ -403,6 +406,31 @@ class AddNewLabTestsController extends AppController
 
         $this->response->body(json_encode($arr));
         return $this->response;
+    }
+
+    /*
+     * Total report
+     */
+    public function total(){
+
+        if($this->request->is('post')){
+            $data = $this->request->data();
+            $date_from = strtotime($data['date_from']);
+            $date_to = strtotime($data['date_to']);
+            $this->loadModel('LabActualTests');
+            $query = $this->LabActualTests->find();
+            $query = $query->select([
+                'rate' => 'LabActualTests.rate',
+                'number_of_test' => $query->func()->sum('LabActualTests.number_of_test'),
+                'lab_test_short_name' => 'LabActualTests.lab_test_short_name',
+                'group_name' => 'lab_test_group.name_en',
+                'test_count' => $query->func()->count('LabActualTests.id')
+            ])->where(['LabActualTests.created_date >=' =>$date_from, 'LabActualTests.created_date <=' => $date_to])
+                ->leftJoin('lab_test_group', 'lab_test_group.id=LabActualTests.lab_test_group_id');
+            $results = $query->group(['lab_test_list_id'])->hydrate(false)->toArray();
+            $this->set(compact('results'));
+        }
+
     }
 
 }
