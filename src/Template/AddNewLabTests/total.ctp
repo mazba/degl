@@ -50,6 +50,7 @@
                             </tr>
                             <?php $i = 1;
                             $total = 0;
+                            $test = 0;
                             foreach ($results as $result): ?>
                                 <tr>
                                     <td><?= $i++ ?></td>
@@ -58,37 +59,16 @@
                                     <td><?= $result['rate'] ?></td>
                                     <td><?= ($result['rate'] * $result['number_of_test']) ?></td>
                                 </tr>
+                                <?php $test += $result['number_of_test']; ?>
                                 <?php $total += ($result['rate'] * $result['number_of_test']) ?>
                             <?php endforeach; ?>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td >Total: <?= $test ?> </td>
+                                    <td></td>
+                                    <td>Total: <?= $total ?></td>
+                                </tr>
                         </table>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-10 text-right balance" style="font-size: 14px">
-                            <spapn>Total Amount Tk. <?= $total ?></spapn>
-                            <br>
-                            <spapn>Net payable this bill Tk. <?= $total ?></spapn>
-                            <br>
-                            <spapn><b>Tk.=</b></spapn>
-                            <br>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-top:100px">
-                        <div class="col-sm-3 sign">
-                            <span>Lab: Technician</span><br>
-                            <span>LGED, Gazipur</span><br>
-                        </div>
-                        <div class="col-sm-3 sign">
-                            <span>Assistant Engineer</span><br>
-                            <span>LGED, Gazipur</span><br>
-                        </div>
-                        <div class="col-sm-3 sign">
-                            <span>Sr. Assistant Engineer</span><br>
-                            <span>LGED, Gazipur</span><br>
-                        </div>
-                        <div class="col-sm-3 sign">
-                            <span>Executive Engineer</span><br>
-                            <span>LGED, Gazipur</span><br>
-                        </div>
                     </div>
                 <?php else: ?>
                     <h3 style="text-align: center"><?= __('কোন তথ্য পাওয়া যায় নাই') ?></h3>

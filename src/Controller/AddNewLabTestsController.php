@@ -416,7 +416,9 @@ class AddNewLabTestsController extends AppController
         if($this->request->is('post')){
             $data = $this->request->data();
             $date_from = strtotime($data['date_from']);
+            $date_from = strtotime(date('Y-m-d 00:00:01', $date_from));
             $date_to = strtotime($data['date_to']);
+            $date_to = strtotime(date('Y-m-d 23:59:59', $date_to));
             $this->loadModel('LabActualTests');
             $query = $this->LabActualTests->find();
             $query = $query->select([

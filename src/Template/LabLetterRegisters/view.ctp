@@ -116,12 +116,6 @@ use Cake\Routing\Router;
                     Add Lab Test
                 </button>
             </a>
-            <a href="<?php echo $this->Url->build(["controller" => "AddNewLabTests", "action" => "total"]); ?>">
-                <button class="btn btn-default" type="button">
-                    <i class="text-green icon-plus"></i>
-                    Total Report
-                </button>
-            </a>
         </div>
     </div>
 

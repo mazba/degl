@@ -4,6 +4,16 @@
         <li class="active"><?= __('Lab Letter Registers') ?></li>
     </ul>
 </div>
+<div class="row">
+    <div class="col-md-12">
+        <a style="float: right" href="<?php echo $this->Url->build(["controller" => "AddNewLabTests", "action" => "total"]); ?>">
+            <button class="btn btn-default" type="button">
+                <i class="text-green icon-plus"></i>
+                Total Report
+            </button>
+        </a>
+    </div>
+</div>
 <div class="tabbable page-tabs">
     <ul class="nav nav-tabs" style="margin-bottom: 5px">
         <li class="active"><?= $this->Html->link(__('List of Lab Letter Registers'), ['action' => 'index']) ?></li>
