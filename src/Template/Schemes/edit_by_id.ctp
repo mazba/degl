@@ -177,9 +177,9 @@ Configure::load('config_offices', 'default');
                             <li><a class="action_btn" href="#contract_sign" data-toggle="tab">Contract Sign</a></li>
                             <li><a class="action_btn" href="#contractors" data-tab-url="contractor_info"  data-toggle="tab">Contractor</a></li>
                             <li><a data-toggle="tab" href="#approval_allotment">Approval Allotment</a></li>
-                            <li><a data-toggle="tab" href="#estimated">Estimated Cost</a></li>
+                            <!--li><a data-toggle="tab" href="#estimated">Estimated Cost</a></li-->
                             <li><a data-toggle="tab" href="#payment">Payment</a></li>
-                            <li><a data-toggle="tab" href="#payorder">Payorder</a></li>
+                            <li><a data-toggle="tab" href="#payorder">Performance Security</a></li>
                             <li><a class="action_btn" href="#item_bbq" data-tab-url="edit_item_bbq" data-toggle="tab" id="item_and_bbq">Item & BOQ</a></li>
                             <li><a class="action_btn" href="#lab_details_wrp" data-tab-url="get_lab_bill_info" data-toggle="tab">Lab</a></li>
                             <li><a class="action_btn" href="#scheme_vehicle_wrp" data-tab-url="scheme_vehicle_manage"   data-toggle="tab" id="scheme_vehicles">Vehicles</a></li>
@@ -295,6 +295,7 @@ Configure::load('config_offices', 'default');
                                     <?php
                                     echo $this->Form->input('category_name', ['options' => Configure::read('scheme_category'), 'empty' => __('Select')]);
                                     echo $this->Form->input('contract_amount', ['label' => __('Contract Amount'), 'type' => 'text']);
+                                    echo $this->Form->input('revised_contract_amount', ['label' => __('সংশোধিত   চুক্তি মূল্য'), 'type' => 'text']);
                                     echo $this->Form->input('scheme_type_id', ['options' => $scheme_types, 'empty' => 'Select']);
                                     echo $this->Form->input('sub_scheme_type_id', ['options' => $scheme_sub_types, 'empty' => 'Select']);
 
@@ -349,12 +350,17 @@ Configure::load('config_offices', 'default');
 
                             <div class="tab-pane" id="quantity">
                                 <div class="col-sm-12">
-                                    <?= $this->Form->input('roadid'); ?>
                                     <?= $this->Form->input('structure_length', ['label' => __('Bridge/Culvert Length')]); ?>
                                 </div>
                                 <div class="col-sm-12">
                                     <?= $this->Form->input('road_length'); ?>
                                     <?= $this->Form->input('building_quantity'); ?>
+
+                                     <?= $this->Form->input('palasiding_length', ['label' => __('প্যালাসাইডিং দৈর্ঘ্য'), 'type' => 'text']); ?>
+                                      <?= $this->Form->input('cross_drain_length', ['label' => __('ক্রস/ ড্রেনের দৈর্ঘ্য'), 'type' => 'text']); ?>
+                                       <?= $this->Form->input('cross_drain_quantity', ['label' => __('ক্রস/ ড্রেনের সংখ্যা'), 'type' => 'text']); ?>
+                                        <?= $this->Form->input('soil_quantity', ['label' => __('মাটির পরিমাণ'), 'type' => 'text']); ?>
+                                         <?= $this->Form->input('div_goods', ['label' => __('বিভাগীয় মালামালের মূল্য '), 'type' => 'text']); ?>
                                 </div>
                             </div>
 
@@ -378,7 +384,7 @@ Configure::load('config_offices', 'default');
                                     <div class="col-sm-4">
                                         <div class="form-group input text">
                                             <label for="etender-no"
-                                                   class="col-sm-4 control-label text-right"><?= __('e-Tender No') ?></label>
+                                                   class="col-sm-4 control-label text-right"><?= __('e-Tender ID No') ?></label>
 
                                             <div class="col-sm-8 container_etender_no">
                                                 <input type="text" name="etender_no"   value="<?= $scheme->etender_no ;?>" class="form-control" id="etender-no"maxlength="100">
@@ -548,7 +554,7 @@ Configure::load('config_offices', 'default');
 
                                 <div class="col-sm-12">
                                     <?php
-                                    echo $this->Form->input('proposed_start_date', ['type' => 'text', 'value' => $this->System->display_date($scheme->proposed_start_date), 'class' => 'form-control hasdatepicker']);
+
                                     echo $this->Form->input('contract_date', ['type' => 'text', 'value' => $this->System->display_date($scheme->contract_date), 'class' => 'form-control hasdatepicker']);
                                     echo $this->Form->input('noa_date', ['label' => __('NOA Date'), 'type' => 'text', 'value' => $this->System->display_date($scheme->noa_date), 'class' => 'form-control hasdatepicker']);
                                     echo $this->Form->input('insurance_date', ['label' => __('Insurance Date'), 'type' => 'text', 'value' => $this->System->display_date($scheme->insurance_date), 'class' => 'form-control hasdatepicker']);
@@ -557,8 +563,10 @@ Configure::load('config_offices', 'default');
 
                                     <?php
                                     //echo $this->Form->input('tender_date', ['type' => 'text', 'value' => $this->System->display_date($scheme->tender_date), 'class' => 'form-control hasdatepicker']);
+                                    echo $this->Form->input('proposed_start_date', ['type' => 'text', 'value' => $this->System->display_date($scheme->proposed_start_date), 'class' => 'form-control hasdatepicker']);
                                     echo $this->Form->input('expected_complete_date', ['type' => 'text', 'value' => $this->System->display_date($scheme->expected_complete_date), 'class' => 'form-control hasdatepicker']);
                                     echo $this->Form->input('actual_start_date', ['type' => 'text', 'value' => $this->System->display_date($scheme->actual_start_date), 'class' => 'form-control hasdatepicker']);
+                                    echo $this->Form->input('actual_complete_date', ['type' => 'text', 'value' => $this->System->display_date($scheme->actual_complete_date), 'class' => 'form-control hasdatepicker']);
                                     echo $this->Form->input('noa_subject', ['label' => __('NOA Subject'), 'type' => 'text']);
 
                                     ?>
@@ -691,7 +699,7 @@ Configure::load('config_offices', 'default');
                                     echo $this->Form->input('scheme_payorders.initial_date', ['label' =>'তারিখ' ,'class' => 'form-control hasdatepicker', 'value' => $payorder['initial_date']?date('d-M-y', $payorder['initial_date']):'']);
                                     echo $this->Form->input('scheme_payorders.expire_date', ['label' => 'মেয়াদ', 'class' => 'form-control hasdatepicker', 'value' => $payorder['expire_date']?date('d-M-y', $payorder['expire_date']):'']);
                                     echo $this->Form->input('scheme_payorders.medium',['label' => 'ব্যাংকের নাম', 'value' => $payorder['order_medium']?$payorder['order_medium']:'']);
-                                    echo $this->Form->input('scheme_payorders.order_branch',['label' => 'ব্যাংকের শাখা', 'value' => $payorder['order_branch']?$payorder['order_branch']:'']);
+                                    echo $this->Form->input('scheme_payorders.order_branch',['label' => 'দাখিলকৃত  ব্যাংকের নাম', 'value' => $payorder['order_branch']?$payorder['order_branch']:'']);
                                     echo $this->Form->input('scheme_payorders.submit_date', ['label' => 'দাখিলকৃত তারিখ', 'class' => 'form-control hasdatepicker', 'value' => $payorder['submit_date']?date('d-M-y', $payorder['submit_date']):'']);
                                     ?>
                                 </div>

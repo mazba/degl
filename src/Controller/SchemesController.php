@@ -240,20 +240,20 @@ class SchemesController extends AppController {
       } else {
         $data['actual_start_date'] = '';
       }
-//            $x = strtotime($data['approve_extended_date']);
-//            if ($x !== false) {
-//                $data['approve_extended_date'] = $x;
-//                $data['completion_date'] = $x;
-//            } else {
-//                $data['approve_extended_date'] = '';
-//            }
-//            $x = strtotime($data['actual_complete_date']);
-//            if ($x !== false) {
-//                $data['actual_complete_date'] = $x;
-//                $data['completion_date'] = $x;
-//            } else {
-//                $data['actual_complete_date'] = '';
-//            }
+            $x = strtotime($data['approve_extended_date']);
+            if ($x !== false) {
+                $data['approve_extended_date'] = $x;
+                $data['completion_date'] = $x;
+            } else {
+                $data['approve_extended_date'] = '';
+            }
+            $x = strtotime($data['actual_complete_date']);
+            if ($x !== false) {
+                $data['actual_complete_date'] = $x;
+                $data['completion_date'] = $x;
+            } else {
+                $data['actual_complete_date'] = '';
+            }
       if (isset($data['allotment_date'])) {
         $data['allotment_date'] = strtotime($data['allotment_date']);
       }
@@ -700,8 +700,8 @@ class SchemesController extends AppController {
       else
       {
         $schemes = $this->Schemes->find('all')//->autoFields(true)
-        ->select(['financial_year' => 'financial_year_estimates.name', 'scheme_name' => 'Schemes.name_en', 'projects_name' => 'projects.short_code', 'districts_name' => 'districts.name_en', 'upazilas_name' => 'upazilas.name_en', 'contractor_name' => 'contractors.contractor_title', 'contract_amount' => 'Schemes.contract_amount', 'contract_date' => 'Schemes.contract_date', /*'scheme_progresses' => 'scheme_progresses.progress_value',*/
-            'expected_complete_date' => 'Schemes.expected_complete_date', 'scheme_id' => 'Schemes.id', 'scheme_progresses' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)'])
+        ->select(['financial_year' => 'financial_year_estimates.name', 'scheme_name' => 'Schemes.name_en', 'projects_name' => 'projects.short_code', 'districts_name' => 'districts.name_en', 'upazilas_name' => 'upazilas.name_en', 'scheme_code' => 'Schemes.scheme_code','contractor_name' => 'contractors.contractor_title', 'contract_amount' => 'Schemes.contract_amount', 'contract_date' => 'Schemes.contract_date', /*'scheme_progresses' => 'scheme_progresses.progress_value',*/
+                'palasiding_length' => 'Schemes.palasiding_length', 'expected_complete_date' => 'Schemes.expected_complete_date', 'scheme_id' => 'Schemes.id', 'scheme_progresses' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)'])
             ->distinct(['Schemes.id'])
             ->innerJoin('project_offices', 'project_offices.project_id = Schemes.project_id')
             ->leftJoin('projects', 'projects.id = Schemes.project_id')
@@ -819,6 +819,17 @@ class SchemesController extends AppController {
       } else {
         $data['actual_start_date'] = '';
       }
+
+        $x = strtotime($data['actual_complete_date']);
+        if ($x !== FALSE) {
+            $data['actual_complete_date'] = $x;
+        } else {
+            $data['actual_complete_date'] = '';
+        }
+        if (isset($data['allotment_date'])) {
+            $data['allotment_date'] = strtotime($data['allotment_date']);
+        }
+
       if (isset($data['allotment_date'])) {
         $data['allotment_date'] = strtotime($data['allotment_date']);
       }
@@ -838,6 +849,8 @@ class SchemesController extends AppController {
       } else {
         $data['work_order_date'] = '';
       }
+
+    
       $data['ads_paper'] = json_encode($newspaper);
       $scheme = $this->Schemes->patchEntity($scheme, $data);
       if ($this->Schemes->save($scheme)) {
@@ -981,6 +994,10 @@ class SchemesController extends AppController {
             'newspaper' => 'Schemes.ads_paper',
             'applied_etender_date' => 'Schemes.applied_etender_date',
             'applied_tender_price' => 'Schemes.contract_amount',
+            'palasiding_length' => 'Schemes.palasiding_length',
+            'cross_drain_length' => 'Schemes.cross_drain_length',
+            'cross_drain_quantity' => 'Schemes.cross_drain_quantity',
+            'soil_quantity' => 'Schemes.soil_quantity',
             'project_name' => 'projects.name_bn',
             'nothi_name' => 'nothi_registers.nothi_no',
             'id' => 'packages.id',
