@@ -102,8 +102,21 @@
                         width: '7%'
                     },
                     {text: '<?= __('Progress Value') ?>', dataField: 'scheme_progresses', width: '7%'},
-                    {text: '<?= __('Contract Date') ?>', dataField: 'contract_date', width: '7%'},
-                    {text: '<?= __('Complete Date') ?>', dataField: 'expected_complete_date', width: '7%'},
+                    {text: '<?= __('চুক্তির শুরুর তারিখ') ?>', dataField: 'contract_date', width: '7%'},
+                    {text: '<?= __('Complete Date') ?>', dataField: 'expected_complete_date',
+                        cellsrenderer: function (row, value1, value2, value3, value4, value5 ) {
+                            var currentDate =  new Date();
+                            var expected_date = value5.expected_complete_date;
+                            var date = expected_date;
+                            var datearray = date.split("/");
+                            var expected = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+                            var expected = new Date(expected);
+
+                            if(currentDate > expected ){
+                               return '<span class="label label-danger">'+expected_date+'</span>';
+                            }
+                        },
+                        width: '7%'},
                     {text: '<?= __('Action') ?>', cellsalign: 'center', dataField: 'action', width: '10%'}
                 ]
             });
