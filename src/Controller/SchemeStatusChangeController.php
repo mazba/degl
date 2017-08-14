@@ -24,7 +24,7 @@ class SchemeStatusChangeController extends AppController
         $inputs=$this->request->data();
         $this->loadModel('Schemes');
         $scheme=$this->Schemes->get($inputs['scheme_id']);
-        $data['status']=$inputs['status'];
+        $data['scheme_progress_status']= $inputs['scheme_progress_status'];
         $scheme=$this->Schemes->patchEntity($scheme,$data);
         if($this->Schemes->save($scheme))
         {

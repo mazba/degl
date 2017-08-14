@@ -21,7 +21,7 @@
         </div>
         <div class="col-sm-offset-1 col-sm-8">
             <div class="form-group input select">
-                <?= $this->Form->input('status', ['options' => Configure::read('status_options')]); ?>
+                <?= $this->Form->input('scheme_progress_status', ['options' => Configure::read('scheme_progress_status')]); ?>
             </div>
         </div>
 
