@@ -276,6 +276,17 @@ use Cake\Core\Configure;
                                 <td><?= array_sum(array_column($schemes, $key)); ?></td>
                             <?php } elseif ($key == 'payment_structure') { ?>
                                 <td><?= array_sum(array_column($schemes, $key)); ?></td>
+<!--                                new fields-->
+                            <?php } elseif ($key == 'palasiding_length') { ?>
+                                <td><?= array_sum(array_column($schemes, $key)); ?></td>
+                            <?php } elseif ($key == 'cross_drain_length') { ?>
+                                <td><?= array_sum(array_column($schemes, $key)); ?></td>
+                            <?php } elseif ($key == 'cross_drain_quantity') { ?>
+                                <td><?= array_sum(array_column($schemes, $key)); ?></td>
+                            <?php } elseif ($key == 'soil_quantity') { ?>
+                                <td><?= array_sum(array_column($schemes, $key)); ?></td>
+                            <?php } elseif ($key == 'div_goods') { ?>
+                                <td><?= array_sum(array_column($schemes, $key)); ?></td>
                             <?php } elseif ($key == 'allotted_amount') { ?>
                                 <td><?= array_sum(array_column($schemes, $key)); ?></td>
                             <?php } else { ?>

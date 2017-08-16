@@ -17,7 +17,6 @@ class SchemesController extends AppController {
    * @return void
    */
   public function index() {
-
   }
 
   /**
@@ -736,10 +735,13 @@ class SchemesController extends AppController {
           $scheme['expected_complete_date'] = date('d/m/Y', $scheme['expected_complete_date']);
           //$scheme['action'] = '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text-danger edit" > </button>';
           $scheme['action'] =
-              '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text-danger edit" > </button>'.''.
-              '<button title="' . __('Work Order') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text workOrder" > </button>' . '' .
-              '&nbsp;<a class="" title="Assign Contractors" href="' . $this->request->webroot . 'Schemes/assign_contractors/' . $scheme['scheme_id'] . '" ><i class="icon-user-plus"></i><a>'. '' .
-              '&nbsp;<a class="" title="Scheme Nothi" href="' . $this->request->webroot . 'note_sheet_events/view/' . $scheme['scheme_id'] . '" target="_blank" ><i class="icon-redo"></i><a>';
+              '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-pencil3 text-danger edit" > </button>'.''.
+              '<button title="' . __('Work Order') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-paper-plane text-success workOrder" > </button>' . '' .
+              '&nbsp;<a class="" title="Assign Contractors" href="' . $this->request->webroot . 'Schemes/assign_contractors/' . $scheme['scheme_id'] . '" ><i class="icon-user-plus text-info"></i><a>'. '' .
+              '&nbsp;<a class="" title="Scheme Nothi" href="' . $this->request->webroot . 'note_sheet_events/view/' . $scheme['scheme_id'] . '" target="_blank" ><i class="icon-link5 text-warning"></i><a>'.''.
+              '&nbsp;<a class="" title="স্কীমের অবস্থা" href="' . $this->request->webroot . 'schemes/scheme_status/' . $scheme['scheme_id'] . '" target="_blank" ><i class="icon-newspaper text-primary scheme-status"></i><a>'.''.
+              '<button title="' . __('স্কীম প্রোগ্রেস') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-loop5 text-success progress" > </button>';
+
 
           $sl++;
         }
@@ -1786,6 +1788,70 @@ class SchemesController extends AppController {
     ];
     $this->response->body(json_encode($response));
     return $this->response;
+  }
+
+  // scheme status
+  public function scheme_status($id = null)
+  {
+    $scheme = $this->Schemes->get($id);
+    if ($this->request->is(['patch', 'post', 'put']))
+    {
+      $inputs = $this->request->data();
+      $data['scheme_progress_status']= $inputs['scheme_progress_status'];
+      $scheme = $this->Schemes->patchEntity($scheme,$data);
+
+      if($this->Schemes->save($scheme))
+      {
+        $this->Flash->success(__('The scheme status has been changed'));
+        return $this->redirect(['action' => 'index']);
+      }else {
+        $this->Flash->error(__('The scheme status could not be changed. Please, try again.'));
+      }
+    }
+    $status = $this->Schemes->find()->select(['scheme_progress_status'])->where(['id' => $id])->first();
+    $this->set(compact('status','scheme'));
+  }
+
+  public function progress($scheme_id = null) {
+    $this->layout = 'ajax';
+    $this->loadModel('SchemeProgresses');
+    $this->loadModel('Schemes');
+    $schemeProgress = $this->SchemeProgresses->newEntity();
+    $id = $scheme_id;
+    $query = TableRegistry::get('SchemeProgresses')
+        ->find()
+        ->select(['progress_value'])
+        ->where(['scheme_id' => $scheme_id, 'status' => 1]);
+    $previous_scheme_progresses = $query->first();
+
+
+    // echo "<pre>";print_r($actually_scheme_progress);die();
+    if ($this->request->is(['post', 'put'])) {
+      $data = $this->request->data;
+      $user = $this->Auth->user();
+      $data['office_id'] = $user['office_id'];
+      $data['created_by'] = $user['id'];
+      $data['created_date'] = strtotime($data['created_date']);
+      $scheme = TableRegistry::get('SchemeProgresses');
+      $query = $scheme->query();
+      $query->update()
+          ->set(['status' => 0])
+          ->where(['scheme_id' => $data['scheme_id']])
+          ->execute();
+
+      $schemeProgress = $this->SchemeProgresses->patchEntity($schemeProgress, $data);
+      //  echo "<pre>";print_r($schemeProgress);die();
+      if ($this->SchemeProgresses->save($schemeProgress)) {
+        $this->Flash->success(__('The scheme progress has been saved'));
+        return $this->redirect(['action' => 'index']);
+      } else {
+        $this->Flash->success(__('The scheme progress could not be changed. Please, try again.'));
+        return $this->redirect(['action' => 'index']);
+      }
+
+    }
+    $this->set(compact('schemeProgress', 'previous_scheme_progresses', 'id'));
+
   }
 
 }

@@ -81,7 +81,11 @@ return [
         'eve_approval_date' => 'Approved Date',
         'actual_start_date' => 'Work Start Date',
         'remarks' => 'Remarks',
-
+        'palasiding_length' => 'Palisading Length',
+        'cross_drain_length' => 'Cross Drain Length',
+        'cross_drain_quantity' => 'Cross Drain Quantity',
+        'soil_quantity' => 'Soil Quantity',
+        'div_goods' => 'Divisional Goods Price',
 
     ],
 

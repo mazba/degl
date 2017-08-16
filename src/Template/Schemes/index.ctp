@@ -51,7 +51,7 @@
             dataType: "json",
             dataFields: [
                 {name: 'sl', type: 'int'},
-              
+
                 {name: 'upazilas_name', type: 'string'},
                 {name: 'financial_year', type: 'string'},
                 {name: 'scheme_name', type: 'string'},
@@ -88,9 +88,9 @@
 
 
                 columns: [
-                    {text: '<?= __('#') ?>', cellsalign: 'center', dataField: 'sl', width: '5%'},
-                  
-                    {text: '<?= __('Upazila') ?>', dataField: 'upazilas_name', filtertype: 'list', width: '10%'},
+                    {text: '<?= __('#') ?>', cellsalign: 'center', dataField: 'sl', width: '4%'},
+
+                    {text: '<?= __('Upazila') ?>', dataField: 'upazilas_name', filtertype: 'list', width: '8%'},
                     {text: '<?= __('Financial Year') ?>', dataField: 'financial_year', filtertype: 'list', width: '7%'},
                     {text: '<?= __('Project') ?>', dataField: 'projects_name', filtertype: 'list', width: '9%'},
 
@@ -113,11 +113,11 @@
                             var expected = new Date(expected);
 
                             if(currentDate > expected ){
-                               return '<span class="label label-danger">'+expected_date+'</span>';
+                                return '<span class="label label-danger">'+expected_date+'</span>';
                             }
                         },
                         width: '7%'},
-                    {text: '<?= __('Action') ?>', cellsalign: 'center', dataField: 'action', width: '10%'}
+                    {text: '<?= __('Action') ?>', cellsalign: 'center', dataField: 'action', width: '14%'}
                 ]
             });
     });
@@ -134,7 +134,7 @@
                 url: '<?= $this->Url->build("/Schemes/view_by_id/")?>',
                 data: {id: id},
                 success: function (data, status) {
-                   $('#modal-content').html(data);
+                    $('#modal-content').html(data);
                     $('#scheme-modal-main').modal('show')
                 }
             });
@@ -142,32 +142,46 @@
         $(document).on ('click', ".edit", function () {
             var id = $(this).data('scheme_id');
             var url =  '<?= $this->Url->build("/Schemes/edit_by_id/")?>'+id;
-           // console.log(id);
+            // console.log(id);
             $.ajax({
                 type: 'GET',
                 url:url,
 
                 success: function (data, status) {
-                   $('#modal-content').html(data);
+                    $('#modal-content').html(data);
                     $('#scheme-modal-main').modal('show')
                 }
             });
         });
 
         $(document).on ('click', ".workOrder", function () {
-                    var id = $(this).data('scheme_id');
-                    var url =  '<?= $this->Url->build("/Schemes/work_order_by_id/")?>'+id;
-                   // console.log(id);
-                    $.ajax({
-                        type: 'GET',
-                        url:url,
+            var id = $(this).data('scheme_id');
+            var url =  '<?= $this->Url->build("/Schemes/work_order_by_id/")?>'+id;
+            // console.log(id);
+            $.ajax({
+                type: 'GET',
+                url:url,
 
-                        success: function (data, status) {
-                           $('#modal-content').html(data);
-                            $('#scheme-modal-main').modal('show')
-                        }
-                    });
-                });
+                success: function (data, status) {
+                    $('#modal-content').html(data);
+                    $('#scheme-modal-main').modal('show')
+                }
+            });
+        });
+
+        $(document).on ('click', ".progress", function () {
+            var id = $(this).data('scheme_id');
+            var url =  '<?= $this->Url->build("/Schemes/progress/")?>'+id;
+            // console.log(id);
+            $.ajax({
+                type: 'GET',
+                url:url,
+                success: function (data, status) {
+                    $('#modal-content').html(data);
+                    $('#scheme-modal-main').modal('show')
+                }
+            });
+        });
 
 
     });

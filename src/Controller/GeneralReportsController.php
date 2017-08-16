@@ -142,6 +142,22 @@ class GeneralReportsController extends AppController {
        if (isset($inputs['field']['Work Remarks'])) {
         array_push($scheme_select_fields, 'Schemes.work_remarks');
       }
+      // new fields added
+       if (isset($inputs['field']['Palisading Length'])) {
+        array_push($scheme_select_fields, 'Schemes.palasiding_length');
+      }
+       if (isset($inputs['field']['Cross Drain Length'])) {
+        array_push($scheme_select_fields, 'Schemes.cross_drain_length');
+      }
+       if (isset($inputs['field']['Cross Drain Quantity'])) {
+        array_push($scheme_select_fields, 'Schemes.cross_drain_quantity');
+      }
+       if (isset($inputs['field']['Soil Quantity'])) {
+        array_push($scheme_select_fields, 'Schemes.soil_quantity');
+      }
+       if (isset($inputs['field']['Divisional Goods Price'])) {
+        array_push($scheme_select_fields, 'Schemes.div_goods');
+      }
 
       //Fund Receive
 
