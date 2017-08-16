@@ -9,6 +9,7 @@ return [
     'status_options' => ['1' => 'Active', '0' => 'In-Active'],
     'scheme_progress_status' => ['1' => 'সচল', '0' => 'সমাপ্ত'],
     'project_status' => ['1' => 'Active', '0' => 'In-Active', '4' => 'Complete'],
+    'no_img_path'=>'files/noimagefound.jpg',
     'yes_no_options' => ['1' => 'Yes', '0' => 'No'],
     'gender' => ['MALE' => 'Male', 'FEMALE' => 'Female'],
     'departments' => ['MECHANICAL' => 'mechanical', 'LAB' => 'lab', 'ACCOUNT' => 'account', 'EFILE' => 'efile'],

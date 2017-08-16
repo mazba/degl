@@ -34,6 +34,8 @@ class ContractorsTable extends Table
             'foreignKey' => 'updated_by',
             'joinType' => 'LEFT'
         ]);
+
+        $this->addBehavior('FileUpload',['upload_path'=>'contractor_photo','field'=>'picture']);
     }
 
     /**

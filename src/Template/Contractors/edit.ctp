@@ -37,7 +37,7 @@ use Cake\Core\Configure;
 </div>
 
 
-<?= $this->Form->create($contractor, ['class' => 'form-horizontal', 'role' => 'form']); ?>
+<?= $this->Form->create($contractor, ['class' => 'form-horizontal', 'role' => 'form', 'type' => 'file']); ?>
 <div class="row panel panel-default">
 
     <div class="panel-heading">
@@ -54,6 +54,7 @@ use Cake\Core\Configure;
             echo $this->Form->input('contractor_phone');
             echo $this->Form->input('mobile');
             echo $this->Form->input('contractor_email');
+            echo $this->Form->input('picture', ['type' => 'file']);
             ?>
         </div>
         <div class="col-sm-6">
@@ -62,6 +63,7 @@ use Cake\Core\Configure;
             echo $this->Form->input('vat_no');
             echo $this->Form->input('tin_no');
             echo $this->Form->input('trade_licence_no');
+            echo $this->Form->input('nid', ['label' => 'জাতীয় পরিচয়পত্র']);
             echo $this->Form->input('contractor_address', ['type' => 'textarea']);
             ?>
         </div>

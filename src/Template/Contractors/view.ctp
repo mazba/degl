@@ -1,6 +1,11 @@
+<?php
+use Cake\Core\Configure;
+?>
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
-        <li><a href="<?= $this->Url->build(('/Dashboard'), true); ?>"><?= __('Dashboard') ?></a></li>
+        <li><a href="<?=
+
+            $this->Url->build(('/Dashboard'), true); ?>"><?= __('Dashboard') ?></a></li>
         <li><?= $this->Html->link(__('Contractors'), ['action' => 'index']) ?> </li>
         <li class="active"><?= __('Detail Contractor') ?> </li>
     </ul>
@@ -44,12 +49,19 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-
+        <div class="panel panel-default">
+            <?php
+            $con_img = $this->request->webroot.'img/'.$contractor->picture;
+            $con_img = !empty($contractor->picture)?$con_img:$this->request->webroot.Configure::read('no_img_path');
+            ?>
+            <img width="280px" height="280px" src="<?php echo $con_img; ?>" />
+        </div>
         <div class="panel panel-default">
             <div class="panel-heading"><h6
                     class="panel-title"><?= __('Contractor Class Title') ?></h6></div>
             <div class="panel-body"><?= h($contractor->contractor_class_title) ?></div>
         </div>
+        
         <div class="panel panel-default">
             <div class="panel-heading"><h6
                     class="panel-title"><?= __('Contractor Title') ?></h6></div>
@@ -96,6 +108,11 @@
             <div class="panel-heading"><h6
                     class="panel-title"><?= __('Tin No') ?></h6></div>
             <div class="panel-body"><?= h($contractor->tin_no) ?></div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><h6
+                    class="panel-title"><?= __('জাতীয় পরিচয়পত্র') ?></h6></div>
+            <div class="panel-body"><?= h($contractor->nid) ?></div>
         </div>
         <div class="panel panel-default">
             <div class="panel-heading"><h6
