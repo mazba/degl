@@ -90,7 +90,7 @@ $newspapers = json_decode($result['newspaper'], true);
 				<br/>
 				<table style="width:100%; margin-left: 15px">
 					<tr>
-						<td width="33%"><b>(চ) দরপত্র গ্রহণের তারিখঃ </b><?= $result['applied_etender_date']?$this->Common->EngToBanglaNum(date('d-m-Y',$result['applied_etender_date'])).'ইং':'.....'?></td>
+						<td width="33%"><b>(চ) দরপত্র গ্রহণের তারিখঃ </b><?= $result['tender_date']?$this->Common->EngToBanglaNum(date('d-m-Y',$result['tender_date'])).'ইং':'.....'?></td>
 						<td width="33%"> প্রাপ্ত দরপত্র সংখ্যা :    <?= $result['obtain_tender_no']?sprintf("%02d", $result['obtain_tender_no']).'টি':'....';  ?> </td>
 						<td width="33%"> রীতিসিদ্ধ দরপত্র সংখ্যা :  <?= $result['customary_tender_no']?sprintf("%02d",$result['customary_tender_no']).'টি':'.....';  ?></td>
 					</tr>

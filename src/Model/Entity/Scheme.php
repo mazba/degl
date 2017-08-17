@@ -16,6 +16,5 @@ class Scheme extends Entity
      */
     protected $_accessible = [
         '*' => true,
-
     ];
 }

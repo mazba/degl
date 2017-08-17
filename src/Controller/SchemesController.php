@@ -702,6 +702,7 @@ class SchemesController extends AppController {
         ->select([
             'financial_year' => 'financial_year_estimates.name',
             'scheme_name' => 'Schemes.name_en',
+            'package_name' => 'packages.name_en',
             'projects_name' => 'projects.short_code',
             'districts_name' => 'districts.name_en',
             'upazilas_name' => 'upazilas.name_en',
@@ -721,6 +722,7 @@ class SchemesController extends AppController {
             ->leftJoin('upazilas', 'upazilas.id = Schemes.upazila_id')
             ->leftJoin('scheme_progresses', 'scheme_progresses.scheme_id = Schemes.id')
             ->leftJoin('upazilas', 'upazilas.id = Schemes.upazila_id')
+            ->leftJoin('packages', 'packages.id = Schemes.package_id')
             ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id = Schemes.id')
             ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
             ->leftJoin('financial_year_estimates', 'financial_year_estimates.id = Schemes.financial_year_estimate_id')
@@ -854,8 +856,8 @@ class SchemesController extends AppController {
       if (isset($data['etender_date'])) {
         $data['etender_date'] = strtotime($data['etender_date']);
       }
-      if (isset($data['applied_etender_date'])) {
-        $data['applied_etender_date'] = strtotime($data['applied_etender_date']);
+      if (isset($data['tender_date'])) {
+        $data['tender_date'] = strtotime($data['tender_date']);
       }
 
       $x = strtotime($data['work_order_date']);
@@ -1007,7 +1009,7 @@ class SchemesController extends AppController {
             'customary_tender_no' => 'Schemes.habitual_number_of_tender',
             'performance_security' => 'Schemes.performance_security',
             'newspaper' => 'Schemes.ads_paper',
-            'applied_etender_date' => 'Schemes.applied_etender_date',
+            'tender_date' => 'Schemes.tender_date',
             'applied_tender_price' => 'Schemes.contract_amount',
             'palasiding_length' => 'Schemes.palasiding_length',
             'cross_drain_length' => 'Schemes.cross_drain_length',

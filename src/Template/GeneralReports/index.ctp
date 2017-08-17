@@ -1,6 +1,7 @@
 <?php
 use Cake\Core\Configure;
-
+/*pr($fields);
+pr($schemes);die;*/
 ?>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
 
@@ -186,7 +187,7 @@ use Cake\Core\Configure;
 
 
 
-                            <?php if (array_key_exists($key, $schemes[0])): ?>
+<!--                            --><?php //if (array_key_exists($key, $schemes[0])): ?>
                                 <?php if($field== "Scheme Name"){
                                 ?>
 
@@ -201,7 +202,7 @@ use Cake\Core\Configure;
                                 ?>
 
 
-                            <?php endif; ?>
+<!--                            --><?php //endif; ?>
                         <?php endforeach; ?>
                        
                     </tr>
@@ -221,7 +222,7 @@ use Cake\Core\Configure;
                                     <?php $count = 0;
                                     continue;
                                 } ?>
-                                <?php if (array_key_exists($key, $schemes[0])): ?>
+<!--                                --><?php //if (array_key_exists($key, $schemes[0])): ?>
                                     <td><?php 
                                     
                                     if($key=="physical_progress")
@@ -230,13 +231,16 @@ use Cake\Core\Configure;
                                     	$datePice = explode(".",$scheme[$key]);
                                     	echo $datePice[0]. "%";
                                     }
+                                    elseif($key == 'remarks'){
+                                        echo '&nbsp';
+                                    }
                                     else
                                     {
                                     	echo $scheme[$key];
                                     
                                     }
                                      ?></td>
-                                <?php endif; ?>
+<!--                                --><?php //endif; ?>
                             <?php endforeach; ?>
                            
                         </tr>
@@ -245,7 +249,6 @@ use Cake\Core\Configure;
                         <td> <?php echo"<b> Sub total</b>"; ?> </td>
                         <?php
                         foreach ($fields as $key => $value): ?>
-
                             <?php if ($key == 'contract_amount') { ?>
                                 <td><?= array_sum(array_column($schemes, $key)); ?></td>
                             <?php } elseif ($key == 'eve_approval_bill') { ?>
@@ -265,8 +268,6 @@ use Cake\Core\Configure;
                             <?php } elseif ($key == 'total_fund_spend') { ?>
                                 <td><?= array_sum(array_column($schemes, $key)); ?></td>
                             <?php } elseif ($key == 'fund_spend_this_year') { ?>
-                                <td><?= array_sum(array_column($schemes, $key)); ?></td>
-                            <?php } elseif ($key == 'fund_spend_this_month') { ?>
                                 <td><?= array_sum(array_column($schemes, $key)); ?></td>
                             <?php } elseif ($key == 'total_fund_received') { ?>
                                 <td><?= array_sum(array_column($schemes, $key)); ?></td>

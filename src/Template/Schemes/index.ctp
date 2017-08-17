@@ -55,6 +55,7 @@
                 {name: 'upazilas_name', type: 'string'},
                 {name: 'financial_year', type: 'string'},
                 {name: 'scheme_name', type: 'string'},
+                {name: 'package_name', type: 'string'},
                 {name: 'projects_name', type: 'string'},
                 {name: 'contractor_name', type: 'string'},
                 {name: 'contract_amount', type: 'float'},
@@ -88,20 +89,21 @@
 
 
                 columns: [
-                    {text: '<?= __('#') ?>', cellsalign: 'center', dataField: 'sl', width: '4%'},
+                    {text: '<?= __('#') ?>', cellsalign: 'center', dataField: 'sl', width: '2%'},
 
                     {text: '<?= __('Upazila') ?>', dataField: 'upazilas_name', filtertype: 'list', width: '8%'},
-                    {text: '<?= __('Financial Year') ?>', dataField: 'financial_year', filtertype: 'list', width: '7%'},
+                    {text: '<?= __('Financial Year') ?>', dataField: 'financial_year', filtertype: 'list', width: '6%'},
                     {text: '<?= __('Project') ?>', dataField: 'projects_name', filtertype: 'list', width: '9%'},
 
                     {text: '<?= __('Scheme Name') ?>', dataField: 'scheme_name', width: '20%'},
-                    {text: '<?= __('Contractor') ?>', dataField: 'contractor_name', width: '10%'},
+                    {text: '<?= __('Package Name') ?>', dataField: 'package_name', width: '7%'},
+                    {text: '<?= __('Contractor') ?>', dataField: 'contractor_name', width: '8%'},
                     {                       text: '<?= __('Contract Amount') ?>',
                         dataField: 'contract_amount',
                         filtertype: 'list',
                         width: '7%'
                     },
-                    {text: '<?= __('Progress Value') ?>', dataField: 'scheme_progresses', width: '7%'},
+                    {text: '<?= __('Progress Value') ?>', dataField: 'scheme_progresses', width: '5%'},
                     {text: '<?= __('চুক্তির শুরুর তারিখ') ?>', dataField: 'contract_date', width: '7%'},
                     {text: '<?= __('Complete Date') ?>', dataField: 'expected_complete_date',
                         cellsrenderer: function (row, value1, value2, value3, value4, value5 ) {

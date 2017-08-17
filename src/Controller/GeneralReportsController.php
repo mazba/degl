@@ -270,7 +270,7 @@ class GeneralReportsController extends AppController {
       $schemes = $schemes->toArray();
       //echo "<pre>",print_r($schemes,1),"</pre>";
       $fields = array_flip($inputs['field']);
-
+//pr($schemes);die;
       foreach ($schemes as & $scheme) {
         if (!empty($scheme['contract_date'])) {
           $scheme['contract_date'] = date('d-m-Y', $scheme['contract_date']);
@@ -282,7 +282,7 @@ class GeneralReportsController extends AppController {
           $scheme['actual_complete_date'] = date('d-m-Y', $scheme['actual_complete_date']);
         }
         if (!empty($scheme['tender_date'])) {
-          $scheme['tender_date'] = date('d-m-Y', $scheme['tender_date']);
+          $scheme['etender_date'] = date('d-m-Y', $scheme['tender_date']);
         }
         if (!empty($scheme['work_order_date'])) {
           $scheme['work_order_date'] = date('d-m-Y', $scheme['work_order_date']);
