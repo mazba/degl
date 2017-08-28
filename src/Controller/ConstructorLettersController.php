@@ -34,7 +34,6 @@ class ConstructorLettersController extends AppController
             if(isset($data['financial_year_estimate_id']) && !empty($data['financial_year_estimate_id']))
             {
                 $conditions['processed_ra_bills.financial_year_estimate_id'] = $data['financial_year_estimate_id'];
-
             }
             $processRaBills = $query->select([
                 'contractor_title' => 'contractors.contractor_title',
@@ -52,7 +51,16 @@ class ConstructorLettersController extends AppController
                 ->order(['financial_year_estimates.id' => 'ASC'])
                 ->hydrate(false)
                 ->toArray();
+            if(empty($processRaBills)){
+                $this->loadModel('Contractors');
+                $this->loadModel('FinancialYearEstimates');
+                $NotFoundProcessRaBills = $this->Contractors->find()->where(['Contractors.id' => $data['contractor_id']])->first();
+                if(isset($data['financial_year_estimate_id']) && !empty($data['financial_year_estimate_id'])){
+                    $fiscal = $this->FinancialYearEstimates->get($data['financial_year_estimate_id']);
+                }
+            }
             $previous_data = $this->ContractorQrImages->find('all')->where(['contractor_id' => $data['contractor_id']])->first();
+//            pr($previous_data);die;
             if(empty(trim($previous_data))){
                 //qr code test
                 $query = [
@@ -88,7 +96,7 @@ class ConstructorLettersController extends AppController
                 ->group(['financial_year_estimates.name'])
                 ->hydrate(false)
                 ->toArray();
-            $this->set(compact('processRaBills', 'finalYears','qr_image'));
+            $this->set(compact('processRaBills', 'finalYears','qr_image','NotFoundProcessRaBills','fiscal'));
         }
         $this->loadModel('Contractors');
         $this->loadModel('FinancialYearEstimates');

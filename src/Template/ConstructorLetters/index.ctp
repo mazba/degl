@@ -18,6 +18,9 @@ if(!empty($processRaBills)){
         $year = $this->Common->EngToBanglaNum($finalYears[0]['fiscal_year']).' ইং';
     }
 }
+if(isset($fiscal) && !empty($fiscal)){
+    $fiscal = $this->Common->EngToBanglaNum($fiscal['name']).' ইং';
+}
 ?>
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
@@ -57,8 +60,8 @@ if(!empty($processRaBills)){
         <a href="#contractor-qr" data-contractor-id="<?= $qr_image['contractor_id']?>" style="background: green;color: #fff;font-weight: bold;font-size: 14px; float: right; margin-left: 1em" data-toggle="modal" class="ans-btn btn purple"><?= __('আপলোড করুন') ?></a>
         <button style="float: right;margin-top: 5px" onclick="print_rpt()">Print</button>
     </div>
-    <?php if(!empty($processRaBills)):?>
         <div id="PrintArea">
+		<div style="padding:20px 50px;">
             <div class="col-sm-12">
                 <h2 class="text-center" style="line-height: 14px"><?= __('Government of the People\'s Republic of Bangladesh') ?></h2>
                 <h4 class="text-center" style="line-height: 14px"><?= __('Local Govt. Engineering Department') ?> </h4>
@@ -71,22 +74,30 @@ if(!empty($processRaBills)){
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="col-sm-8">
+				<table style="width:100%">
+				  <tr>
+					<th valign="top">  <div class="col-sm-8">
                         <p>স্মারক নং - <span contenteditable="true">এখানে স্মারক নং লিখুন</span></p>
-                    </div>
-                    <div class="col-sm-4">
-                        <p style="float: right">তারিখ: <?= $this->Common->EngToBanglaNum(date('d-m-Y')). ' ইং' ?></p>
-                    </div>
+                    </div></th>
+					<th valign="top"><div class="col-sm-4" >
+                        <p style="float: right">তারিখ: <span contenteditable="true">এখানে স্মারক নং লিখুন</span></p>
+                    </div></th> 
+				  </tr>
+				  </table>
+                  
+                    
                 </div>
             </div>
             <div class="col-sm-12">
-                <div class="text-center" style="margin-top: 2em; margin-bottom: 3em" >
+                <div class="text-center" style="margin-top: -4px; margin-bottom: 0px;" >
                     <h3><u>"প্রত্যয়ন পত্র"</u></h3>
                 </div>
             </div>
             <div class="panel-body">
+                <?php if(isset($processRaBills) && !empty($processRaBills)):?>
                 <div class="row">
-                    <div class="col-sm-12" style="line-height: 45px">
+                    <div class="col-sm-12" style="line-height: 20px;margin-bottom:10px;    text-align: justify;">
+					<span style="line-height: 20px;padding-left:20px;">&nbsp;</span>
                         এই মর্মে প্রত্যয়ন করা যাচ্ছে যে, <?= $processRaBills[0]['contractor_title']?$processRaBills[0]['contractor_title'].', ':''?>
                         <?= $processRaBills[0]['contractor_person_name']?$processRaBills[0]['contractor_person_name'].', ':''?>
                         <?= $processRaBills[0]['contractor_address']?$processRaBills[0]['contractor_address']:'' ?>
@@ -99,22 +110,22 @@ if(!empty($processRaBills)){
                         <table class="table table-bordered show-grid">
                             <thead>
                             <tr>
-                                <th><?= __('ক্রমিক নং') ?></th>
-                                <th><?= __('অর্থ বছর') ?></th>
-                                <th><?= __('মোট পরিশোধিত বিল') ?></th>
-                                <th><?= __('ভ্যাট কর্তন') ?></th>
-                                <th><?= __('আয়কর কর্তন') ?></th>
-                                <th><?= __('মন্তব্য') ?></th>
+                                <th width="5%"><?= __('ক্রমিক নং') ?></th>
+                                <th width="20%"><?= __('অর্থ বছর') ?></th>
+                                <th width="25%"><?= __('মোট পরিশোধিত বিল') ?></th>
+                                <th width="20%"><?= __('ভ্যাট কর্তন') ?></th>
+                                <th width="20%"><?= __('আয়কর কর্তন') ?></th>
+                                <th width="15%"><?= __('মন্তব্য') ?></th>
                             </tr>
                             </thead>
                             <tbody>
                             <?php $sum_bill_amount = 0; $sum_vat = 0; $sum_income_tex = 0; foreach($processRaBills as $key => $processRaBill):?>
                                 <tr>
-                                    <td><?= $key+1 ?></td>
-                                    <td><?= $processRaBill['fiscal_year'] ?></td>
-                                    <td><?= $processRaBill['bill_amount'] ?></td>
-                                    <td><?= $processRaBill['vat'] ?></td>
-                                    <td><?= $processRaBill['income_tex'] ?></td>
+                                    <td><?= $this->Number->format($key+1); ?></td>
+                                    <td><?= $this->Common->EngToBanglaNum($processRaBill['fiscal_year']); ?></td>
+                                    <td><?= $this->Number->format($processRaBill['bill_amount']); ?></td>
+                                    <td><?= $this->Number->format($processRaBill['vat']); ?></td>
+                                    <td><?= $this->Number->format($processRaBill['income_tex']); ?></td>
                                     <td></td>
                                     <?php $sum_bill_amount += $processRaBill['bill_amount']; $sum_vat += $processRaBill['vat']; $sum_income_tex += $processRaBill['income_tex'] ?>
                                 </tr>
@@ -122,19 +133,34 @@ if(!empty($processRaBills)){
                             <?php endforeach; ?>
                             <tr>
                                 <td colspan="2"></td>
-                                <td><?= $sum_bill_amount ?></td>
-                                <td><?= $sum_vat ?></td>
-                                <td><?= $sum_income_tex ?></td>
+                                <td><?= $this->Number->format($sum_bill_amount); ?></td>
+                                <td><?= $this->Number->format($sum_vat); ?></td>
+                                <td><?= $this->Number->format($sum_income_tex); ?></td>
                                 <td></td>
                             </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+                <?php endif; if(isset($processRaBills) && !empty($NotFoundProcessRaBills)): ?>
+                    এই মর্মে প্রত্যয়ন করা যাচ্ছে যে, <?= $NotFoundProcessRaBills['contractor_title']?$NotFoundProcessRaBills['contractor_title'].', ':''?>
+                    <?= $NotFoundProcessRaBills['contractor_person_name']?$NotFoundProcessRaBills['contractor_person_name'].', ':''?>
+                    <?= $NotFoundProcessRaBills['contractor_address']?$NotFoundProcessRaBills['contractor_address']:'' ?>
+                    <?= $NotFoundProcessRaBills['tin_no']?'(TIN '.$NotFoundProcessRaBills['tin_no'].' )':''?> থেকে তিনি <?= $fiscal ?>
+                    অর্থ বছরে অত্র দপ্তরে কোন উন্নয়ন মূলক কাজ করেন নাই এবং কোন প্রকার বিল পরিশোধ করা হয় নাই।
+                <?php endif; ?>
                 <div class="row">
                     <div class="col-sm-12" style="margin-top: 40px;">
-                        <img style="padding-left: 20px !important;" src="<?php echo Router::url('/', true) . 'img/qr_contractor/' . $qr_image['qr_image']; ?>" alt="" height="170px" width="170px">
-                        <p class="text-center" style="float: right;font-size:15px;">
+                        <img style="padding-left: 20px !important;" src="<?php echo Router::url('/', true) . 'img/qr_contractor/' . $qr_image['qr_image']; ?>" alt="" height="90px" width="100px">
+                        <br/>
+					 <span>
+                Authenticity of this page is <br>
+					verifiable from 
+			http://www.lgedgazipur.gov.bd <br>
+					With the QR Code.
+					</span>
+						
+						<p class="text-center" style="float: right;font-size:15px;    margin-top: -90px;">
                             (মো: আমিরুল ইসলাম খান)<br>
                             নির্বাহী প্রকৌশলী<br>
                             এলজিইডি, গাজীপুর<br>
@@ -193,6 +219,24 @@ if(!empty($processRaBills)){
                 table tr td {
                     font-family: 'SutonnyOMJ' !important;;
                 }
+				.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td
+				{
+					    vertical-align: middle;
+						padding: 0px 12px !important;
+				
+				}
+				.table-bordered>thead>tr>th, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>th, 
+				.table-bordered>thead>tr>td,
+				.table-bordered>tbody>tr>td, .table-bordered>tfoot>tr>td
+				{
+				    border: 1px solid #000 !important;
+				}
+				
+				.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td
+				{
+				
+						border-top: 1px solid #000 !important;
+				}
             </style>
         </div>
 
@@ -217,9 +261,7 @@ if(!empty($processRaBills)){
             </div>
                 <?= $this->Form->end() ?>
         </div>
-    <?php else: ?>
-        <h2 class="text-center">কোন তথ্য পাওয়া যায় নাই</h2>
-    <?php endif; ?>
+
     <script>
         //  modal contractor_id pass
         $(document).ready(function(){
