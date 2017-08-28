@@ -353,8 +353,6 @@ class AddNewLabTestsController extends AppController
                 ->leftJoin('lab_test_group', 'lab_test_group.id=LabActualTests.lab_test_group_id')
                 ->group(['LabActualTests.lab_test_list_id','LabActualTests.created_date'])
                 ->toArray();
-
-            pr($tests);die;
         } else {
             $scheme = "";
 
