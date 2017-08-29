@@ -26,6 +26,7 @@ class VehicleServicing extends Entity
         'servicing_end_date' => true,
         'job_card' => true,
         'service_charge' => true,
+        'service_charge_approved' => true,
         'created_by' => true,
         'created_date' => true,
         'updated_by' => true,

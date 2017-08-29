@@ -1,3 +1,6 @@
+<?php
+//pr($services->toArray());die;
+?>
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
         <li><a href="<?= $this->Url->build(('/Dashboard'), true); ?>"><?= __('Dashboard') ?></a></li>
@@ -110,7 +113,7 @@
 
                 <?php $i = 1; $expense = 0;
                 foreach ($services as $service):
-                    $expense += $service->service_charge;
+                    $expense += $service->service_charge_approved;
                     ?>
                     <tr>
                         <td><?= $i++; ?></td>
@@ -129,7 +132,7 @@
                                     echo $vehicle_servicing_detail['name'] . ", ";
                                 }
                             } ?></td>
-                        <td><?= $service->service_charge ?></td>
+                        <td><?= $service->service_charge_approved?$service->service_charge_approved:0 ?></td>
                         <td><?= date('d-m-Y', $service->servicing_start_date) ?></td>
                         <td><?= date('d-m-Y', $service->servicing_end_date) ?> </td>
                         </td>

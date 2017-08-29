@@ -46,6 +46,9 @@
             table tr {
                 margin-top: 60px;
             }
+            .remove-col{
+                display: none;
+            }
 
             .borderless > thead > tr > th, .borderless > tbody > tr > th, .borderless > tfoot > tr > th, .borderless > thead > tr > td, .borderless > tbody > tr > td, .borderless > tfoot > tr > td {
                 border: none

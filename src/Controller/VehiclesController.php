@@ -239,7 +239,7 @@ class VehiclesController extends AppController
 
             $vehiclesCosts = TableRegistry::get('vehicles')->find()->select([
                     'vehicle_id' => 'vehicle_servicings.vehicle_id',
-                    'serviceCost' => $query->func()->sum('vehicle_servicings.service_charge')
+                    'serviceCost' => $query->func()->sum('vehicle_servicings.service_charge_approved')
                 ])
                     ->leftJoin('vehicle_servicings', 'vehicle_servicings.vehicle_id = vehicles.id')
                     ->where($conditions)
@@ -431,7 +431,7 @@ class VehiclesController extends AppController
             $this->loadModel('VehicleServicings');
             $vehicleCostQuery = $this->VehicleServicings->find('all');
             $vehicleCostResult = $vehicleCostQuery
-                ->select(['service_charge' => $vehicleCostQuery->func()->sum('service_charge')])
+                ->select(['service_charge' => $vehicleCostQuery->func()->sum('service_charge_approved')])
                 ->where(['financial_year_estimate_id' => $data['financial_year_estimate_id'], 'status !=' =>99])
                 ->group('financial_year_estimate_id')
                 ->first();

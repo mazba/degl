@@ -132,7 +132,8 @@ use Cake\Core\Configure;
     <div class="col-sm-offset-6 col-sm-6" style="margin-top: 40px">
       <?php
       echo $this->Form->input('other_charge', ['type' => 'number']);
-      echo $this->Form->input('service_charge', ['label' => __('Total')]);
+      echo $this->Form->input('service_charge', ['label' => __('আনুমানিক মূল্য মোট')]);
+      echo $this->Form->input('service_charge_approved', ['label' => __('বরাদ্দকৃত মূল্য মোট')]);
       ?>
     </div>
     <div class="col-sm-12 form-actions text-right">

@@ -33,7 +33,7 @@
                     <table class="table table-bordered">
                         <thead>
                         <tr>
-                            <th><?= 'Sl. No.' ?></th>
+<!--                            <th>--><?//= 'Sl. No.' ?><!--</th>-->
                             <th><?= 'Description' ?></th>
                             <th><?= 'Reg NO/CC' ?></th>
                             <th><?= 'C/Origin' ?></th>
@@ -48,12 +48,13 @@
                                 ?>
                             </th>
                             <th><?= 'Remarks' ?></th>
+                            <th class="remove-col"><?= 'Remove' ?></th>
                         </tr>
                         </thead>
                         <tbody class="test_list">
                         <?php foreach($results as $key => $result):?>
                             <tr>
-                                <td><?= $key+1 ?></td>
+<!--                                <td>--><?//= $key+1 ?><!--</td>-->
                                 <td><?= $result['title'] ?></td>
                                 <td><?php if($result['type'] == 'vehicles'){
                                         echo $result['registration_no'];
@@ -74,7 +75,8 @@
                                         }
                                     ?>
                                 </td>
-                                <td></td>
+                                <td><p contenteditable="true">White Here</p></td>
+                                <td class="remove-col"><span class="btn btn-sm btn-circle btn-danger remove-element">X</span></td>
                             </tr>
                         <?php endforeach; ?>
                         </tbody>
@@ -88,6 +90,12 @@
     </div>
 
     <script>
+
+        jQuery(document).on('click', '.remove-element', function () {
+            var obj = jQuery(this);
+                obj.closest('tr').remove();
+            }
+        );
         function print_rpt() {
             URL = "<?php echo $this->request->webroot; ?>page/Print_a4_Eng.php?selLayer=PrintArea";
             day = new Date();
