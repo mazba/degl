@@ -130,6 +130,7 @@ class LabLetterRegistersController extends AppController
                 $labLetterRegister['created_date'] = date('d/m/Y',$labLetterRegister['created_date']);
                 $labLetterRegister['receive_date'] = date('d/m/Y',$labLetterRegister['receive_date']);
             }
+//            pr($labLetterRegisters);die;
 
             $this->response->body(json_encode($labLetterRegisters));
             return $this->response;

@@ -999,27 +999,27 @@ class SchemesController extends AppController {
             'work_name' => 'Schemes.name_en',
             'etender_no' => 'Schemes.etender_no',
             'estimation_sarok_no' => 'Schemes.allotment_no',
-            'estimation_date' => 'Schemes.allotment_date',
+            'estimation_date' => 'Schemes.eve_approval_date',
             'estimation_taka' => 'Schemes.allotment_bill',
-            'e_tender_no' => 'Schemes.etender_no',
+//            'e_tender_no' => 'Schemes.etender_no',
             'etender_notice' => 'Schemes.etender_notice',
             'e_tender_date' => 'Schemes.etender_date',
-            'package_id' => 'Schemes.package_id',
+//            'package_id' => 'Schemes.package_id',
             'obtain_tender_no' => 'Schemes.number_of_tender',
             'customary_tender_no' => 'Schemes.habitual_number_of_tender',
             'performance_security' => 'Schemes.performance_security',
             'newspaper' => 'Schemes.ads_paper',
             'tender_date' => 'Schemes.tender_date',
             'applied_tender_price' => 'Schemes.contract_amount',
-            'palasiding_length' => 'Schemes.palasiding_length',
-            'cross_drain_length' => 'Schemes.cross_drain_length',
-            'cross_drain_quantity' => 'Schemes.cross_drain_quantity',
-            'soil_quantity' => 'Schemes.soil_quantity',
+          /*            'palasiding_length' => 'Schemes.palasiding_length',
+                      'cross_drain_length' => 'Schemes.cross_drain_length',
+                      'cross_drain_quantity' => 'Schemes.cross_drain_quantity',
+                      'soil_quantity' => 'Schemes.soil_quantity',*/
             'project_name' => 'projects.name_bn',
             'nothi_name' => 'nothi_registers.nothi_no',
-            'id' => 'packages.id',
+//            'id' => 'packages.id',
             'name_en' => 'packages.name_en',
-            'contractor_id' => 'scheme_contractors.contractor_id',
+//            'contractor_id' => 'scheme_contractors.contractor_id',
             'contractor_title' => 'contractors.contractor_title',
             'order_number' => 'scheme_payorders.order_number',
             'initial_date' => 'scheme_payorders.initial_date',
@@ -1036,7 +1036,8 @@ class SchemesController extends AppController {
         ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
         ->leftJoin('scheme_payorders', 'scheme_payorders.scheme_id = Schemes.id')
         ->where(['Schemes.id' => $scheme_id])
-        ->first();
+        ->hydrate(false)->first();
+
     $this->set(compact('result'));
   }
 

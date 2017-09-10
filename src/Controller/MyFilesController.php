@@ -594,6 +594,10 @@ class MyFilesController extends AppController
             $this->MessageRegisters->save($file_forward);
 
             $inputs = $this->request->data;
+            //pr($inputs);die;
+            $this->loadModel('ReceiveFileRegisters');
+            $receive_file_register_id = $this->ReceiveFileRegisters->get($inputs['receive_file_register_id']);
+//            pr($receive_file_register_id['sarok_no']);die;
             $this->loadModel('Users');
             $dept = $this->Users->find()
                 ->select(['departments.keyword', 'Users.department_id'])
@@ -645,7 +649,7 @@ class MyFilesController extends AppController
                     }
                     $lab['received_from'] = $my_file['sender_name'];
                     $lab['letter_date'] = $my_file->created_date;
-
+                    $lab['letter_no'] = $receive_file_register_id['sarok_no'];
                     if (!empty($my_file['work_description'])) {
                         $lab['work_description'] = $my_file['work_description'];
                     }
@@ -653,7 +657,6 @@ class MyFilesController extends AppController
                     $lab['created_by'] = $user['id'];
                     $lab['created_date'] = time();
                     $lab['status'] = 1;
-
                     $this->loadModel('LabLetterRegisters');
                     $lab_registers = $this->LabLetterRegisters->newEntity();
 
