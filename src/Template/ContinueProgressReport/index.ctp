@@ -72,7 +72,7 @@
                     $variable10 = (($variable4-$variable5)+$variable8);
                     $variable11 = isset($results[18]['project'][$project['project_id']]['project_value'])?$results[18]['project'][$project['project_id']]['project_cost']:'0';;
                     $variable12 = 0;
-                    $variable13 = $variable5+$variable11 !=0?(($variable5+$variable11)/($variable4+$variable8)):0;
+                    $variable13 = $variable5+$variable11 !=0?(($variable5+$variable11)/($variable4+$variable8))*100:0;
                     $deactive2 = isset($results[18]['project'][$project['project_id']]['de_active_scheme'])?$results[18]['project'][$project['project_id']]['de_active_scheme']:'0';
                     $variable14 = $deactive1+$deactive2;
                     $variable15 = '<p contenteditable="true">এখানে লিখুন</p>';
@@ -132,7 +132,7 @@
                         </td>
                         <td>
                             <?php
-                            echo $variable13;
+                            echo intval($variable13).'%';
                             ?>
                         </td>
                         <td>

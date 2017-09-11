@@ -49,22 +49,22 @@ class ContinueProgressReportController extends AppController
             $results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['project_name']=$active_first['project_name'];
 
             //   project contract value
-            if(isset($results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['project_value']))
-            {
-                $results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['project_value']+=$active_first['cost'];
-            }
-            else
-            {
-                $results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['project_value']=$active_first['cost'];
-            }
-            //   project cost
             if(isset($results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['project_cost']))
             {
-                $results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['project_cost']+=$active_first['contract_amount'];
+                $results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['project_cost']+=$active_first['cost'];
             }
             else
             {
-                $results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['project_cost']=$active_first['contract_amount'];
+                $results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['project_cost']=$active_first['cost'];
+            }
+            //   project cost
+            if(isset($results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['project_value']))
+            {
+                $results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['project_value']+=$active_first['contract_amount'];
+            }
+            else
+            {
+                $results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['project_value']=$active_first['contract_amount'];
             }
             // total scheme
             if(isset($results[$active_first['financial_year_estimate_id']]['project'][$active_first['project_id']]['total_scheme']))

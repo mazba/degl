@@ -785,21 +785,12 @@ class SchemesController extends AppController {
     $user = $this->Auth->user();
 
     $this->layout = 'ajax';
-
-//        $scheme = $this->Schemes->get($id, [
-//            'contain' => ['Projects', 'WorkTypes', 'WorkSubTypes', 'Districts', 'Upazilas', 'Municipalities', 'FinancialYearEstimates', 'ReceiveFileRegisters', 'SchemeDetails', 'SchemeProgresses' =>
-//                function ($q) {
-//                    return $q
-//                        ->where(['SchemeProgresses.status' => 1])
-//                        ->limit(1);
-//                }]
-//        ]);
-
     $scheme = $this->Schemes->get($id, ['contain' => ['Projects','WorkTypes', 'WorkSubTypes', 'Districts', 'Upazilas', 'Municipalities', 'FinancialYearEstimates', 'SchemeDetails']]);
 
     //echo "<pre>",print_r($scheme),"<pre>";die();
     if ($this->request->is(['patch', 'post', 'put'])) {
       $data = $this->request->data;
+//      pr($data);die;
       $newspaper = array();
       for ($i = 0; $i < count($data['newspaper']); $i++) {
         $newspaper[$i]['name'] = $data['newspaper'][$i];
@@ -858,6 +849,9 @@ class SchemesController extends AppController {
       }
       if (isset($data['tender_date'])) {
         $data['tender_date'] = strtotime($data['tender_date']);
+      }
+      if(empty($data['tender_date'])){
+        unset($data['tender_date']);
       }
 
       $x = strtotime($data['work_order_date']);
