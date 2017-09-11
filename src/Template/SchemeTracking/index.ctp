@@ -1,9 +1,9 @@
 <?php
 //pr($proposedStartDates);die;
 $type = [
-    1 => 'প্রস্তাবিত কাজ শুরুর তারিখ',
-    2 => 'পারফরমেন্স সিকিউরিটি মেয়াদ',
-    3 => 'কাজ শেষের তারিখ',
+    1 => 'Date of Commencement Expired',
+    2 => 'Performance Guaranty Expired',
+    3 => 'Date of Time Line Expired',
 ]
 ?>
 
@@ -52,7 +52,9 @@ $type = [
                     </div>
                     <div id="PrintArea" style="margin-top: 10px; padding: 5px; margin-bottom: 10px">
                         <div class="col-md-12">
-                            <h3 class="text-center">স্কীমের অগ্রগতি প্রতিবেদন</h3>
+                            <h3 class="text-center"><?= $proposedStartDates[0]['projects_name'] ?></h3>
+                            <p class="text-center"><?= __('Date of Commencement Expired Report') ?></p>
+                            <p class="text-center"><?php echo date('F Y', strtotime('today')); ?></p>
                         </div>
                         <div class="col-sm-12">
                             <table class="table table-bordered" style="border: 1px solid #eee; margin-bottom: 10px;">
@@ -65,6 +67,8 @@ $type = [
                                     <th><?= __('প্যাকেজের নাম') ?></th>
                                     <th><?= __('ঠিকাদার') ?></th>
                                     <th><?= __('চুক্তিমূল্য') ?></th>
+                                    <th><?= __('কাজ শুরুর তারিখ') ?></th>
+                                    <th><?= __('কাজ শেষের তারিখ') ?></th>
 <!--                                    <th>--><?//= __('চুক্তিমূল্য') ?><!--</th>-->
                                 </tr>
                                 </thead>
@@ -79,6 +83,8 @@ $type = [
                                             <td><?= $proposedStartDate['package_name'] ?></td>
                                             <td><?= $proposedStartDate['contractor_name'] ?></td>
                                             <td><?= $proposedStartDate['contract_amount'] ?></td>
+                                            <td><?= date('d/m/Y', $proposedStartDate['contract_date']) ?></td>
+                                            <td><?= date('d/m/Y', $proposedStartDate['expected_complete_date'])?></td>
 <!--                                            <td>--><?//= $proposedStartDate['scheme_progresses'] ?><!--</td>-->
                                         </tr>
                                     <?php endif; ?>
