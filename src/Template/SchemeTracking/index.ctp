@@ -1,5 +1,6 @@
 <?php
 //pr($proposedStartDates);die;
+//pr($check);die;
 $type = [
     1 => 'Date of Commencement Expired',
     2 => 'Performance Guaranty Expired',
@@ -27,7 +28,7 @@ $type = [
                     <?= $this->Form->input('type', ['required'=>'required','options' => $type, 'empty' => __('Select')]) ?>
                 </div>
                 <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
-                    <?= $this->Form->input('project_id', ['required'=>'required','options' => $projects, 'empty' => __('Select')]) ?>
+                    <?= $this->Form->input('project_id', ['options' => $projects, 'empty' => __('Select')]) ?>
                 </div>
                 <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
                     <?=  $this->Form->input('financial_year_estimate_id', ['options' => $fiscal,'empty'=>__('Select')]); ?>
@@ -51,30 +52,119 @@ $type = [
                         <button style="margin-right: 5px; margin-bottom: 1em" class="btn btn-info pull-right" id="print_button" onclick="print_rpt()"><?= __('Print') ?></button>
                     </div>
                     <div id="PrintArea" style="margin-top: 10px; padding: 5px; margin-bottom: 10px">
-                        <div class="col-md-12">
-                            <h3 class="text-center"><?= $proposedStartDates[0]['projects_name'] ?></h3>
-                            <p class="text-center"><?= __('Date of Commencement Expired Report') ?></p>
-                            <p class="text-center"><?php echo date('F Y', strtotime('today')); ?></p>
-                        </div>
-                        <div class="col-sm-12">
-                            <table class="table table-bordered" style="border: 1px solid #eee; margin-bottom: 10px;">
-                                <thead>
-                                <tr>
-                                    <th><?= __('id') ?></th>
-                                    <th><?= __('উপজেলা') ?></th>
-                                    <th><?= __('অর্থবছর') ?></th>
-                                    <th><?= __('স্কীমের নাম') ?></th>
-                                    <th><?= __('প্যাকেজের নাম') ?></th>
-                                    <th><?= __('ঠিকাদার') ?></th>
-                                    <th><?= __('চুক্তিমূল্য') ?></th>
-                                    <th><?= __('কাজ শুরুর তারিখ') ?></th>
-                                    <th><?= __('কাজ শেষের তারিখ') ?></th>
-<!--                                    <th>--><?//= __('চুক্তিমূল্য') ?><!--</th>-->
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php $sn=0; foreach ($proposedStartDates as $key => $proposedStartDate):  ?>
-                                    <?php if(($proposedStartDate['scheme_progresses'] == 0.00) || ($proposedStartDate['scheme_progresses'] == '')): ?>
+
+                        <?php if($check == 1):?>
+                            <div class="col-md-12">
+                                <h3 class="text-center"><?= $proposedStartDates[0]['projects_name'] ?></h3>
+                                <p class="text-center"><?= __('Date of Commencement Expired Report') ?></p>
+                                <p class="text-center"><?php echo date('F Y', strtotime('today')); ?></p>
+                            </div>
+                            <div class="col-sm-12">
+                                <table class="table table-bordered" style="border: 1px solid #eee; margin-bottom: 10px;">
+                                    <thead>
+                                    <tr>
+                                        <th><?= __('id') ?></th>
+                                        <th><?= __('উপজেলা') ?></th>
+                                        <th><?= __('অর্থবছর') ?></th>
+                                        <th><?= __('স্কীমের নাম') ?></th>
+                                        <th><?= __('প্যাকেজের নাম') ?></th>
+                                        <th><?= __('ঠিকাদার') ?></th>
+                                        <th><?= __('চুক্তিমূল্য') ?></th>
+                                        <!--                                    <th>--><?//= __('অগ্রগতি') ?><!--</th>-->
+                                        <th><?= __('কাজ শুরুর তারিখ') ?></th>
+                                        <th><?= __('কাজ শেষের তারিখ') ?></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php $sn=0; foreach ($proposedStartDates as $key => $proposedStartDate):  ?>
+                                        <?php if(($proposedStartDate['scheme_progresses'] == 0.00) || ($proposedStartDate['scheme_progresses'] == '')): ?>
+                                            <tr>
+                                                <td><?= $this->Number->format(++$sn); ?></td>
+                                                <td><?= $proposedStartDate['upazilas_name'] ?></td>
+                                                <td><?= $proposedStartDate['financial_year'] ?></td>
+                                                <td><?= $proposedStartDate['scheme_name'] ?></td>
+                                                <td><?= $proposedStartDate['package_name'] ?></td>
+                                                <td><?= $proposedStartDate['contractor_name'] ?></td>
+                                                <td><?= $proposedStartDate['contract_amount'] ?></td>
+                                                <!--                                            <td>--><?//= $proposedStartDate['scheme_progresses'] ?><!--</td>-->
+                                                <td><?= date('d/m/Y', $proposedStartDate['contract_date']) ?></td>
+                                                <td><?= date('d/m/Y', $proposedStartDate['expected_complete_date'])?></td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if($check == 2): ?>
+                            <div class="col-md-12">
+                                <h3 class="text-center"><?= $proposedStartDates[0]['projects_name'] ?></h3>
+                                <p class="text-center"><?= __('Performance Guaranty Expired Report') ?></p>
+                                <p class="text-center"><?php echo date('F Y', strtotime('today')); ?></p>
+                            </div>
+                            <div class="col-sm-12">
+                                <table class="table table-bordered" style="border: 1px solid #eee; margin-bottom: 10px;">
+                                    <thead>
+                                    <tr>
+                                        <th><?= __('id') ?></th>
+                                        <th><?= __('উপজেলা') ?></th>
+                                        <th><?= __('অর্থবছর') ?></th>
+                                        <th><?= __('স্কীমের নাম') ?></th>
+                                        <th><?= __('প্যাকেজের নাম') ?></th>
+                                        <th><?= __('ঠিকাদার') ?></th>
+                                        <th><?= __('চুক্তিমূল্য') ?></th>
+                                        <th><?= __('অগ্রগতি') ?></th>
+                                        <th><?= __('কাজ শুরুর তারিখ') ?></th>
+                                        <th><?= __('কাজ শেষের তারিখ') ?></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php $sn=0; foreach ($proposedStartDates as $key => $proposedStartDate):  ?>
+
+                                            <tr>
+                                                <td><?= $this->Number->format(++$sn); ?></td>
+                                                <td><?= $proposedStartDate['upazilas_name'] ?></td>
+                                                <td><?= $proposedStartDate['financial_year'] ?></td>
+                                                <td><?= $proposedStartDate['scheme_name'] ?></td>
+                                                <td><?= $proposedStartDate['package_name'] ?></td>
+                                                <td><?= $proposedStartDate['contractor_name'] ?></td>
+                                                <td><?= $proposedStartDate['contract_amount'] ?></td>
+                                                <td><?= $proposedStartDate['scheme_progresses'] ?></td>
+                                                <td><?= date('d/m/Y', $proposedStartDate['contract_date']) ?></td>
+                                                <td><?= date('d/m/Y', $proposedStartDate['expected_complete_date'])?></td>
+                                            </tr>
+                                    <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if($check == 3): ?>
+                            <div class="col-md-12">
+                                <h3 class="text-center"><?= $proposedStartDates[0]['projects_name'] ?></h3>
+                                <p class="text-center"><?= __('Date of Time Line Expired Report') ?></p>
+                                <p class="text-center"><?php echo date('F Y', strtotime('today')); ?></p>
+                            </div>
+                            <div class="col-sm-12">
+                                <table class="table table-bordered" style="border: 1px solid #eee; margin-bottom: 10px;">
+                                    <thead>
+                                    <tr>
+                                        <th><?= __('id') ?></th>
+                                        <th><?= __('উপজেলা') ?></th>
+                                        <th><?= __('অর্থবছর') ?></th>
+                                        <th><?= __('স্কীমের নাম') ?></th>
+                                        <th><?= __('প্যাকেজের নাম') ?></th>
+                                        <th><?= __('ঠিকাদার') ?></th>
+                                        <th><?= __('চুক্তিমূল্য') ?></th>
+                                        <th><?= __('অগ্রগতি') ?></th>
+                                        <th><?= __('কাজ শুরুর তারিখ') ?></th>
+                                        <th><?= __('কাজ শেষের তারিখ') ?></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php $sn=0; foreach ($proposedStartDates as $key => $proposedStartDate):  ?>
+
                                         <tr>
                                             <td><?= $this->Number->format(++$sn); ?></td>
                                             <td><?= $proposedStartDate['upazilas_name'] ?></td>
@@ -83,16 +173,18 @@ $type = [
                                             <td><?= $proposedStartDate['package_name'] ?></td>
                                             <td><?= $proposedStartDate['contractor_name'] ?></td>
                                             <td><?= $proposedStartDate['contract_amount'] ?></td>
+                                            <td><?= $proposedStartDate['scheme_progresses'] ?></td>
                                             <td><?= date('d/m/Y', $proposedStartDate['contract_date']) ?></td>
                                             <td><?= date('d/m/Y', $proposedStartDate['expected_complete_date'])?></td>
-<!--                                            <td>--><?//= $proposedStartDate['scheme_progresses'] ?><!--</td>-->
                                         </tr>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                    <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endif; ?>
                     </div>
+                <?php else: ?>
+                    <h3 class="text-center" style="margin-top: 1em"><?= __('কোন তথ্য পাওয়া যায় নাই') ?></h3>
                 <?php endif; ?>
             <?php endif; ?>
         </div>
