@@ -1,5 +1,6 @@
 <?php
 use Cake\Core\Configure;
+$contractor_type = Configure::read('contractor_type');
 ?>
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
@@ -56,6 +57,12 @@ use Cake\Core\Configure;
             ?>
             <img width="280px" height="280px" src="<?php echo $con_img; ?>" />
         </div>
+        <div class="panel panel-default">
+            <div class="panel-heading"><h6
+                    class="panel-title"><?= __('ঠিকাদার ধরণ ') ?></h6></div>
+            <div class="panel-body"><?= $contractor->contractor_type?$contractor_type[$contractor->contractor_type]:'' ?></div>
+        </div>
+
         <div class="panel panel-default">
             <div class="panel-heading"><h6
                     class="panel-title"><?= __('Contractor Class Title') ?></h6></div>

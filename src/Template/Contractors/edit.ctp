@@ -1,6 +1,6 @@
 <?php
 use Cake\Core\Configure;
-
+$contractor_type = Configure::read('contractor_type');
 ?>
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
@@ -48,6 +48,7 @@ use Cake\Core\Configure;
     <div class="row panel-body ">
         <div class="col-sm-6">
             <?php
+            echo $this->Form->input('contractor_type', ['empty' => 'নির্বাচন করুন', 'required' => 'required', 'options' => $contractor_type]);
             echo $this->Form->input('contractor_class_title');
             echo $this->Form->input('contractor_title', ['label' => 'প্রতিষ্ঠানের নাম (English)']);
             echo $this->Form->input('contractor_title_bn', ['label' => 'প্রতিষ্ঠানের নাম (বাংলা)']);
