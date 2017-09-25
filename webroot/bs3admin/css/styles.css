@@ -2092,7 +2092,7 @@ ul.list-justified li {
 
 @media (max-width: 480px) {
   .footer .icons-group {
-    display: none;
+    display: block;
   }
 }
 
@@ -6428,7 +6428,7 @@ li.plupload_droptext {
     padding-top: 35px; 
   }
   .page-condensed .footer { 
-    display: none; 
+    display: block;
   }
 }
 

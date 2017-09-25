@@ -1,6 +1,7 @@
 <?php
 use Cake\Core\Configure;
 use Cake\Routing\Router;
+$contractor_type = Configure::read('contractor_type');
 ?>
     <style>
         .report-table {
@@ -300,6 +301,56 @@ use Cake\Routing\Router;
 
 
 <?php } ?>
+
+<!--     contractors -->
+<?php if (isset($contractor_details) && !empty($contractor_details)) { ?>
+    <br/>
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="col-md-7">
+                    <h6 class="panel-title"><i class="icon-table2"></i>Contractor List</h6>
+                </div>
+
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <table class="table table-striped table-responsive table-hover">
+                        <thead>
+                        <tr>
+                            <th><?= __('ক্রম') ?></th>
+                            <th><?= __('ঠিকাদার ধরণ') ?></th>
+                            <th><?= __('ঠিকাদার টাইটেল') ?></th>
+                            <th><?= __('কন্টাক্ট ব্যক্তি') ?></th>
+                            <th><?= __('মোবাইল') ?></th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <?php $i = 1; ?>
+                        <?php foreach ($contractor_details as $contractor_detail): ?>
+                            <tr>
+                                <td><?= $i; ?></td>
+                                <td><?= $contractor_detail['contractor_type']?$contractor_type[$contractor_detail['contractor_type']]:''; ?></td>
+                                <td><?= $contractor_detail['contractor_title'] ?></td>
+                                <td><?= $contractor_detail['contact_person_name']; ?></td>
+                                <td><?= $contractor_detail['mobile']; ?></td>
+                            </tr>
+                            <?php $i++; ?>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+<?php } ?>
+
 
 <?php if (isset($asset_list[0]['asset']) && !empty($asset_list[0]['asset'])) { ?>
     <br/>

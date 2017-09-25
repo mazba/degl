@@ -18,7 +18,7 @@ use Cake\Core\Configure;
         {
             ?>
             <li><?= $this->Html->link(__('New Contractor'), ['action' => 'add']) ?></li>
-        <?php
+            <?php
         }
         ?>
         <li class="active"><?= $this->Html->link(__('Edit Contractor'), ['action' => 'edit', $contractor->id]) ?> </li>
@@ -30,7 +30,7 @@ use Cake\Core\Configure;
                 $this->Html->link(__('Details Contractor'), ['action' => 'view', $contractor->id])
                 ?>
             </li>
-        <?php
+            <?php
         }
         ?>
     </ul>
@@ -49,7 +49,8 @@ use Cake\Core\Configure;
         <div class="col-sm-6">
             <?php
             echo $this->Form->input('contractor_class_title');
-            echo $this->Form->input('contractor_title');
+            echo $this->Form->input('contractor_title', ['label' => 'প্রতিষ্ঠানের নাম (English)']);
+            echo $this->Form->input('contractor_title_bn', ['label' => 'প্রতিষ্ঠানের নাম (বাংলা)']);
             echo $this->Form->input('contact_person_name');
             echo $this->Form->input('contractor_phone');
             echo $this->Form->input('mobile');

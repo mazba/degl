@@ -215,8 +215,20 @@ class NothiRegistersController extends AppController
         $employee_details->innerJoin('offices', 'offices.id = employees.office_id');
         $employee_details=$employee_details->toArray();
 
-        //echo "<pre>";print_r($employee_details);die();
-        $this->set(compact('nothi_related_scheme','nothi_related_dake_file','nothi_related_project','nothi_related_lab_bill','nothi_related_hire_charge','nothi_related_purto_bill','nothi_related_allotment_registe','asset_list','nothiRegister', 'nothiNothiAssigns', 'project_images', 'project_videos','schemeProgress','employee_details','querys_data'));
+        //get contractor details
+//        pr($id);die;
+        $contractor_details = $this->NothiAssigns->find('all');
+        $contractor_details->select([
+            'contractor_type' => 'contractors.contractor_type',
+            'contractor_title' => 'contractors.contractor_title',
+            'contact_person_name' => 'contractors.contact_person_name',
+            'mobile' => 'contractors.mobile']);
+        $contractor_details->where(['NothiAssigns.nothi_register_id' => $id]);
+        $contractor_details->leftJoin('contractors', 'contractors.id = NothiAssigns.contractor_id');
+        $contractor_details = $contractor_details->toArray();
+
+//        echo "<pre>";print_r($contractor_details);die();
+        $this->set(compact('nothi_related_scheme','nothi_related_dake_file','nothi_related_project','nothi_related_lab_bill','nothi_related_hire_charge','nothi_related_purto_bill','nothi_related_allotment_registe','asset_list','nothiRegister', 'nothiNothiAssigns', 'project_images', 'project_videos','schemeProgress','employee_details','querys_data','contractor_details'));
         //$this->set('nothiRegister', $nothiRegister);
         $this->set('_serialize', ['nothiRegister']);
     }

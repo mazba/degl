@@ -112,6 +112,11 @@ return [
         2=>'m<sup>2</sup>',
         3=>'m',
         4=>'kg',
+    ],
+    'contractor_type' => [
+        1 => 'LGED',
+        2 => 'License',
+        3 => 'License Renew'
     ]
 
 ];
