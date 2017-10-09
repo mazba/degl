@@ -21,6 +21,8 @@ class MonthlyReportsController extends AppController
             $inputs = $this->request->data;
             $schemes = $this->Schemes->find()
                 ->hydrate(FALSE);
+
+            //IRIDP-2
             if($inputs['project_id'] == 20 || $inputs['project_id'] == 3){
                 $scheme_select_fields = [
                     'upazila_name' => 'upazilas.name_bn',
@@ -40,6 +42,68 @@ class MonthlyReportsController extends AppController
                     'payment_road' => 'Schemes.payment_road',
                 ];
             }
+
+
+            //landless mukti
+            elseif($inputs['project_id'] == 8){
+                $scheme_select_fields = [
+                    'upazila_name' => 'upazilas.name_bn',
+                    'package_name' => 'packages.name_bn',
+                    'scheme_name' => 'Schemes.name_bn',
+                    'contractor_title' => 'contractors.contractor_title',
+                    'estimated_cost' => 'Schemes.estimated_cost',
+                    'contract_amount' => 'Schemes.contract_amount',
+                    'contract_date' => 'Schemes.contract_date',
+                    'completion_date' => 'Schemes.completion_date',
+                    'actual_complete_date' => 'Schemes.	actual_complete_date',
+                    'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
+                    'payment_road' => 'Schemes.payment_road',
+                ];
+            }
+
+            //PEDP-3
+            elseif($inputs['project_id'] == 5){
+                $scheme_select_fields = [
+                    //'upazila_name' => 'upazilas.name_bn',
+                    'package_name' => 'packages.name_bn',
+                    'scheme_name' => 'Schemes.name_bn',
+                    'estimated_cost' => 'Schemes.estimated_cost',
+                    'tender_date' => 'Schemes.tender_date',
+                    'noa_date' => 'Schemes.noa_date',
+                    'contract_amount' => 'Schemes.contract_amount',
+                    'contractor_title' => 'contractors.contractor_title',
+                    'contract_date' => 'Schemes.contract_date',
+                    'proposed_start_date' => 'Schemes.proposed_start_date',
+                    'completion_date' => 'Schemes.completion_date',
+                    'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
+                    'payment_road' => 'Schemes.payment_road',
+
+                ];
+            }
+
+            //NATA
+
+            //PEDP-3
+            elseif($inputs['project_id'] == 22){
+                $scheme_select_fields = [
+                    'upazila_name' => 'upazilas.name_bn',
+                    'package_name' => 'packages.name_bn',
+                    'scheme_name' => 'Schemes.name_bn',
+                    'estimated_cost' => 'Schemes.estimated_cost',
+                    'contractor_title' => 'contractors.contractor_title',
+                    'contract_amount' => 'Schemes.contract_amount',
+                    'contract_date' => 'Schemes.contract_date',
+                    'completion_date' => 'Schemes.completion_date',
+                    'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
+                    'payment_road' => 'Schemes.payment_road',
+
+                ];
+            }
+            else{
+                $scheme_select_fields = [];
+            }
+
+
             $schemes->select($scheme_select_fields);
             $schemes->where(['Schemes.project_id' => $inputs['project_id'], 'Schemes.status' => 1]);
             $schemes->leftJoin('packages', 'packages.id=Schemes.package_id');
