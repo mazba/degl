@@ -1,3 +1,6 @@
+<?php
+
+?>
 <!-- Page header -->
 <div class="page-header">
     <div class="page-title">
@@ -68,18 +71,37 @@
 
         <div class="row">
             <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h6 class="panel-title">
+                                    <i class="icon-wand2"></i>
+                                    <?= __('RA Bill Applications') ?>
+                                </h6>
+                            </div>
+                            <div id="dataTable_application" style="margin-top:5px ">
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h6 class="panel-title">
-                            <i class="icon-wand2"></i>
-                            <?= __('RA Bill Applications') ?>
-                        </h6>
-                    </div>
-                    <div id="dataTable_application" style="margin-top:5px ">
-
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h6 class="panel-title">
+                                    <i class="icon-wand2"></i>
+                                    <?= __('Allotment Registers') ?>
+                                </h6>
+                            </div>
+                            <div id="allotment_registers" style="margin-top:5px ">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
 
@@ -92,17 +114,17 @@
                         </h6>
                     </div>
                     <div id='calendar'></div>
-                    </div>
                 </div>
-
             </div>
+
         </div>
-
-
-
-
-
     </div>
+
+
+
+
+
+</div>
 
 
 <script type="text/javascript">
@@ -162,7 +184,6 @@
 <script type="text/javascript">
     $(document).ready(function () {
         var url = "<?php echo $this->request->webroot; ?>MyFiles/ajax/get_grid_data";
-
         // prepare the data
         var source =
         {
@@ -178,10 +199,7 @@
             id: 'id',
             url: url
         };
-
         var dataAdapter = new $.jqx.dataAdapter(source);
-
-
         $("#dataTable").jqxGrid(
             {
                 width: '100%',
@@ -197,8 +215,6 @@
 //                selectionmode: 'checkbox',
                 altrows: true,
                 autoheight: true,
-
-
                 columns: [
                     {text: '<?= __('Sender Name') ?>', dataField: 'sender_name', width: '20%'},
                     {text: '<?= __('Sender Designation') ?>', dataField: 'sender_designation', width: '10%'},
@@ -208,8 +224,8 @@
                 ]
             });
 
-        var url2 = "<?php echo $this->request->webroot; ?>TaskManagement/ajax/get_grid_data";
 
+        var url2 = "<?php echo $this->request->webroot; ?>TaskManagement/ajax/get_grid_data";
         // prepare the data
         var source2 =
         {
@@ -226,9 +242,7 @@
             id: 'id',
             url: url2
         };
-
         var dataAdapter2 = new $.jqx.dataAdapter(source2);
-
         $("#dataTaskTable").jqxGrid(
             {
                 width: '100%',
@@ -244,8 +258,6 @@
 //                selectionmode: 'checkbox',
                 altrows: true,
                 autoheight: true,
-
-
                 columns: [
                     {text: '<?= __('Task Title') ?>', dataField: 'title', width: '30%'},
                     {text: '<?= __('Priority') ?>', dataField: 'priority', width: '15%', cellsalign: 'center'},
@@ -256,12 +268,48 @@
                 ]
             });
 
+        var url3 = "<?php echo $this->request->webroot; ?>AllotmentRegisters/ajax/allotment";
+        // prepare the data
+        var source3 =
+        {
+            dataType: "json",
+            dataFields: [
+                {name: 'allotment_date', type: 'string'},
+                {name: 'project_name', type: 'string'},
+                {name: 'allotment_amount', type: 'string'},
+                {name: 'credit', type: 'string'}
+            ],
+            id: 'id',
+            url: url3
+        };
+        var dataAdapter3 = new $.jqx.dataAdapter(source3);
+        $("#allotment_registers").jqxGrid(
+            {
+                width: '100%',
+                source: dataAdapter3,
+                pageable: true,
+                filterable: true,
+                sortable: true,
+                showfilterrow: true,
+                columnsresize: true,
+                rowsheight: 40,
+                pagesize: 10,
+                pagesizeoptions: ['100', '200', '300', '500', '1000', '1500'],
+//                selectionmode: 'checkbox',
+                altrows: true,
+                autoheight: true,
+                columns: [
+                    {text: '<?= __('Date') ?>', dataField: 'allotment_date', width: '20%'},
+                    {text: '<?= __('Particulars of Allotment') ?>', dataField: 'project_name', width: '50%'},
+                    {text: '<?= __('Dr.(TK)') ?>', dataField: 'allotment_amount', width: '20%'},
+                    {text: '<?= __('Cr.(TK)') ?>', dataField: 'credit', width: '10%'}
+                ]
+            });
 
     });
 </script>
 
 <script>
-
     $(document).ready(function () {
         $.ajax({
             url: "<?php echo $this->request->webroot; ?>TaskManagement/ajax/get_my_calendar_task_data",
@@ -269,12 +317,10 @@
             data: 'type=fetch',
             async: false,
             success: function(response){
-               // console.log(response);
+                // console.log(response);
                 json_events = response;
             }
         });
-
-
 
         $('#calendar').fullCalendar({
             defaultDate: '<?php echo date('Y-m-d')?>',
@@ -285,17 +331,9 @@
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay'
             },
-
-
-
-        events: JSON.parse(json_events),
-
-
+            events: JSON.parse(json_events),
         });
-
-
     });
-
 </script>
 <style>
 

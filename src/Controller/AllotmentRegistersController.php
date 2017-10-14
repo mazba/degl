@@ -192,10 +192,33 @@ class AllotmentRegistersController extends AppController
             $arr[$key] = substr($arr[$key], 0, strrpos($arr[$key], ' ')) . ' ... ';
         }
         $projects = $arr;
-
-
         $financial_years = $this->FinancialYearEstimates->find('list');
-
         $this->set(compact(['projects', 'financial_years']));
+    }
+
+    public function ajax($param = null){
+        if($param == 'allotment'){
+            $this->loadModel('FinancialYearEstimates');
+            $financial_year_data = $this->FinancialYearEstimates->find()->select(['id'])->where(['status !=' => 99])->order(['id' => 'DESC'])->first();
+            $this->loadModel('AllotmentRegisters');
+            $allotment_registersQuery = $this->AllotmentRegisters->find();
+            $allotment_registers = $allotment_registersQuery
+                ->select([
+                    'project_name' => 'projects.name_bn',
+                    'year_id' => 'AllotmentRegisters.financial_year_id',
+                    'project_id' => 'AllotmentRegisters.project_id',
+                    'allotment_date' => 'AllotmentRegisters.allotment_date',
+                    'allotment_amount' => $allotment_registersQuery->func()->sum('AllotmentRegisters.allotment_amount')])
+                ->where(['AllotmentRegisters.financial_year_id' => $financial_year_data->id])
+                ->leftJoin('projects', 'projects.id=AllotmentRegisters.project_id')
+                ->group('AllotmentRegisters.project_id')
+                ->toArray();
+            foreach($allotment_registers as &$allotment_register){
+                $allotment_register['allotment_date'] = date('d/m/y', $allotment_register['allotment_date']);
+                $allotment_register['credit'] = 0;
+            }
+            $this->response->body(json_encode($allotment_registers));
+            return $this->response;
+        }
     }
 }
