@@ -32,203 +32,209 @@ if(isset($schemes)){
     </div>
     <!-- report    -->
     <div class="row">
-        <?php if(isset($schemes)): ?>
-            <?php if((!empty($schemes))): ?>
+        <div class="col-md-12">
+            <?php if(isset($schemes)): ?>
+                <?php if((!empty($schemes))): ?>
 
-                <div id="PrintArea" style="margin-top: 10px; padding: 5px; margin-bottom: 10px">
-                    <button class="btn btn-info pull-right" id="print_button" onclick="print_rpt()"><?= __('Print') ?></button>
-                    <h3 class="text-center"><?= $project['name_en'] ?><br>
+                    <div id="PrintArea" style="margin-top: 10px; padding: 5px; margin-bottom: 10px">
+                        <button class="btn btn-info pull-right" id="print_button" onclick="print_rpt()"><?= __('Print') ?></button>
+                        <h3 class="text-center"><?= $project['name_en'] ?><br>
 
-                    </h3>
-                    <div id="report_table">
-                        <table width="100%" class="table table-bordered" style="border: 1px solid #eee; margin-bottom: 10px;">
+                        </h3>
+                        <div class="portlet box">
+                            <div class="portlet-body">
+                                <div class="table-scrollable">
+                                    <table class="table table-bordered table-hover">
 
-                            <!--IRIDP-2-->
-                            <?php if($project['id'] == 20 || $project['id'] == 3): ?>
-                                <thead>
-                                <tr>
-                                    <th width="1%">Sl. No.</th>
-                                    <th width="5%">Upazila</th>
-                                    <th width="5%">Package No.</th>
-                                    <th width="15%">Name of scheme</th>
-                                    <th width="5%">Road (km)</th>
-                                    <th width="5%">Structure (m)</th>
-                                    <th width="5%">Estimated Cost (Road)</th>
-                                    <th width="5%">Estimated Cost (Structure)</th>
-                                    <th width="5%">Estimated Cost (Total)</th>
-                                    <th width="5%">Tender receiving date</th>
-                                    <th width="5%">Name of Contractor</th>
-                                    <th width="5%">Date of Contract</th>
-                                    <th width="5%">Contract Amount</th>
-                                    <th width="5%">Physical Progress (%)</th>
-                                    <th width="5%">Actual Date completion</th>
-                                    <th width="5%">Payment (tk.)</th>
-                                    <th width="5%">Remarks</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php foreach($schemes as $key => $scheme): ?>
-                                    <tr class="custom-table-width">
-                                        <td><?= ++$key?></td>
-                                        <td><?= $scheme['upazila_name']?></td>
-                                        <td><?= $scheme['package_name']?></td>
-                                        <td><?= $scheme['scheme_name']?></td>
-                                        <td><?= $scheme['road_length']?></td>
-                                        <td><?= $scheme['structure_length']?></td>
-                                        <td><?= $scheme['structure_length']?></td>
-                                        <td><?= $scheme['cost_road']?></td>
-                                        <td><?= $scheme['cost_structure']?></td>
-                                        <td><?= date('d-m-Y', $scheme['tender_date'])?></td>
-                                        <td><?= $scheme['contractor_title']?></td>
-                                        <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
-                                        <td><?= $scheme['contract_amount']?></td>
-                                        <td><?= $scheme['physical_progress']?></td>
-                                        <td><?= date('d-m-Y', $scheme['actual_complete_date'])?></td>
-                                        <td><?= $scheme['payment_road']?></td>
-                                        <th> <p contenteditable="true">&nbsp;</p></th>
-                                    </tr>
-                                <?php endforeach; ?>
-                                </tbody>
+                                        <!--IRIDP-2-->
+                                        <?php if($project['id'] == 20 || $project['id'] == 3): ?>
+                                            <thead>
+                                            <tr>
+                                                <th>Sl. No.</th>
+                                                <th>Upazila</th>
+                                                <th>Package No.</th>
+                                                <th>Name of scheme</th>
+                                                <th>Road (km)</th>
+                                                <th>Structure (m)</th>
+                                                <th>Estimated Cost (Road)</th>
+                                                <th>Estimated Cost (Structure)</th>
+                                                <th>Estimated Cost (Total)</th>
+                                                <th>Tender receiving date</th>
+                                                <th>Name of Contractor</th>
+                                                <th>Date of Contract</th>
+                                                <th>Contract Amount</th>
+                                                <th>Physical Progress (%)</th>
+                                                <th>Actual Date completion</th>
+                                                <th>Payment (tk.)</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach($schemes as $key => $scheme): ?>
+                                                <tr class="custom-table-width">
+                                                    <td><?= ++$key?></td>
+                                                    <td><?= $scheme['upazila_name']?></td>
+                                                    <td><?= $scheme['package_name']?></td>
+                                                    <td><p style="width:350px;"><?= $scheme['scheme_name']?></p></td>
+                                                    <td><?= $scheme['road_length']?></td>
+                                                    <td><?= $scheme['structure_length']?></td>
+                                                    <td><?= $scheme['structure_length']?></td>
+                                                    <td><?= $scheme['cost_road']?></td>
+                                                    <td><?= $scheme['cost_structure']?></td>
+                                                    <td><?= date('d-m-Y', $scheme['tender_date'])?></td>
+                                                    <td><?= $scheme['contractor_title']?></td>
+                                                    <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
+                                                    <td><?= $scheme['contract_amount']?></td>
+                                                    <td><?= $scheme['physical_progress']?></td>
+                                                    <td><?= date('d-m-Y', $scheme['actual_complete_date'])?></td>
+                                                    <td><?= $scheme['payment_road']?></td>
+                                                    <th> <p contenteditable="true">&nbsp;</p></th>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                            </tbody>
 
-                            <!--Landless mukti-->
-                            <?php elseif($project['id'] == 8): ?>
-                                <thead>
-                                <tr>
-                                    <th width="1%">Sl. No.</th>
-                                    <th width="5%">Upazila</th>
-                                    <th width="5%">Package No.</th>
-                                    <th width="15%">Name of scheme</th>
-                                    <th width="5%">Name of Contractor</th>
-                                    <th width="5%">Approved Estimated Cost </th>
-                                    <th width="5%">Contract Amount</th>
-                                    <th width="5%">Date of Contract</th>
-                                    <th width="5%">Date of completion</th>
-                                    <th width="5%">Actual Date completion</th>
-                                    <th width="5%">Physical Progress (%)</th>
-                                    <th width="5%">Payment (tk.)</th>
-                                    <th width="5%">Remarks</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php foreach($schemes as $key => $scheme): ?>
-                                    <tr class="custom-table-width">
-                                        <td><?= ++$key?></td>
-                                        <td><?= $scheme['upazila_name']?></td>
-                                        <td><?= $scheme['package_name']?></td>
-                                        <td><?= $scheme['scheme_name']?></td>
-                                        <td><?= $scheme['contractor_title']?></td>
-                                        <td><?= $scheme['estimated_cost']?></td>
-                                        <td><?= $scheme['contract_amount']?></td>
-                                        <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
-                                        <td><?= date('d-m-Y', $scheme['completion_date'])?></td>
-                                        <td><?= date('d-m-Y', $scheme['actual_complete_date'])?></td>
-                                        <td><?= $scheme['physical_progress']?></td>
-                                        <td><?= $scheme['payment_road']?></td>
-                                        <th><p contenteditable="true">&nbsp;</p></th>
-                                    </tr>
-                                <?php endforeach; ?>
-                                </tbody>
-                            <!--PEDP-3-->
+                                            <!--Landless mukti-->
+                                        <?php elseif($project['id'] == 8): ?>
+                                            <thead>
+                                            <tr>
+                                                <th >Sl. No.</th>
+                                                <th >Upazila</th>
+                                                <th >Package No.</th>
+                                                <th >Name of scheme</th>
+                                                <th >Name of Contractor</th>
+                                                <th >Approved Estimated Cost </th>
+                                                <th >Contract Amount</th>
+                                                <th >Date of Contract</th>
+                                                <th >Date of completion</th>
+                                                <th >Actual Date completion</th>
+                                                <th >Physical Progress (%)</th>
+                                                <th >Payment (tk.)</th>
+                                                <th >Remarks</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach($schemes as $key => $scheme): ?>
+                                                <tr class="custom-table-width">
+                                                    <td><?= ++$key?></td>
+                                                    <td><?= $scheme['upazila_name']?></td>
+                                                    <td><?= $scheme['package_name']?></td>
+                                                    <td><p style="width:350px;"><?= $scheme['scheme_name']?></p></td>
+                                                    <td><?= $scheme['contractor_title']?></td>
+                                                    <td><?= $scheme['estimated_cost']?></td>
+                                                    <td><?= $scheme['contract_amount']?></td>
+                                                    <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
+                                                    <td><?= date('d-m-Y', $scheme['completion_date'])?></td>
+                                                    <td><?= date('d-m-Y', $scheme['actual_complete_date'])?></td>
+                                                    <td><?= $scheme['physical_progress']?></td>
+                                                    <td><?= $scheme['payment_road']?></td>
+                                                    <th><p contenteditable="true">&nbsp;</p></th>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                            </tbody>
+                                            <!--PEDP-3-->
 
-                            <?php elseif($project['id'] == 5): ?>
-                                <thead>
-                                <tr>
-                                    <th width="1%">Sl. No.</th>
-                                    <th width="5%">Package No.</th>
-                                    <th width="15%">Name of scheme</th>
-                                    <th width="5%">Approved Estimated Cost </th>
-                                    <th width="5%">Tender Receiving Date</th>
-                                    <th width="5%">NOA Date</th>
-                                    <th width="5%">Contract Amount</th>
-                                    <th width="5%">Name of Contractor</th>
-                                    <th width="5%">Date of Contract</th>
-                                    <th width="5%">Starting Date of Contract</th>
-                                    <th width="5%">Date of Completion</th>
-                                    <th width="5%">Physical Progress (%)</th>
-                                    <th width="5%">Payment (tk.)</th>
-                                    <th width="5%">Remarks</th>
-                                </tr>
-                                </thead>
+                                        <?php elseif($project['id'] == 5): ?>
+                                            <thead>
+                                            <tr>
+                                                <th >Sl. No.</th>
+                                                <th >Package No.</th>
+                                                <th >Name of scheme</th>
+                                                <th >Approved Estimated Cost </th>
+                                                <th >Tender Receiving Date</th>
+                                                <th >NOA Date</th>
+                                                <th >Contract Amount</th>
+                                                <th >Name of Contractor</th>
+                                                <th >Date of Contract</th>
+                                                <th >Starting Date of Contract</th>
+                                                <th >Date of Completion</th>
+                                                <th >Physical Progress (%)</th>
+                                                <th >Payment (tk.)</th>
+                                                <th >Remarks</th>
+                                            </tr>
+                                            </thead>
 
-                                <tbody>
-                                <?php foreach($schemes as $key => $scheme): ?>
-                                    <tr class="custom-table-width">
-                                        <td><?= ++$key?></td>
-                                        <td><?= $scheme['package_name']?></td>
-                                        <td><?= $scheme['scheme_name']?></td>
-                                        <td><?= $scheme['estimated_cost']?></td>
-                                        <td><?= date('d-m-Y', $scheme['tender_date'])?></td>
-                                        <td><?= date('d-m-Y', $scheme['noa_date'])?></td>
-                                        <td><?= $scheme['contract_amount']?></td>
-                                        <td><?= $scheme['contractor_title']?></td>
-                                        <td><?= $scheme['contract_amount']?></td>
-                                        <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
-                                        <td><?= date('d-m-Y', $scheme['proposed_start_date'])?></td>
-                                        <td><?= date('d-m-Y', $scheme['completion_date'])?></td>
-                                        <td><?= $scheme['physical_progress']?></td>
-                                        <td><?= $scheme['payment_road']?></td>
-                                        <th><p contenteditable="true">&nbsp;</p></th>
-                                    </tr>
-                                <?php endforeach; ?>
-                                </tbody>
+                                            <tbody>
+                                            <?php foreach($schemes as $key => $scheme): ?>
+                                                <tr class="custom-table-width">
+                                                    <td><?= ++$key?></td>
+                                                    <td><?= $scheme['package_name']?></td>
+                                                    <td><p style="width:350px;"><?= $scheme['scheme_name']?></p></td>
+                                                    <td><?= $scheme['estimated_cost']?></td>
+                                                    <td><?= date('d-m-Y', $scheme['tender_date'])?></td>
+                                                    <td><?= date('d-m-Y', $scheme['noa_date'])?></td>
+                                                    <td><?= $scheme['contract_amount']?></td>
+                                                    <td><?= $scheme['contractor_title']?></td>
+                                                    <td><?= $scheme['contract_amount']?></td>
+                                                    <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
+                                                    <td><?= date('d-m-Y', $scheme['proposed_start_date'])?></td>
+                                                    <td><?= date('d-m-Y', $scheme['completion_date'])?></td>
+                                                    <td><?= $scheme['physical_progress']?></td>
+                                                    <td><?= $scheme['payment_road']?></td>
+                                                    <th><p contenteditable="true">&nbsp;</p></th>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                            </tbody>
 
-                            <!--NATA-->
+                                            <!--NATA-->
 
-                            <?php elseif($project['id'] == 22): ?>
-                                <thead>
-                                <tr>
-                                    <th width="1%">Sl. No.</th>
-                                    <th width="5%">Upzila</th>
-                                    <th width="5%">Package No.</th>
-                                    <th width="15%">Name of scheme</th>
-                                    <th width="5%"> Estimated Cost </th>
-                                    <th width="5%">Name of Contractor</th>
-                                    <th width="5%">Contract Amount</th>
-                                    <th width="5%">Date of Contract</th>
-                                    <th width="5%">Date of Completion</th>
-                                    <th width="5%">Physical Progress (%)</th>
-                                    <th width="5%">Payment (tk.)</th>
-                                    <th width="5%">Remarks</th>
-                                </tr>
-                                </thead>
+                                        <?php elseif($project['id'] == 22): ?>
+                                            <thead>
+                                            <tr>
+                                                <th >Sl. No.</th>
+                                                <th >Upzila</th>
+                                                <th >Package No.</th>
+                                                <th >Name of scheme</th>
+                                                <th > Estimated Cost </th>
+                                                <th >Name of Contractor</th>
+                                                <th >Contract Amount</th>
+                                                <th >Date of Contract</th>
+                                                <th >Date of Completion</th>
+                                                <th >Physical Progress (%)</th>
+                                                <th >Payment (tk.)</th>
+                                                <th >Remarks</th>
+                                            </tr>
+                                            </thead>
 
-                                <tbody>
-                                <?php foreach($schemes as $key => $scheme): ?>
-                                    <tr class="custom-table-width">
-                                        <td><?= ++$key?></td>
-                                        <td><?= $scheme['upazila_name']?></td>
-                                        <td><?= $scheme['package_name']?></td>
-                                        <td><?= $scheme['scheme_name']?></td>
-                                        <td><?= $scheme['estimated_cost']?></td>
-                                        <td><?= $scheme['contractor_title']?></td>
-                                        <td><?= $scheme['contract_amount']?></td>
-                                        <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
-                                        <td><?= date('d-m-Y', $scheme['completion_date'])?></td>
-                                        <td><?= $scheme['physical_progress']?></td>
-                                        <td><?= $scheme['payment_road']?></td>
-                                        <th><p contenteditable="true">&nbsp;</p></th>
-                                    </tr>
-                                <?php endforeach; ?>
-                                </tbody>
-                                <?php else: ?>
-                                <h3 class="text-center">Data Not Found</h3>
-                            <?php endif; ?>
+                                            <tbody>
+                                            <?php foreach($schemes as $key => $scheme): ?>
+                                                <tr class="custom-table-width">
+                                                    <td><?= ++$key?></td>
+                                                    <td><?= $scheme['upazila_name']?></td>
+                                                    <td><?= $scheme['package_name']?></td>
+                                                    <td><p style="width:350px;"><?= $scheme['scheme_name']?></p></td>
+                                                    <td><?= $scheme['estimated_cost']?></td>
+                                                    <td><?= $scheme['contractor_title']?></td>
+                                                    <td><?= $scheme['contract_amount']?></td>
+                                                    <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
+                                                    <td><?= date('d-m-Y', $scheme['completion_date'])?></td>
+                                                    <td><?= $scheme['physical_progress']?></td>
+                                                    <td><?= $scheme['payment_road']?></td>
+                                                    <th><p contenteditable="true">&nbsp;</p></th>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                            </tbody>
+                                        <?php else: ?>
+                                            <h3 class="text-center">Data Not Found</h3>
+                                        <?php endif; ?>
 
-                        </table>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <style>
+                            .table-bordered th:nth-child(4) {
+                                width: 500px;
+                            }
+
+                        </style>
                     </div>
 
-                    <style>
-                        .table-bordered th:nth-child(4) {
-                            width: 500px;
-                        }
-
-                    </style>
-                </div>
-
-            <?php else: ?>
-                <h4 class="text-center text-warning" style="margin-top: 1em"><?= __('No data found') ?></h4>
+                <?php else: ?>
+                    <h4 class="text-center text-warning" style="margin-top: 1em"><?= __('No data found') ?></h4>
+                <?php endif; ?>
             <?php endif; ?>
-        <?php endif; ?>
+        </div>
     </div>
 </div>
 
