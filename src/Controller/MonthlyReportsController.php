@@ -113,6 +113,7 @@ class MonthlyReportsController extends AppController
             $schemes->leftJoin('contractors', 'contractors.id=scheme_contractors.contractor_id');
             $schemes->leftJoin('scheme_progresses', 'scheme_progresses.scheme_id=Schemes.id');
             $schemes->leftJoin('financial_year_estimates', 'financial_year_estimates.id=Schemes.financial_year_estimate_id');
+            $schemes->group(['Schemes.id']);
             $this->loadModel('Projects');
             $project = $this->Projects->get($inputs['project_id']);
             $this->set(compact('schemes', 'project'));
