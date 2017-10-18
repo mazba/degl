@@ -92,17 +92,13 @@
                             <div class="panel-heading">
                                 <h6 class="panel-title">
                                     <i class="icon-wand2"></i>
-                                    <?= __('Allotment Registers') ?>
+                                    <?= __('Task Calendar') ?>
                                 </h6>
                             </div>
-                            <div id="allotment_registers" style="margin-top:5px ">
-
-                            </div>
+                            <div id='calendar'></div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
 
             <div class="col-md-6">
@@ -110,13 +106,14 @@
                     <div class="panel-heading">
                         <h6 class="panel-title">
                             <i class="icon-wand2"></i>
-                            <?= __('Task Calendar') ?>
+                            <?= __('Allotment Registers') ?>
                         </h6>
                     </div>
-                    <div id='calendar'></div>
+                    <div id="allotment_registers" style="margin-top:5px ">
+
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 

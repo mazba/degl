@@ -76,11 +76,11 @@ if(isset($fiscal) && !empty($fiscal)){
                 <div class="col-sm-12">
 				<table style="width:100%">
 				  <tr>
-					<th valign="top">  <div class="col-sm-8">
-                        <p>স্মারক নং - <span contenteditable="true">এখানে স্মারক নং লিখুন</span></p>
+					<th valign="top">  <div class="col-sm-4">
+                        <p>স্মারক নং - <span contenteditable="true">৪৬.০২.৩৩০০.০০০.১৬.০০৩.১৭/</span></p>
                     </div></th>
-					<th valign="top"><div class="col-sm-4" >
-                        <p style="float: right">তারিখ: <span contenteditable="true">এখানে স্মারক নং লিখুন</span></p>
+					<th valign="top"><div class="col-sm-offset-4 col-sm-4" >
+                        <p style="float: right">তারিখ: <span contenteditable="true"> লিখুন</span></p>
                     </div></th> 
 				  </tr>
 				  </table>

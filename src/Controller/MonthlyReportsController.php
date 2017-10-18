@@ -55,7 +55,7 @@ class MonthlyReportsController extends AppController
                     'contract_amount' => 'Schemes.contract_amount',
                     'contract_date' => 'Schemes.contract_date',
                     'completion_date' => 'Schemes.completion_date',
-                    'actual_complete_date' => 'Schemes.	actual_complete_date',
+                    'actual_complete_date' => 'Schemes.actual_complete_date',
                     'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
                     'payment_road' => 'Schemes.payment_road',
                 ];
