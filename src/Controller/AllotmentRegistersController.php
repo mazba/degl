@@ -208,14 +208,15 @@ class AllotmentRegistersController extends AppController
                     'year_id' => 'AllotmentRegisters.financial_year_id',
                     'project_id' => 'AllotmentRegisters.project_id',
                     'allotment_date' => 'AllotmentRegisters.allotment_date',
-                    'allotment_amount' => $allotment_registersQuery->func()->sum('AllotmentRegisters.allotment_amount')])
+                    'allotment_amount' => $allotment_registersQuery->func()->sum('AllotmentRegisters.allotment_amount'),
+                    'allotment_expense' => $allotment_registersQuery->func()->sum('AllotmentRegisters.allotment_expense')])
                 ->where(['AllotmentRegisters.financial_year_id' => $financial_year_data->id])
                 ->leftJoin('projects', 'projects.id=AllotmentRegisters.project_id')
                 ->group('AllotmentRegisters.project_id')
                 ->toArray();
             foreach($allotment_registers as &$allotment_register){
                 $allotment_register['allotment_date'] = date('d/m/y', $allotment_register['allotment_date']);
-                $allotment_register['credit'] = 0;
+                $allotment_register['remain'] = ($allotment_register['allotment_amount']?$allotment_register['allotment_amount']:0) - ($allotment_register['allotment_expense']?$allotment_register['allotment_expense']:0);
             }
             $this->response->body(json_encode($allotment_registers));
             return $this->response;

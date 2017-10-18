@@ -274,7 +274,8 @@
                 {name: 'allotment_date', type: 'string'},
                 {name: 'project_name', type: 'string'},
                 {name: 'allotment_amount', type: 'string'},
-                {name: 'credit', type: 'string'}
+                {name: 'allotment_expense', type: 'string'},
+                {name: 'remain', type: 'string'}
             ],
             id: 'id',
             url: url3
@@ -296,10 +297,11 @@
                 altrows: true,
                 autoheight: true,
                 columns: [
-                    {text: '<?= __('Date') ?>', dataField: 'allotment_date', width: '20%'},
-                    {text: '<?= __('Particulars of Allotment') ?>', dataField: 'project_name', width: '50%'},
-                    {text: '<?= __('Dr.(TK)') ?>', dataField: 'allotment_amount', width: '20%'},
-                    {text: '<?= __('Cr.(TK)') ?>', dataField: 'credit', width: '10%'}
+                    {text: '<?= __('Date') ?>', dataField: 'allotment_date', width: '13%'},
+                    {text: '<?= __('Particulars of Allotment') ?>', dataField: 'project_name', width: '42%'},
+                    {text: '<?= __('Dr.(TK)') ?>', dataField: 'allotment_amount', width: '15%'},
+                    {text: '<?= __('Cr.(TK)') ?>', dataField: 'allotment_expense', width: '15%'},
+                    {text: '<?= __('Remain.(TK)') ?>', dataField: 'remain', width: '15%'}
                 ]
             });
 
