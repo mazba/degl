@@ -1,9 +1,5 @@
 <?php
-/**
- * Created by Rana ranabd36@gmail.com.
- * Date: 12/17/2015
- * Time: 2:22 PM
- */
+
 
 namespace App\Controller;
 
