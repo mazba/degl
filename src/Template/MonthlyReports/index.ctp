@@ -131,8 +131,8 @@ if(isset($schemes)){
                                                 </tr>
                                             <?php endforeach; ?>
                                             </tbody>
-                                            <!--PEDP-3-->
 
+                                            <!--PEDP-3-->
                                         <?php elseif($project['id'] == 5): ?>
                                             <thead>
                                             <tr>
@@ -164,7 +164,6 @@ if(isset($schemes)){
                                                     <td><?= date('d-m-Y', $scheme['noa_date'])?></td>
                                                     <td><?= $scheme['contract_amount']?></td>
                                                     <td><?= $scheme['contractor_title']?></td>
-                                                    <td><?= $scheme['contract_amount']?></td>
                                                     <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
                                                     <td><?= date('d-m-Y', $scheme['proposed_start_date'])?></td>
                                                     <td><?= date('d-m-Y', $scheme['completion_date'])?></td>
