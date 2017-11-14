@@ -82,7 +82,7 @@
                     { text: '<?= __('Serial No/Equipment Category') ?>', dataField: 'serial_no',width:'16%'},
                     { text: '<?= __('Registration No/Equipment brand') ?>', dataField: 'registration_no',width:'25%'},
                     { text: '<?= __('Vehicle Status') ?>', dataField: 'vehicle_status',width:'8%'},
-                    { text: '<?= __('Type') ?>', dataField: 'type',width:'9%'},
+                    { text: '<?= __('Type') ?>', dataField: 'type', filtertype: 'checkedlist',width:'9%'},
                     { text: '<?= __('Action') ?>', cellsalign: 'center',dataField: 'action',width:'12%'}
                 ]
             });

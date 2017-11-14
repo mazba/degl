@@ -70,7 +70,20 @@ if(isset($schemes)){
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <?php foreach($schemes as $key => $scheme): ?>
+                                            <?php
+                                            $cost_road = 0;
+                                            $cost_structure = 0;
+                                            $cost_total = 0;
+                                            $contract_amount = 0;
+                                            $payment_road = 0;
+                                            foreach($schemes as $key => $scheme):
+                                                $cost_road += $scheme['cost_road'];
+                                                $cost_structure += $scheme['cost_structure'];
+                                                $cost_total += $scheme['cost_total'];
+                                                $contract_amount+= $scheme['contract_amount'];
+                                                $payment_road+= $scheme['payment_road'];
+                                                ?>
+
                                                 <tr class="custom-table-width">
                                                     <td><?= ++$key?></td>
                                                     <td><?= $scheme['upazila_name']?></td>
@@ -78,9 +91,9 @@ if(isset($schemes)){
                                                     <td><p style="width:350px;"><?= $scheme['scheme_name']?></p></td>
                                                     <td><?= $scheme['road_length']?></td>
                                                     <td><?= $scheme['structure_length']?></td>
-                                                    <td><?= $scheme['structure_length']?></td>
                                                     <td><?= $scheme['cost_road']?></td>
                                                     <td><?= $scheme['cost_structure']?></td>
+                                                    <td><?= $scheme['cost_total']?></td>
                                                     <td><?= date('d-m-Y', $scheme['tender_date'])?></td>
                                                     <td><?= $scheme['contractor_title']?></td>
                                                     <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
@@ -91,6 +104,18 @@ if(isset($schemes)){
                                                     <th> <p contenteditable="true">&nbsp;</p></th>
                                                 </tr>
                                             <?php endforeach; ?>
+                                            <tr>
+                                                <td>Total</td>
+                                                <td colspan="5"></td>
+                                                <td><?= $cost_road?></td>
+                                                <td><?= $cost_structure?></td>
+                                                <td><?= $cost_total?></td>
+                                                <td colspan="3"></td>
+                                                <td><?= $contract_amount?></td>
+                                                <td colspan="2"></td>
+                                                <td><?=$payment_road?></td>
+                                                <td></td>
+                                            </tr>
                                             </tbody>
 
                                             <!--Landless mukti-->
