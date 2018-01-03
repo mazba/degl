@@ -46,15 +46,15 @@ $contractor_type = Configure::read('contractor_type');
                             ?>
                         </h3>
                         <div id="report_table">
-                            <table class="table table-bordered" style="border: 1px solid #eee; margin-bottom: 10px;">
+                            <table class="table table-bordered" style="border: 1px solid #000; margin-bottom: 10px;">
                                 <thead>
                                 <tr>
-                                    <th><?= __('ক্রম') ?></th>
-                                    <th><?= __('প্রতিষ্ঠানের নাম') ?></th>
-                                    <th><?= __('নাম') ?></th>
-                                    <th><?= __('ঠিকানা') ?></th>
-                                    <th><?= __('মোবাইল নং') ?></th>
-                                    <th><?= __('জাতীয় পরিচয়পত্র') ?></th>
+                                    <th width="5%"><?= __('ক্রম') ?></th>
+                                    <th width="20%"><?= __('প্রতিষ্ঠানের নাম') ?></th>
+                                    <th width="20%"><?= __('নাম') ?></th>
+                                    <th width="35%"><?= __('ঠিকানা') ?></th>
+                                    <th width="10%"><?= __('মোবাইল নং') ?></th>
+                                    <th width="10%"><?= __('জাতীয় পরিচয়পত্র') ?></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -86,6 +86,20 @@ $contractor_type = Configure::read('contractor_type');
         }
         div#select2-drop {
             width: 451px !important;
+        }
+        
+        .table > tbody > tr > td
+        {
+        
+        padding: 2px 10px !important;
+        
+        }
+        
+        
+        .table-bordered>tbody>tr>td
+        {
+        
+            border: 1px solid #000 !important;
         }
     </style>
 

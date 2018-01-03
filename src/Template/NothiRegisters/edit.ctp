@@ -67,7 +67,7 @@ use Cake\Core\Configure;
         echo $this->Form->input('parent_id', ['options' => $nothiRegisters, 'empty' => __('Select')]);
         echo $this->Form->input('nothi_no', ['label' => __('Name')]);
         echo $this->Form->input('nothi_date', ['type' => 'text', 'value' => $this->System->display_date($nothiRegister->nothi_date), 'class' => 'form-control hasdatepicker']);
-        echo $this->Form->input('package_no', ['label' => __('Package No')]);
+        echo $this->Form->input('package_no', ['label' => __('ডিজিটাল স্মারক নং')]);
         echo $this->Form->input('tender_no', ['label' => __('Tender No')]);
         ?>
         <div class="is_parent" style="<?= !$nothiRegister->parent_id? 'display:none': '' ?>">

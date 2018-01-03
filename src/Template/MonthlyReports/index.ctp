@@ -138,7 +138,16 @@ if(isset($schemes)){
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <?php foreach($schemes as $key => $scheme): ?>
+
+                                            <?php
+                                            $estimated_cost =0;
+                                            $contract_amount =0;
+                                            $payment_road =0;
+                                            foreach($schemes as $key => $scheme):
+                                                $estimated_cost += $scheme['estimated_cost'];
+                                                $contract_amount += $scheme['contract_amount'];
+                                                $payment_road += $scheme['payment_road'];
+                                                ?>
                                                 <tr class="custom-table-width">
                                                     <td><?= ++$key?></td>
                                                     <td><?= $scheme['upazila_name']?></td>
@@ -155,6 +164,15 @@ if(isset($schemes)){
                                                     <th><p contenteditable="true">&nbsp;</p></th>
                                                 </tr>
                                             <?php endforeach; ?>
+                                            <tr>
+                                                <td>Total</td>
+                                                <td colspan="4"></td>
+                                                <td><?= $estimated_cost?></td>
+                                                <td><?= $contract_amount?></td>
+                                                <td colspan="4"></td>
+                                                <td><?=$payment_road?></td>
+                                                <td></td>
+                                            </tr>
                                             </tbody>
 
                                             <!--PEDP-3-->
@@ -179,7 +197,14 @@ if(isset($schemes)){
                                             </thead>
 
                                             <tbody>
-                                            <?php foreach($schemes as $key => $scheme): ?>
+                                            <?php $estimated_cost =0;
+                                            $contract_amount =0;
+                                            $payment_road =0;
+                                            foreach($schemes as $key => $scheme):
+                                                $estimated_cost += $scheme['estimated_cost'];
+                                                $contract_amount += $scheme['contract_amount'];
+                                                $payment_road += $scheme['payment_road'];
+                                                ?>
                                                 <tr class="custom-table-width">
                                                     <td><?= ++$key?></td>
                                                     <td><?= $scheme['package_name']?></td>
@@ -197,6 +222,16 @@ if(isset($schemes)){
                                                     <th><p contenteditable="true">&nbsp;</p></th>
                                                 </tr>
                                             <?php endforeach; ?>
+                                            <tr>
+                                                <td>Total</td>
+                                                <td colspan="2"></td>
+                                                <td><?= $estimated_cost ?></td>
+                                                <td colspan="2"></td>
+                                                <td><?= $contract_amount ?></td>
+                                                <td colspan="5"></td>
+                                                <td><?= $payment_road ?></td>
+                                                <td></td>
+                                            </tr>
                                             </tbody>
 
                                             <!--NATA-->
@@ -220,7 +255,14 @@ if(isset($schemes)){
                                             </thead>
 
                                             <tbody>
-                                            <?php foreach($schemes as $key => $scheme): ?>
+                                            <?php $estimated_cost =0;
+                                            $contract_amount =0;
+                                            $payment_road =0;
+                                            foreach($schemes as $key => $scheme):
+                                                $estimated_cost += $scheme['estimated_cost'];
+                                                $contract_amount += $scheme['contract_amount'];
+                                                $payment_road += $scheme['payment_road'];
+                                                ?>
                                                 <tr class="custom-table-width">
                                                     <td><?= ++$key?></td>
                                                     <td><?= $scheme['upazila_name']?></td>
@@ -236,6 +278,16 @@ if(isset($schemes)){
                                                     <th><p contenteditable="true">&nbsp;</p></th>
                                                 </tr>
                                             <?php endforeach; ?>
+                                            <tr>
+                                                <td>Total</td>
+                                                <td colspan="3"></td>
+                                                <td><?= $estimated_cost ?></td>
+                                                <td colspan="1"></td>
+                                                <td><?= $contract_amount ?></td>
+                                                <td colspan="3"></td>
+                                                <td><?= $payment_road ?></td>
+                                                <td></td>
+                                            </tr>
                                             </tbody>
                                         <?php else: ?>
                                             <h3 class="text-center">Data Not Found</h3>

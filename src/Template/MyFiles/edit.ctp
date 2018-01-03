@@ -26,7 +26,7 @@ Configure::load('config_receive_file_registers', 'default');
                 class="icon-paragraph-right2"></i><?= __('Add Receive File Register') ?>
         </h6></div>
     <div class="panel-body col-sm-12">
-        <input type="hidden" name="name[]" value="<?= $user['id']?>">
+	<input type="hidden" name="name[]" value="<?= $user['id']?>">
         <?php
         echo $this->Form->input('sarok_no');
         echo $this->Form->input('sender_name', ['required' => 'required']);

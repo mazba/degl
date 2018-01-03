@@ -14,29 +14,29 @@ class ContractorSchemesController extends AppController
         $this->loadModel('Upazilas');
         if ($this->request->is(['post'])) {
             $inputs = $this->request->data;
-            $this->loadModel('Schemes');
+			$this->loadModel('Schemes');
             $this->loadModel('SchemeContractors');
             $schemes=$this->SchemeContractors->find()
                 ->autoFields(true)
                 ->select([
-                    'contractors.contractor_title',
-                    'packages.name_bn',
-                    'schemes.name_bn',
-                    'schemes.contract_amount',
-                    'schemes.contract_date',
-                    'schemes.completion_date',
-                    'schemes.road_length',
-                    'schemes.structure_length',
-                    'schemes.building_quantity',
-                    'schemes.financial_year_estimate_id',
-                    'schemes.upazila_id',
-                    'schemes.payment_road',
-                    'schemes.payment_structure',
-                    'scheme_progresses.progress_value'
-                ])
+				'contractors.contractor_title',
+				'packages.name_bn',
+				'schemes.name_bn',
+				'schemes.contract_amount',
+				'schemes.contract_date',
+				'schemes.completion_date',
+				'schemes.road_length',
+				'schemes.structure_length',
+				'schemes.building_quantity',
+				'schemes.financial_year_estimate_id',
+				'schemes.upazila_id',
+				'schemes.payment_road',
+				'schemes.payment_structure',
+				'scheme_progresses.progress_value'
+				])
                 ->where(['SchemeContractors.status'=>1])
                 ->innerJoin('contractors','contractors.id=SchemeContractors.contractor_id')
-                ->leftJoin('schemes','schemes.id=SchemeContractors.scheme_id')
+                ->leftJoin('schemes','schemes.id=SchemeContractors.scheme_id') 
                 ->innerJoin('packages','packages.id=schemes.package_id')
                 ->innerJoin('scheme_progresses','scheme_progresses.scheme_id=schemes.id and scheme_progresses.status=1')
                 ->order(['schemes.contract_date'=>'desc']);
@@ -73,11 +73,11 @@ class ContractorSchemesController extends AppController
             ->innerJoin('scheme_progresses','scheme_progresses.scheme_id=schemes.id and scheme_progresses.status=1')
             ->order(['schemes.contract_date'=>'desc'])
             ->toArray()
-        ;
-        /* echo "<pre>";
-         print_r($schemes);
-         echo "</pre>";
-         die;*/
+            ;
+       /* echo "<pre>";
+        print_r($schemes);
+        echo "</pre>";
+        die;*/
         $this->set(compact('schemes'));
         $this->layout='ajax';
 

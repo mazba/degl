@@ -92,7 +92,7 @@ class VehiclesStatusController extends AppController
         $vehiclesStatus = TableRegistry::get('vehicles')->get($id, [
             'contain' => ['VehiclesStatus'=>['Employees','Schemes']]
         ]);
-     //   echo "<pre>";print_r($vehiclesStatus);die();
+//        echo "<pre>";print_r($vehiclesStatus);die();
         $this->set('vehiclesStatus', $vehiclesStatus);
         $this->set('_serialize', ['vehiclesStatus']);
     }

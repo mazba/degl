@@ -241,6 +241,8 @@ Configure::load('config_receive_file_registers', 'default');
     <div class="panel-body">
         <div class="row">
             <div class="col-md-12">
+            
+            
                 <form method="post"
                       action="<?php echo $this->request->webroot; ?>my_files/forward/<?= $my_file->id ?>" enctype="multipart/form-data">
                     <div class="col-md-10">
@@ -574,7 +576,7 @@ Configure::load('config_receive_file_registers', 'default');
                     <div class="col-sm-11 container_description" style="width: 87.667%;">
                         <input type="hidden" class="row-id"  value="<?= $letterIssueData['id']?$letterIssueData['id']:'' ?>">
                         <input type="hidden" class="letter-id" name="receive_file_register_id" value="<?= $receiveFileRegisterId?>">
-                        <input type="text" value="<?= $letterIssueData['subject']?$letterIssueData['subject']:'' ?>" name="subject" class="subject form-control" required="required"/>
+                        <input type="text" value="<?= $letterIssueData['subject']?$letterIssueData['subject']:'' ?>" name="subject" class="subject form-control" />
                     </div>
                 </div>
             </div>
@@ -669,34 +671,45 @@ Configure::load('config_receive_file_registers', 'default');
                 <div class="col-sm-12">
                     <button style="float: right;margin-top: 5px" onclick="print_draft_rpt()">Print</button>
                 </div>
-                <div id="PrintAreaDraft">
+                <div id="PrintAreaDraft" >
+				<div style="padding:20px 40px 0 40px !important;">
+				
                     <div class="col-sm-12">
                         <h2 class="text-center" style="line-height: 14px"><?= __('Government of the People\'s Republic of Bangladesh') ?></h2>
                         <h4 class="text-center" style="line-height: 14px"><?= __('Local Govt. Engineering Department') ?> </h4>
                         <h4 class="text-center" style="line-height: 14px"><?= __('Office of the Executive Engineer') ?></h4>
                         <h4 class="text-center" style="line-height: 14px">নলজানী,<?= __('District: Gazipur') ?></h4>
-                        <h4 class="text-center" style="line-height: 14px"><a>www.lged.gov.bd</a></h4>
-                        <div class="shek-hasina">
-                            উন্নয়নের গণতন্ত্র<br/>শেখ হাসিনার মূলমন্ত্র
-                        </div>
+                        <h4 class="text-center" style="line-height: 14px;"><u>www.lged.gov.bd</u></h4>
+                       <div class="shek-hasina" style="font-size:17px; width:180px; right: 14px !important;
+    top: 32px !important;"> উন্নয়নের গণতন্ত্র <br/> শেখ হাসিনার মূলমন্ত্র </div> 
                     </div>
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-sm-12">
-                                <p><b><?= __('Reminder Number') ?>: </b><?= $letterIssueData['reminder_number'] ?></p>
-                                <p></p><?= $letterIssueData['receiver_name'] ?></p>
-
-                                <p><b><?= __('Subject') ?>: <?= $letterIssueData['subject'] ?></b></p>
-                                <p style="padding-left: 1em"><?= $letterIssueData['description'] ?></p>
+                                <p style="font-size: 16px;float:left;"><b><?= __('Reminder Number') ?>: </b><?= $letterIssueData['reminder_number'] ?></p>
+                                
+                                <p style="font-size: 16px; float:right;"><label class="col-sm-1 control-label text-right" style="width: 43%;"><?= __('তারিখ:') ?></label>
+                                <?= EngToBanglaNum(date('d/m/Y', $letterIssueData['answer_date'])); ?></p>
+                                
+<p style="font-size: 16px;clear:both;margin-top:-10px;" > <?php echo $letterIssueData['receiver_name']; ?> </p>
+                                <?php
+								if($letterIssueData['subject']!="NA"){
+								?><p style="font-size: 16px"><b><?= __('Subject') ?>: <?= $letterIssueData['subject'] ?></b></p>
+							<?php
+								}
+							?>
+							
+                                <p style="font-size: 16px" style="padding-left: 1em"><?= $letterIssueData['description'] ?></p>
                             </div>
                             </div>
                         <div class="row">
                             <div class="col-sm-12" style="margin-top: 40px;">
                                 <p class="text-center" style="float: right;font-size:15px;">
+                                (মোঃ আমিরুল ইসলাম খান)<br>
                                     নির্বাহী প্রকৌশলী<br>
                                     এলজিইডি, গাজীপুর<br>
                                     ফোনঃ ৯২৬৩৯৮৯, ফ্যাক্সঃ ৯২৬৪১২৮<br>
-                                    Email: xen.gazipur@lged.gov.bd<br>
+             Email: xen.gazipur@lged.gov.bd<br>
 
                                 </p>
                             </div>
@@ -721,9 +734,6 @@ Configure::load('config_receive_file_registers', 'default');
                             color: #ccc;
                             font-size: 13px;
                         }
-                        p{
-                            font-size: 15px;
-                        }
                         @media print {
                             .shek-hasina {
                                 display: inline-block;
@@ -739,6 +749,7 @@ Configure::load('config_receive_file_registers', 'default');
                         }
                     </style>
                 </div>
+				</div>
             </div>
         </div>
     </div>
@@ -762,7 +773,7 @@ function EngToBanglaNum($input) {
         URL = "<?php echo $this->request->webroot; ?>page/Print_a4_Eng.php?selLayer=PrintAreaDraft";
         day = new Date();
         id = day.getTime();
-        eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=yes,scrollbars=yes ,location=0,statusbar=0 ,menubar=yes,resizable=1,width=880,height=600,left = 20,top = 50');");
+        eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=yes,scrollbars=yes ,location=0,statusbar=0 ,menubar=yes,resizable=1,width=880,height=600,left = 40,top = 50');");
     }
 
 </script>
@@ -1009,4 +1020,12 @@ function EngToBanglaNum($input) {
     .display-none{
         display: none;
     }
+	table tr td
+	{
+		
+		text-align: center !important;
+		vertical-align:text-top !important;
+		
+	}
+	
 </style>

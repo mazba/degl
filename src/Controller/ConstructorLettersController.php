@@ -97,6 +97,7 @@ class ConstructorLettersController extends AppController
                 ->hydrate(false)
                 ->toArray();
             $this->set(compact('processRaBills', 'finalYears','qr_image','NotFoundProcessRaBills','fiscal'));
+			
         }
         $this->loadModel('Contractors');
         $this->loadModel('FinancialYearEstimates');

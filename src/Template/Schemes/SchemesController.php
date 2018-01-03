@@ -17,6 +17,7 @@ class SchemesController extends AppController {
    * @return void
    */
   public function index() {
+
   }
 
   /**
@@ -112,7 +113,7 @@ class SchemesController extends AppController {
       $data['approved'] = 1;
 
       $scheme = $this->Schemes->patchEntity($scheme, $data);
-       //echo "<pre>";print_r($scheme);die();
+      //  echo "<pre>";print_r($scheme);die();
       if ($scheme = $this->Schemes->save($scheme)) {
 
         if (!empty($data['parent_id'])) {
@@ -239,20 +240,20 @@ class SchemesController extends AppController {
       } else {
         $data['actual_start_date'] = '';
       }
-      $x = strtotime($data['approve_extended_date']);
-      if ($x !== false) {
-        $data['approve_extended_date'] = $x;
-        $data['completion_date'] = $x;
-      } else {
-        $data['approve_extended_date'] = '';
-      }
-      $x = strtotime($data['actual_complete_date']);
-      if ($x !== false) {
-        $data['actual_complete_date'] = $x;
-        $data['completion_date'] = $x;
-      } else {
-        $data['actual_complete_date'] = '';
-      }
+            $x = strtotime($data['approve_extended_date']);
+            if ($x !== false) {
+                $data['approve_extended_date'] = $x;
+                $data['completion_date'] = $x;
+            } else {
+                $data['approve_extended_date'] = '';
+            }
+            $x = strtotime($data['actual_complete_date']);
+            if ($x !== false) {
+                $data['actual_complete_date'] = $x;
+                $data['completion_date'] = $x;
+            } else {
+                $data['actual_complete_date'] = '';
+            }
       if (isset($data['allotment_date'])) {
         $data['allotment_date'] = strtotime($data['allotment_date']);
       }
@@ -699,22 +700,8 @@ class SchemesController extends AppController {
       else
       {
         $schemes = $this->Schemes->find('all')//->autoFields(true)
-        ->select([
-            'financial_year' => 'financial_year_estimates.name',
-            'scheme_name' => 'Schemes.name_en',
-            'package_name' => 'packages.name_en',
-            'projects_name' => 'projects.short_code',
-            'districts_name' => 'districts.name_en',
-            'upazilas_name' => 'upazilas.name_en',
-            'scheme_code' => 'Schemes.scheme_code',
-            'contractor_name' => 'contractors.contractor_title',
-            'contract_amount' => 'Schemes.contract_amount',
-            'contract_date' => 'Schemes.proposed_start_date', /*'scheme_progresses' => 'scheme_progresses.progress_value',*/
-            'palasiding_length' => 'Schemes.palasiding_length',
-            'expected_complete_date' => 'Schemes.expected_complete_date',
-            'scheme_id' => 'Schemes.id',
-            'scheme_progresses' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)'
-        ])
+        ->select(['financial_year' => 'financial_year_estimates.name', 'scheme_name' => 'Schemes.name_en', 'projects_name' => 'projects.short_code', 'districts_name' => 'districts.name_en', 'upazilas_name' => 'upazilas.name_en', 'scheme_code' => 'Schemes.scheme_code','contractor_name' => 'contractors.contractor_title', 'contract_amount' => 'Schemes.contract_amount', 'contract_date' => 'Schemes.contract_date', /*'scheme_progresses' => 'scheme_progresses.progress_value',*/
+                'palasiding_length' => 'Schemes.palasiding_length', 'expected_complete_date' => 'Schemes.expected_complete_date', 'scheme_id' => 'Schemes.id', 'scheme_progresses' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)'])
             ->distinct(['Schemes.id'])
             ->innerJoin('project_offices', 'project_offices.project_id = Schemes.project_id')
             ->leftJoin('projects', 'projects.id = Schemes.project_id')
@@ -722,7 +709,6 @@ class SchemesController extends AppController {
             ->leftJoin('upazilas', 'upazilas.id = Schemes.upazila_id')
             ->leftJoin('scheme_progresses', 'scheme_progresses.scheme_id = Schemes.id')
             ->leftJoin('upazilas', 'upazilas.id = Schemes.upazila_id')
-            ->leftJoin('packages', 'packages.id = Schemes.package_id')
             ->leftJoin('scheme_contractors', 'scheme_contractors.scheme_id = Schemes.id')
             ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
             ->leftJoin('financial_year_estimates', 'financial_year_estimates.id = Schemes.financial_year_estimate_id')
@@ -737,13 +723,10 @@ class SchemesController extends AppController {
           $scheme['expected_complete_date'] = date('d/m/Y', $scheme['expected_complete_date']);
           //$scheme['action'] = '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text-danger edit" > </button>';
           $scheme['action'] =
-              '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-pencil3 text-danger edit" > </button>'.''.
-              '<button title="' . __('Work Order') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-paper-plane text-success workOrder" > </button>' . '' .
-              '&nbsp;<a class="" title="Assign Contractors" href="' . $this->request->webroot . 'Schemes/assign_contractors/' . $scheme['scheme_id'] . '" ><i class="icon-user-plus text-info"></i><a>'. '' .
-              '&nbsp;<a class="" title="Scheme Nothi" href="' . $this->request->webroot . 'note_sheet_events/view/' . $scheme['scheme_id'] . '" target="_blank" ><i class="icon-link5 text-warning"></i><a>'.''.
-              '&nbsp;<a class="" title="স্কীমের অবস্থা" href="' . $this->request->webroot . 'schemes/scheme_status/' . $scheme['scheme_id'] . '" target="_blank" ><i class="icon-newspaper text-primary scheme-status"></i><a>'.''.
-              '<button title="' . __('স্কীম প্রোগ্রেস') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-loop5 text-success progress" > </button>';
-
+              '<button title="' . __('Edit') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text-danger edit" > </button>'.''.
+              '<button title="' . __('Work Order') . ' " data-scheme_id="' . $scheme['scheme_id'] . '" class="icon-newspaper text workOrder" > </button>' . '' .
+              '&nbsp;<a class="" title="Assign Contractors" href="' . $this->request->webroot . 'Schemes/assign_contractors/' . $scheme['scheme_id'] . '" ><i class="icon-user-plus"></i><a>'. '' .
+              '&nbsp;<a class="" title="Scheme Nothi" href="' . $this->request->webroot . 'note_sheet_events/view/' . $scheme['scheme_id'] . '" target="_blank" ><i class="icon-redo"></i><a>';
 
           $sl++;
         }
@@ -785,12 +768,21 @@ class SchemesController extends AppController {
     $user = $this->Auth->user();
 
     $this->layout = 'ajax';
+
+//        $scheme = $this->Schemes->get($id, [
+//            'contain' => ['Projects', 'WorkTypes', 'WorkSubTypes', 'Districts', 'Upazilas', 'Municipalities', 'FinancialYearEstimates', 'ReceiveFileRegisters', 'SchemeDetails', 'SchemeProgresses' =>
+//                function ($q) {
+//                    return $q
+//                        ->where(['SchemeProgresses.status' => 1])
+//                        ->limit(1);
+//                }]
+//        ]);
+
     $scheme = $this->Schemes->get($id, ['contain' => ['Projects','WorkTypes', 'WorkSubTypes', 'Districts', 'Upazilas', 'Municipalities', 'FinancialYearEstimates', 'SchemeDetails']]);
 
     //echo "<pre>",print_r($scheme),"<pre>";die();
     if ($this->request->is(['patch', 'post', 'put'])) {
       $data = $this->request->data;
-//      pr($data);die;
       $newspaper = array();
       for ($i = 0; $i < count($data['newspaper']); $i++) {
         $newspaper[$i]['name'] = $data['newspaper'][$i];
@@ -828,15 +820,15 @@ class SchemesController extends AppController {
         $data['actual_start_date'] = '';
       }
 
-      $x = strtotime($data['actual_complete_date']);
-      if ($x !== FALSE) {
-        $data['actual_complete_date'] = $x;
-      } else {
-        $data['actual_complete_date'] = '';
-      }
-      if (isset($data['allotment_date'])) {
-        $data['allotment_date'] = strtotime($data['allotment_date']);
-      }
+        $x = strtotime($data['actual_complete_date']);
+        if ($x !== FALSE) {
+            $data['actual_complete_date'] = $x;
+        } else {
+            $data['actual_complete_date'] = '';
+        }
+        if (isset($data['allotment_date'])) {
+            $data['allotment_date'] = strtotime($data['allotment_date']);
+        }
 
       if (isset($data['allotment_date'])) {
         $data['allotment_date'] = strtotime($data['allotment_date']);
@@ -847,11 +839,8 @@ class SchemesController extends AppController {
       if (isset($data['etender_date'])) {
         $data['etender_date'] = strtotime($data['etender_date']);
       }
-      if (isset($data['tender_date'])) {
-        $data['tender_date'] = strtotime($data['tender_date']);
-      }
-      if(empty($data['tender_date'])){
-        unset($data['tender_date']);
+      if (isset($data['applied_etender_date'])) {
+        $data['applied_etender_date'] = strtotime($data['applied_etender_date']);
       }
 
       $x = strtotime($data['work_order_date']);
@@ -861,6 +850,12 @@ class SchemesController extends AppController {
         $data['work_order_date'] = '';
       }
 
+        $x = $data['palasiding_length'];
+        if ($x !== FALSE) {
+            $data['palasiding_length'] = $x;
+        } else {
+            $data['palasiding_length'] = '';
+        }
 
       $data['ads_paper'] = json_encode($newspaper);
       $scheme = $this->Schemes->patchEntity($scheme, $data);
@@ -993,27 +988,27 @@ class SchemesController extends AppController {
             'work_name' => 'Schemes.name_en',
             'etender_no' => 'Schemes.etender_no',
             'estimation_sarok_no' => 'Schemes.allotment_no',
-            'estimation_date' => 'Schemes.eve_approval_date',
+            'estimation_date' => 'Schemes.allotment_date',
             'estimation_taka' => 'Schemes.allotment_bill',
-//            'e_tender_no' => 'Schemes.etender_no',
+            'e_tender_no' => 'Schemes.etender_no',
             'etender_notice' => 'Schemes.etender_notice',
             'e_tender_date' => 'Schemes.etender_date',
-//            'package_id' => 'Schemes.package_id',
+            'package_id' => 'Schemes.package_id',
             'obtain_tender_no' => 'Schemes.number_of_tender',
             'customary_tender_no' => 'Schemes.habitual_number_of_tender',
             'performance_security' => 'Schemes.performance_security',
             'newspaper' => 'Schemes.ads_paper',
-            'tender_date' => 'Schemes.tender_date',
+            'applied_etender_date' => 'Schemes.applied_etender_date',
             'applied_tender_price' => 'Schemes.contract_amount',
-          /*            'palasiding_length' => 'Schemes.palasiding_length',
-                      'cross_drain_length' => 'Schemes.cross_drain_length',
-                      'cross_drain_quantity' => 'Schemes.cross_drain_quantity',
-                      'soil_quantity' => 'Schemes.soil_quantity',*/
+            'palasiding_length' => 'Schemes.palasiding_length',
+            'cross_drain_length' => 'Schemes.cross_drain_length',
+            'cross_drain_quantity' => 'Schemes.cross_drain_quantity',
+            'soil_quantity' => 'Schemes.soil_quantity',
             'project_name' => 'projects.name_bn',
             'nothi_name' => 'nothi_registers.nothi_no',
-//            'id' => 'packages.id',
+            'id' => 'packages.id',
             'name_en' => 'packages.name_en',
-//            'contractor_id' => 'scheme_contractors.contractor_id',
+            'contractor_id' => 'scheme_contractors.contractor_id',
             'contractor_title' => 'contractors.contractor_title',
             'order_number' => 'scheme_payorders.order_number',
             'initial_date' => 'scheme_payorders.initial_date',
@@ -1030,8 +1025,7 @@ class SchemesController extends AppController {
         ->leftJoin('contractors', 'contractors.id = scheme_contractors.contractor_id')
         ->leftJoin('scheme_payorders', 'scheme_payorders.scheme_id = Schemes.id')
         ->where(['Schemes.id' => $scheme_id])
-        ->hydrate(false)->first();
-
+        ->first();
     $this->set(compact('result'));
   }
 
@@ -1785,70 +1779,6 @@ class SchemesController extends AppController {
     ];
     $this->response->body(json_encode($response));
     return $this->response;
-  }
-
-  // scheme status
-  public function scheme_status($id = null)
-  {
-    $scheme = $this->Schemes->get($id);
-    if ($this->request->is(['patch', 'post', 'put']))
-    {
-      $inputs = $this->request->data();
-      $data['scheme_progress_status']= $inputs['scheme_progress_status'];
-      $scheme = $this->Schemes->patchEntity($scheme,$data);
-
-      if($this->Schemes->save($scheme))
-      {
-        $this->Flash->success(__('The scheme status has been changed'));
-        return $this->redirect(['action' => 'index']);
-      }else {
-        $this->Flash->error(__('The scheme status could not be changed. Please, try again.'));
-      }
-    }
-    $status = $this->Schemes->find()->select(['scheme_progress_status'])->where(['id' => $id])->first();
-    $this->set(compact('status','scheme'));
-  }
-
-  public function progress($scheme_id = null) {
-    $this->layout = 'ajax';
-    $this->loadModel('SchemeProgresses');
-    $this->loadModel('Schemes');
-    $schemeProgress = $this->SchemeProgresses->newEntity();
-    $id = $scheme_id;
-    $query = TableRegistry::get('SchemeProgresses')
-        ->find()
-        ->select(['progress_value'])
-        ->where(['scheme_id' => $scheme_id, 'status' => 1]);
-    $previous_scheme_progresses = $query->first();
-
-
-    // echo "<pre>";print_r($actually_scheme_progress);die();
-    if ($this->request->is(['post', 'put'])) {
-      $data = $this->request->data;
-      $user = $this->Auth->user();
-      $data['office_id'] = $user['office_id'];
-      $data['created_by'] = $user['id'];
-      $data['created_date'] = strtotime($data['created_date']);
-      $scheme = TableRegistry::get('SchemeProgresses');
-      $query = $scheme->query();
-      $query->update()
-          ->set(['status' => 0])
-          ->where(['scheme_id' => $data['scheme_id']])
-          ->execute();
-
-      $schemeProgress = $this->SchemeProgresses->patchEntity($schemeProgress, $data);
-      //  echo "<pre>";print_r($schemeProgress);die();
-      if ($this->SchemeProgresses->save($schemeProgress)) {
-        $this->Flash->success(__('The scheme progress has been saved'));
-        return $this->redirect(['action' => 'index']);
-      } else {
-        $this->Flash->success(__('The scheme progress could not be changed. Please, try again.'));
-        return $this->redirect(['action' => 'index']);
-      }
-
-    }
-    $this->set(compact('schemeProgress', 'previous_scheme_progresses', 'id'));
-
   }
 
 }

@@ -18,7 +18,7 @@ class MonthlyReportsController extends AppController
             $schemes = $this->Schemes->find()
                 ->hydrate(FALSE);
 
-            //IRIDP-2
+            //IRIDP-2  GDP 2
             if($inputs['project_id'] == 20 || $inputs['project_id'] == 3){
                 $scheme_select_fields = [
                     'upazila_name' => 'upazilas.name_bn',
@@ -38,10 +38,42 @@ class MonthlyReportsController extends AppController
                     'payment_road' => 'Schemes.payment_road',
                 ];
             }
-
-
-            //landless mukti
+           //Landless mukti
             elseif($inputs['project_id'] == 8){
+                $scheme_select_fields = [
+                    'upazila_name' => 'upazilas.name_bn',
+                    'package_name' => 'packages.name_bn',
+                    'scheme_name' => 'Schemes.name_bn',
+                    'contractor_title' => 'contractors.contractor_title',
+                    'estimated_cost' => 'Schemes.estimated_cost',
+                    'contract_amount' => 'Schemes.contract_amount',
+                    'contract_date' => 'Schemes.contract_date',
+                    'completion_date' => 'Schemes.completion_date',
+                    'actual_complete_date' => 'Schemes.actual_complete_date',
+                    'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
+                    'payment_road' => 'Schemes.payment_road',
+                ];
+            }
+
+            //Ups
+            elseif($inputs['project_id'] == 17){
+                $scheme_select_fields = [
+                    'upazila_name' => 'upazilas.name_bn',
+                    'package_name' => 'packages.name_bn',
+                    'scheme_name' => 'Schemes.name_bn',
+                    'contractor_title' => 'contractors.contractor_title',
+                    'estimated_cost' => 'Schemes.estimated_cost',
+                    'contract_amount' => 'Schemes.contract_amount',
+                    'contract_date' => 'Schemes.contract_date',
+                    'completion_date' => 'Schemes.completion_date',
+                    'actual_complete_date' => 'Schemes.actual_complete_date',
+                    'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
+                    'payment_road' => 'Schemes.payment_road',
+                ];
+            }
+
+            //Pti
+            elseif($inputs['project_id'] == 18){
                 $scheme_select_fields = [
                     'upazila_name' => 'upazilas.name_bn',
                     'package_name' => 'packages.name_bn',

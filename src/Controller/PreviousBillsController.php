@@ -109,11 +109,11 @@ class PreviousBillsController extends AppController
         $processBill = $this->ProcessedRaBills->patchEntity($processBill, $data);
         if ($this->ProcessedRaBills->save($processBill))
         {
-            $this->Flash->success('The process bill has been deleted.');
+            $this->Flash->success('The previous bill has been deleted.');
         }
         else
         {
-            $this->Flash->error('The process bill could not be deleted. Please, try again.');
+            $this->Flash->error('The previous bill could not be deleted. Please, try again.');
         }
         return $this->redirect(['action' => 'index']);
     }

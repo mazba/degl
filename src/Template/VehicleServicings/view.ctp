@@ -35,7 +35,7 @@
   </div>
   <div class="panel-body" id="PrintArea">
 
-    <h3 style="text-align: center">JOB CARD</h3>
+    <h3 style="text-align: center">Estimated</h3>
 
     <div class="" style="margin: 0px">
 

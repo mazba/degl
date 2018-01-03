@@ -341,7 +341,7 @@
         font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
         font-size: 14px;
     }
-
+ 
     #calendar {
         margin: 40px 10px;
 

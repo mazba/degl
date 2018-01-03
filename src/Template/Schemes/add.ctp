@@ -192,21 +192,21 @@ Configure::load('config_offices', 'default');
                                 <div class="col-sm-6">
                                     <?php
                                     if (in_array($office_type, ['HEAD_QUARTER', 'DIVISION', 'ZONAL'])) {
-                                        echo $this->Form->input('district_id', ['options' => $districts, 'empty' => 'Select a district']);
+                                        echo $this->Form->input('district_id', ['options' => $districts, 'empty' => 'Select a district', 'required' => 'required']);
                                     } else {
-                                        echo $this->Form->input('district_id', ['options' => $districts]);
+                                        echo $this->Form->input('district_id', ['options' => $districts, 'required' => 'required']);
                                     } ?>
                                     <div id="main_container_municipality_dropdown">
                                         <?php
-                                        echo $this->Form->input('municipality_id', ['options' => $municipalities, 'empty' => 'NONE']);
+                                        echo $this->Form->input('municipality_id', ['options' => $municipalities, 'empty' => 'Select', 'required' => 'required']);
                                         ?>
                                     </div>
 
                                     <?php
-                                    echo $this->Form->input('financial_year_estimate_id', ['options' => $financialYearEstimates, 'empty' => __('Select')]);
-                                    echo $this->Form->input('name_bn', ['label' => __('NAME_BN'), 'type' => 'text']);
+                                    echo $this->Form->input('financial_year_estimate_id', ['options' => $financialYearEstimates, 'empty' => __('Select'), 'required' => 'required']);
+                                    echo $this->Form->input('name_bn', ['label' => __('NAME_BN'), 'type' => 'text', 'required' => 'required']);
 
-                                    echo $this->Form->input('scheme_code');
+                                    echo $this->Form->input('scheme_code',['required' => 'required']);
 
                                     ?>
 
@@ -271,16 +271,16 @@ Configure::load('config_offices', 'default');
                                     </div>
                                     <?php
                                     echo $this->Form->input('constituency_no', ['label' => __('Constituency No'), 'type' => 'text']);
-                                    echo $this->Form->input('project_id', ['options' => $projects, 'empty' => __('Select')]);
+                                    echo $this->Form->input('project_id', ['options' => $projects, 'empty' => __('Select'), 'required' => 'required']);
                                     echo $this->Form->input('name_en', ['label' => __('NAME_EN'), 'type' => 'text']);
-                                    echo $this->Form->input('package_id', ['options' => $packages, 'empty' => __('Select')]);
+                                    echo $this->Form->input('package_id', ['options' => $packages, 'empty' => __('Select'), 'required' => 'required']);
 
                                     ?>
 
                                     <?php
                                     echo $this->Form->input('category_name', ['options' => Configure::read('scheme_category'), 'empty' => __('Select')]);
                                     echo $this->Form->input('contract_amount', ['label' => __('Contract Amount'), 'type' => 'text']);
-                                    echo $this->Form->input('scheme_type_id', ['options' => $scheme_types, 'empty' => 'Select']);
+                                    echo $this->Form->input('scheme_type_id', ['options' => $scheme_types, 'empty' => 'Select', 'required' => 'required']);
                                     ?>
                                     <div class="form-group input number">
                                         <label

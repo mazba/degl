@@ -245,13 +245,15 @@ use Cake\Core\Configure;
                 if (above_or_less == 'ABOVE') {
 
                     so_far_payable = total_payable + percentage_value;
-                    bill_amount = so_far_payable - up_to_date_approved;
+                    //bill_amount = so_far_payable - up_to_date_approved;
+					  bill_amount = so_far_payable;
                     //bill_amount = so_far_payable;
                     console.log(bill_amount);
                 }
                 else {
                     so_far_payable = total_payable - percentage_value;
-                    bill_amount = so_far_payable - up_to_date_approved;
+                    //bill_amount = so_far_payable - up_to_date_approved;
+                     bill_amount = so_far_payable;
                     // bill_amount = so_far_payable;
                 }
                 $('#so_far_payable').val(so_far_payable);

@@ -420,12 +420,19 @@ class AddNewLabTestsController extends AppController
             $this->loadModel('LabActualTests');
             $query = $this->LabActualTests->find();
             $query = $query->select([
+				'id' => 'LabActualTests.id',
                 'rate' => 'LabActualTests.rate',
                 'number_of_test' => $query->func()->sum('LabActualTests.number_of_test'),
                 'lab_test_short_name' => 'LabActualTests.lab_test_short_name',
                 'group_name' => 'lab_test_group.name_en',
                 'test_count' => $query->func()->count('LabActualTests.id')
-            ])->where(['LabActualTests.created_date >=' =>$date_from, 'LabActualTests.created_date <=' => $date_to])
+            ])
+			->where([
+			'LabActualTests.created_date >=' =>$date_from, 
+			'LabActualTests.created_date <=' => $date_to,
+			'LabActualTests.status ' => 1
+			])
+			->order(['LabActualTests.id' => 'ASC'])
                 ->leftJoin('lab_test_group', 'lab_test_group.id=LabActualTests.lab_test_group_id');
             $results = $query->group(['lab_test_list_id'])->hydrate(false)->toArray();
             $this->set(compact('results'));

@@ -1,4 +1,3 @@
-
 <div class="col-md-12" style="margin-top: 20px; padding: 5px; border: 1px solid #eee">
     <?php
         foreach($project_images as $project_image)
@@ -15,15 +14,18 @@
                     </div>
                     <div class="section-details text-center container-fluid">
                         <div class="row">
-                            <div class="col-xs-4">
+                          <div class="col-xs-3">
+                            <?= $project_image['image_caption'] ? $project_image['image_caption'] : "&nbsp"  ?> <span><?= __('Picture Caption'); ?></span>
+                          </div>
+                            <div class="col-xs-3">
                                 <?= date('h:i:s A',$project_image['created_date']) ?> <span><?= __('Picture Capture Time'); ?></span>
                             </div>
-                            <div class="col-xs-4">
+                            <div class="col-xs-3">
                                 <?= date('d/m/Y',$project_image['created_date']) ?> <span><?= __('Picture Capture Date'); ?></span>
                             </div>
-                            <div class="col-xs-4">
+                            <div class="col-xs-3">
                                 <img style="width: 40px;height: 40px" src="<?= $this->request->webroot; ?>img/<?= $project_image['users']['picture'] ?>" alt=""/>
-                                <?= $project_image['users']['name_bn'] ?> <span><?= __('Picture Capture By'); ?></span>
+                                <?= $project_image['users']['name_bn'] ?> <span><?= __('Picture Captured By'); ?></span>
                             </div>
                         </div>
                     </div>
@@ -47,15 +49,18 @@
                     </div>
                     <div class="section-details text-center container-fluid">
                         <div class="row">
-                            <div class="col-xs-4">
-                                <?= date('h:i:s A',$project_video['created_date']) ?> <span><?= __('Picture Capture Time'); ?></span>
+                          <div class="col-xs-3">
+                            <?= $project_video['video_caption'] ? $project_video['video_caption'] : "&nbsp"  ?> <span><?= __('Video Caption'); ?></span>
+                          </div>
+                          <div class="col-xs-3">
+                                <?= date('h:i:s A',$project_video['created_date']) ?> <span><?= __('Video Capture Time'); ?></span>
                             </div>
-                            <div class="col-xs-4">
-                                <?= date('d/m/Y',$project_video['created_date']) ?> <span><?= __('Picture Capture Date'); ?></span>
+                            <div class="col-xs-3">
+                                <?= date('d/m/Y',$project_video['created_date']) ?> <span>Video Capture Date</span>
                             </div>
-                            <div class="col-xs-4">
+                            <div class="col-xs-3">
                                 <img style="width: 40px;height: 40px" src="<?= $this->request->webroot; ?>img/<?= $project_video['users']['picture'] ?>" alt=""/>
-                                <?= $project_video['users']['name_bn'] ?> <span><?= __('Picture Capture By'); ?></span>
+                                <?= $project_video['users']['name_bn'] ?> <span><?= __('Video Captured By'); ?></span>
                             </div>
                         </div>
                     </div>

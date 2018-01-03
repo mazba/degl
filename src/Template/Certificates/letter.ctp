@@ -31,10 +31,10 @@ use Cake\Routing\Router;
     <div class="row">
         <div class="col-sm-12">
             <div class="col-sm-8">
-                <p>Memo No:  <span contenteditable="true">এখানে স্মারক নং লিখুন</span></p>
+                <p>Memo No:  <span contenteditable="true"></span></p>
             </div>
             <div class="col-sm-4">
-                <p style="float: right">Date: <span contenteditable="true"><?= $this->Common->EngToBanglaNum(date('d-m-Y')). ' ইং' ?></span></p>
+                <p style="float: right">Date: <span contenteditable="true"></span></p>
             </div>
         </div>
     </div>
@@ -48,6 +48,7 @@ use Cake\Routing\Router;
         <div class="row">
             <div class="col-sm-12">
                 <table class="table table-bordered show-grid" style="width:100%;">
+
                     <tr>
                         <td colspan="4" style="padding:0px !important; margin:0px !important;">
                             <table class="table table-bordered show-grid" style="width:100%;    margin: 0px;">
@@ -279,17 +280,35 @@ use Cake\Routing\Router;
             </div>
         </div>
         <div class="row">
-            <div style="margin-top: 40px; width: 100% !important;">
+            <div style="margin-top: 50px; width: 100% !important;">
 
-                <img style="padding-left: 20px !important;" src="<?php echo Router::url('/', true) . 'img/qr_code/' . $result['qr_image']; ?>" alt="" height="170px" width="170px">
-
-                <p class="text-center" style="float: right;font-size:15px; padding-right: 20px">
+<table style="width:100%">
+  
+  <tr>
+    <td width="20%" valign="top" style="text-align:center;"> <img style="padding-left: 20px !important;" src="<?php echo Router::url('/', true) . 'img/qr_code/' . $result['qr_image']; ?>" alt="" height="90px" width="100px"> <br/>
+    <span >
+                Authenticity of this page is <br/>
+verifiable from 
+http://www.lgedgazipur.gov.bd <br/>
+With the QR Code.
+    </span>
+</td>
+    <td width="50%" valign="top"><p class="text-center" style="float: right;font-size:15px; padding-right: 20px">
                     Md. Amirul Islam Khan<br>
                     Executive Engineer<br>
                     LGED, Gazipur<br>
                     Phone:9263989, Faz:9264128 <br>
                     Email: xen.gazipur@lged.gov.bd<br>
-                </p>
+                </p></td> 
+   
+  </tr>
+</table>
+               
+
+
+                
+                
+                
             </div>
 
         </div>
@@ -345,7 +364,7 @@ use Cake\Routing\Router;
         .table>tbody>tr>td
         {
             padding: 0px 0px 0px 10px !important;
-            font-size:13px !important;
+            font-size:12px !important;
         }
     </style>
 </div>

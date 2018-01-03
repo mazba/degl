@@ -32,9 +32,6 @@ class LabActualTestsTable extends Table
             'foreignKey' => 'lab_letter_registers_id',
             'joinType' => 'INNER'
         ]);
-        $this->belongsTo('LabTestGroup', [
-            'foreignKey' => 'lab_test_group_id',
-        ]);
     }
 
     /**

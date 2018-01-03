@@ -76,12 +76,12 @@ if(isset($fiscal) && !empty($fiscal)){
                 <div class="col-sm-12">
 				<table style="width:100%">
 				  <tr>
-					<th valign="top">  <div class="col-sm-4">
+					<th valign="top">  <div class="col-sm-8">
                         <p>স্মারক নং - <span contenteditable="true">৪৬.০২.৩৩০০.০০০.১৬.০০৩.১৭/</span></p>
                     </div></th>
 					<th valign="top"><div class="col-sm-offset-4 col-sm-4" >
-                        <p style="float: right">তারিখ: <span contenteditable="true"> লিখুন</span></p>
-                    </div></th> 
+                        <p style="float: right">তারিখ: <span contenteditable="true">লিখুন</span></p>
+                    </div></th>
 				  </tr>
 				  </table>
                   
@@ -143,11 +143,13 @@ if(isset($fiscal) && !empty($fiscal)){
                     </div>
                 </div>
                 <?php endif; if(isset($processRaBills) && !empty($NotFoundProcessRaBills)): ?>
-                    এই মর্মে প্রত্যয়ন করা যাচ্ছে যে, <?= $NotFoundProcessRaBills['contractor_title']?$NotFoundProcessRaBills['contractor_title'].', ':''?>
-                    <?= $NotFoundProcessRaBills['contractor_person_name']?$NotFoundProcessRaBills['contractor_person_name'].', ':''?>
+                <br/>
+                    <span style="line-height: 20px;padding-left:20px;">&nbsp;</span>এই মর্মে প্রত্যয়ন করা যাচ্ছে যে, <?= $NotFoundProcessRaBills['contractor_title']?$NotFoundProcessRaBills['contractor_title'].', ':''?>
+                    <?= $NotFoundProcessRaBills['contact_person_name']?$NotFoundProcessRaBills['contact_person_name'].', ':''?>
                     <?= $NotFoundProcessRaBills['contractor_address']?$NotFoundProcessRaBills['contractor_address']:'' ?>
                     <?= $NotFoundProcessRaBills['tin_no']?'(TIN '.$NotFoundProcessRaBills['tin_no'].' )':''?> থেকে তিনি <?= $fiscal ?>
                     অর্থ বছরে অত্র দপ্তরে কোন উন্নয়ন মূলক কাজ করেন নাই এবং কোন প্রকার বিল পরিশোধ করা হয় নাই।
+                    <br/><br/><br/><br/>
                 <?php endif; ?>
                 <div class="row">
                     <div class="col-sm-12" style="margin-top: 40px;">

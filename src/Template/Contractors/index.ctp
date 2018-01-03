@@ -49,7 +49,7 @@
                     <td><?= h($contractor->contractor_class_title) ?></td>
                     <td><?= h($contractor->contractor_title) ?></td>
                     <td><?= h($contractor->contact_person_name) ?></td>
-                    <td><?= h($contractor->contractor_phone) ?></td>
+                    <td><?= h($contractor->mobile) ?></td>
                     <td><?= h($contractor->contractor_email) ?></td>
                     <td class="actions">
                         <?php

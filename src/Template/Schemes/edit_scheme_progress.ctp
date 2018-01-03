@@ -235,7 +235,7 @@
                 zoomEnabled: false,
                 animationEnabled: true,
                 title:{
-                    text: "Plan vs Reality report"
+                    text: "Curve (Plan vs Work Done)"
                 },
                 axisY2:{
                     valueFormatString:"0",
