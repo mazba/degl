@@ -187,6 +187,7 @@ class SchemesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->add($rules->isUnique('scheme_code'));
         $rules->add($rules->existsIn(['project_id'], 'Projects'));
         $rules->add($rules->existsIn(['package_id'], 'Packages'));
         $rules->add($rules->existsIn(['work_type_id'], 'WorkTypes'));

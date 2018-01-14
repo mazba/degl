@@ -46,89 +46,96 @@ class SchemesController extends AppController {
     if ($this->request->is('post')) {
 
       $data = $this->request->data;
-      //   echo "<pre>";print_r($data);die();
+      $schemeCode = $this->Schemes->exists(['scheme_code' => $data['scheme_code']]);
+      if($schemeCode){
+          $this->Flash->error(__('এই স্কিম কোড ইতিমধ্যে ব্যবহৃত হয়েছে   '));
+      }
+      else{
+          $newspaper = array();
+          for ($i = 0; $i < count($data['newspaper']); $i++) {
+              $newspaper[$i]['name'] = $data['newspaper'][$i];
+              $newspaper[$i]['date'] = $data['publicationdate'][$i];
+          }
+
+          $data['ads_paper'] = json_encode($newspaper);
+          unset($data['newspaper']);
+          unset($data['publicationdate']);
+
+          $data['app_sent'] = strtotime($data['app_sent']);
+          $data['app_approved'] = strtotime($data['app_approved']);
+          $data['noa_date'] = strtotime($data['noa_date']);
+          $data['insurance_date'] = strtotime($data['insurance_date']);
+
+          $data['created_by'] = $user['id'];
+          $data['created_date'] = time();
+
+          $x = strtotime($data['proposed_start_date']);
+          if ($x !== FALSE) {
+              $data['proposed_start_date'] = $x;
+          } else {
+              $data['proposed_start_date'] = '';
+          }
+
+          $x = strtotime($data['contract_date']);
+          if ($x !== FALSE) {
+              $data['contract_date'] = $x;
+          } else {
+              $data['contract_date'] = '';
+          }
+
+          $x = strtotime($data['expected_complete_date']);
+          if ($x !== FALSE) {
+              $data['expected_complete_date'] = $x;
+              $data['completion_date'] = $x;
+          } else {
+              $data['expected_complete_date'] = '';
+          }
+          $x = strtotime($data['actual_start_date']);
+          if ($x !== FALSE) {
+              $data['actual_start_date'] = $x;
+          } else {
+              $data['actual_start_date'] = '';
+          }
+
+          $x = strtotime($data['work_order_date']);
+          if ($x !== FALSE) {
+              $data['work_order_date'] = $x;
+          } else {
+              $data['work_order_date'] = '';
+          }
+          if (isset($data['allotment_date'])) {
+              $data['allotment_date'] = strtotime($data['allotment_date']);
+          }
+          if (isset($data['eve_approval_date'])) {
+              $data['eve_approval_date'] = strtotime($data['eve_approval_date']);
+          }
+          if (isset($data['etender_date'])) {
+              $data['etender_date'] = strtotime($data['etender_date']);
+          }
+          $data['approved'] = 1;
+
+          $scheme = $this->Schemes->patchEntity($scheme, $data);
+       echo "<pre>";print_r($this->Schemes->save($scheme));die();
+//       echo "<pre>";print_r($scheme->errors());die();
+          if ($scheme = $this->Schemes->save($scheme)) {
+
+              if (!empty($data['parent_id'])) {
+                  $this->loadModel('nothi_assigns');
+                  $nothi_data = array();
+                  $nothi_data['nothi_register_id'] = $data['parent_id'];
+                  $nothi_data['scheme_id'] = $scheme['id'];
+                  $new_nothi = $this->nothi_assigns->newEntity();
+                  $nothi = $this->nothi_assigns->patchEntity($new_nothi, $nothi_data);
+                  $this->nothi_assigns->save($nothi);
+              }
+              $this->Flash->success(__('The scheme has been saved.'));
+              return $this->redirect(['action' => 'index']);
+          } else {
+              $this->Flash->error(__('The scheme could not be saved. Please, try again.'));
+          }
+      }
 //
-      $newspaper = array();
-      for ($i = 0; $i < count($data['newspaper']); $i++) {
-        $newspaper[$i]['name'] = $data['newspaper'][$i];
-        $newspaper[$i]['date'] = $data['publicationdate'][$i];
-      }
 
-      $data['ads_paper'] = json_encode($newspaper);
-      unset($data['newspaper']);
-      unset($data['publicationdate']);
-
-      $data['app_sent'] = strtotime($data['app_sent']);
-      $data['app_approved'] = strtotime($data['app_approved']);
-      $data['noa_date'] = strtotime($data['noa_date']);
-      $data['insurance_date'] = strtotime($data['insurance_date']);
-
-      $data['created_by'] = $user['id'];
-      $data['created_date'] = time();
-
-      $x = strtotime($data['proposed_start_date']);
-      if ($x !== FALSE) {
-        $data['proposed_start_date'] = $x;
-      } else {
-        $data['proposed_start_date'] = '';
-      }
-
-      $x = strtotime($data['contract_date']);
-      if ($x !== FALSE) {
-        $data['contract_date'] = $x;
-      } else {
-        $data['contract_date'] = '';
-      }
-
-      $x = strtotime($data['expected_complete_date']);
-      if ($x !== FALSE) {
-        $data['expected_complete_date'] = $x;
-        $data['completion_date'] = $x;
-      } else {
-        $data['expected_complete_date'] = '';
-      }
-      $x = strtotime($data['actual_start_date']);
-      if ($x !== FALSE) {
-        $data['actual_start_date'] = $x;
-      } else {
-        $data['actual_start_date'] = '';
-      }
-
-      $x = strtotime($data['work_order_date']);
-      if ($x !== FALSE) {
-        $data['work_order_date'] = $x;
-      } else {
-        $data['work_order_date'] = '';
-      }
-      if (isset($data['allotment_date'])) {
-        $data['allotment_date'] = strtotime($data['allotment_date']);
-      }
-      if (isset($data['eve_approval_date'])) {
-        $data['eve_approval_date'] = strtotime($data['eve_approval_date']);
-      }
-      if (isset($data['etender_date'])) {
-        $data['etender_date'] = strtotime($data['etender_date']);
-      }
-      $data['approved'] = 1;
-
-      $scheme = $this->Schemes->patchEntity($scheme, $data);
-       //echo "<pre>";print_r($scheme);die();
-      if ($scheme = $this->Schemes->save($scheme)) {
-
-        if (!empty($data['parent_id'])) {
-          $this->loadModel('nothi_assigns');
-          $nothi_data = array();
-          $nothi_data['nothi_register_id'] = $data['parent_id'];
-          $nothi_data['scheme_id'] = $scheme['id'];
-          $new_nothi = $this->nothi_assigns->newEntity();
-          $nothi = $this->nothi_assigns->patchEntity($new_nothi, $nothi_data);
-          $this->nothi_assigns->save($nothi);
-        }
-        $this->Flash->success(__('The scheme has been saved.'));
-        return $this->redirect(['action' => 'index']);
-      } else {
-        $this->Flash->error(__('The scheme could not be saved. Please, try again.'));
-      }
     }
     if ($user['user_group_id'] == 1) {
       $projects = $this->Schemes->Projects->find('list');

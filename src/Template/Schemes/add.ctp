@@ -215,7 +215,7 @@ Configure::load('config_offices', 'default');
                                     ?>
 
                                     <?php
-                                    echo $this->Form->input('pic_flag', ['options' => ['1' => 1, '2' => 2], 'empty' => __('Select')]);
+                                    echo $this->Form->input('pic_flag', ['options' => ['1' => 1, '2' => 2], 'empty' => __('Select'), 'required' => 'required']);
                                     // echo $this->Form->input('proposed_start_date', ['type' => 'text', 'value' => $this->System->display_date($scheme->proposed_start_date), 'class' => 'form-control hasdatepicker']);
                                     //echo $this->Form->input('tender_date', ['type' => 'text', 'value' => $this->System->display_date($scheme->tender_date), 'class' => 'form-control hasdatepicker']);
                                     //echo $this->Form->input('expected_complete_date', ['type' => 'text', 'value' => $this->System->display_date($scheme->expected_complete_date), 'class' => 'form-control hasdatepicker']);
@@ -272,7 +272,7 @@ Configure::load('config_offices', 'default');
                                     <?php
                                     echo $this->Form->input('constituency_no', ['label' => __('Constituency No'), 'type' => 'text']);
                                     echo $this->Form->input('project_id', ['options' => $projects, 'empty' => __('Select'), 'required' => 'required']);
-                                    echo $this->Form->input('name_en', ['label' => __('NAME_EN'), 'type' => 'text']);
+                                    echo $this->Form->input('name_en', ['label' => __('NAME_EN'), 'type' => 'text', 'required' => 'required']);
                                     echo $this->Form->input('package_id', ['options' => $packages, 'empty' => __('Select'), 'required' => 'required']);
 
                                     ?>
