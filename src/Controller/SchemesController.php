@@ -115,8 +115,6 @@ class SchemesController extends AppController {
           $data['approved'] = 1;
 
           $scheme = $this->Schemes->patchEntity($scheme, $data);
-       echo "<pre>";print_r($this->Schemes->save($scheme));die();
-//       echo "<pre>";print_r($scheme->errors());die();
           if ($scheme = $this->Schemes->save($scheme)) {
 
               if (!empty($data['parent_id'])) {

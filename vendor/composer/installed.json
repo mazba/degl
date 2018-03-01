@@ -14,7 +14,7 @@
             "reference": "52f8de3670cc1ef45a916f40f732937436d028c8",
             "shasum": ""
         },
-        "time": "2012-11-26 21:35:57",
+        "time": "2012-11-26T21:35:57+00:00",
         "type": "composer-installer",
         "extra": {
             "class": "Aura\\Composer\\DefaultInstaller"
@@ -61,7 +61,7 @@
             "cakephp/cakephp-codesniffer": "dev-master",
             "composer/composer": "1.0.*@dev"
         },
-        "time": "2015-02-06 02:06:07",
+        "time": "2015-02-06T02:06:07+00:00",
         "type": "composer-installer",
         "extra": {
             "class": "Cake\\Composer\\Installer\\PluginInstaller"
@@ -99,7 +99,7 @@
             "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
             "shasum": ""
         },
-        "time": "2012-12-21 11:40:51",
+        "time": "2012-12-21T11:40:51+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -145,7 +145,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.0"
         },
-        "time": "2014-09-26 02:52:02",
+        "time": "2014-09-26T02:52:02+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -195,7 +195,7 @@
             "johnkary/phpunit-speedtrap": "~1.0@dev",
             "phpunit/phpunit": "*"
         },
-        "time": "2015-04-25 20:10:52",
+        "time": "2015-04-25T20:10:52+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -247,7 +247,7 @@
             "aura/installer-default": "1.0.*",
             "php": ">=5.4.0"
         },
-        "time": "2014-08-24 00:00:00",
+        "time": "2014-08-24T00:00:00+00:00",
         "type": "aura-package",
         "extra": {
             "aura": {
@@ -326,7 +326,7 @@
         "require-dev": {
             "phpunit/phpunit": "4.*"
         },
-        "time": "2014-11-20 16:49:30",
+        "time": "2014-11-20T16:49:30+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -393,7 +393,7 @@
             "cakephp/cakephp-codesniffer": "dev-master",
             "phpunit/phpunit": "*"
         },
-        "time": "2015-05-03 14:53:51",
+        "time": "2015-05-03T14:53:51+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -450,7 +450,7 @@
         "require-dev": {
             "symfony/phpunit-bridge": "~2.7"
         },
-        "time": "2015-03-30 15:54:10",
+        "time": "2015-03-30T15:54:10+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -502,7 +502,7 @@
         "require-dev": {
             "symfony/phpunit-bridge": "~2.7"
         },
-        "time": "2015-03-22 16:55:57",
+        "time": "2015-03-22T16:55:57+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -555,7 +555,7 @@
         "require-dev": {
             "symfony/phpunit-bridge": "~2.7"
         },
-        "time": "2015-03-30 15:54:10",
+        "time": "2015-03-30T15:54:10+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -615,7 +615,7 @@
             "symfony/event-dispatcher": "",
             "symfony/process": ""
         },
-        "time": "2015-03-30 15:54:10",
+        "time": "2015-03-30T15:54:10+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -670,7 +670,7 @@
             "phpunit/phpunit": "3.7.*",
             "squizlabs/php_codesniffer": "dev-phpcs-fixer"
         },
-        "time": "2015-02-23 16:38:12",
+        "time": "2015-02-23T16:38:12+00:00",
         "bin": [
             "bin/phinx"
         ],
@@ -736,7 +736,7 @@
         "suggest": {
             "cakephp/bake": "Required if you want to generate migrations."
         },
-        "time": "2015-04-18 09:36:44",
+        "time": "2015-04-18T09:36:44+00:00",
         "type": "cakephp-plugin",
         "installation-source": "dist",
         "autoload": {
@@ -786,7 +786,7 @@
             "phpunit/phpunit": "3.7.*",
             "squizlabs/php_codesniffer": "1.*"
         },
-        "time": "2014-04-08 15:00:19",
+        "time": "2014-04-08T15:00:19+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -831,7 +831,7 @@
             "phpunit/phpunit": "~4.0",
             "squizlabs/php_codesniffer": "~1.5"
         },
-        "time": "2014-07-14 20:59:35",
+        "time": "2014-07-14T20:59:35+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -872,7 +872,7 @@
         "require-dev": {
             "phpunit/phpunit": "@stable"
         },
-        "time": "2014-10-24 07:27:01",
+        "time": "2014-10-24T07:27:01+00:00",
         "type": "project",
         "installation-source": "dist",
         "autoload": {
@@ -905,7 +905,7 @@
             "ext-tokenizer": "*",
             "php": ">=5.3"
         },
-        "time": "2015-05-02 15:40:40",
+        "time": "2015-05-02T15:40:40+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -967,7 +967,7 @@
             "ext-posix": "If you have PCNTL, you'll want the POSIX extension as well.",
             "ext-readline": "Enables support for arrow-key history navigation, and showing and manipulating command history."
         },
-        "time": "2015-03-26 18:43:54",
+        "time": "2015-03-26T18:43:54+00:00",
         "bin": [
             "bin/psysh"
         ],
@@ -1031,7 +1031,7 @@
         "suggest": {
             "ext-sqlite": "DebugKit needs to store panel data in a database. SQLite is simple and easy to use."
         },
-        "time": "2015-04-26 14:17:35",
+        "time": "2015-04-26T14:17:35+00:00",
         "type": "cakephp-plugin",
         "extra": {
             "branch-alias": {
@@ -1091,7 +1091,7 @@
             "cakephp/cakephp-codesniffer": "dev-master",
             "phpunit/phpunit": "*"
         },
-        "time": "2015-05-05 07:57:21",
+        "time": "2015-05-05T07:57:21+00:00",
         "type": "cakephp-plugin",
         "installation-source": "dist",
         "autoload": {
