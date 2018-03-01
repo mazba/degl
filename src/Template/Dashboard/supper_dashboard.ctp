@@ -77,12 +77,10 @@
                             <div class="panel-heading">
                                 <h6 class="panel-title">
                                     <i class="icon-wand2"></i>
-                                    <?= __('RA Bill Applications') ?>
+                                    <?= __('Task Calendar') ?>
                                 </h6>
                             </div>
-                            <div id="dataTable_application" style="margin-top:5px ">
-
-                            </div>
+                            <div id='calendar'></div>
                         </div>
                     </div>
                 </div>
@@ -92,10 +90,12 @@
                             <div class="panel-heading">
                                 <h6 class="panel-title">
                                     <i class="icon-wand2"></i>
-                                    <?= __('Task Calendar') ?>
+                                    <?= __('RA Bill Applications') ?>
                                 </h6>
                             </div>
-                            <div id='calendar'></div>
+                            <div id="dataTable_application" style="margin-top:5px ">
+
+                            </div>
                         </div>
                     </div>
                 </div>
