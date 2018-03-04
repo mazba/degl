@@ -99,10 +99,10 @@ class AssignVehiclesController extends AppController
 
 
         $vehicleTbl = TableRegistry::get('vehicles')->find('all')
-                    ->where(['office_id' => $user['office_id'],'status'=>1,'vehicle_status'=>'READY']);
+            ->where(['office_id' => $user['office_id'],'status'=>1,'vehicle_status'=>'READY']);
         foreach($vehicleTbl as $vehicle){
             if($vehicle['type']=='vehicles'){
-            $vehicles[$vehicle['id']] = $vehicle['title'].' -'.'('.$vehicle['registration_no'].')';
+                $vehicles[$vehicle['id']] = $vehicle['title'].' -'.'('.$vehicle['registration_no'].')';
             }else{
                 $vehicles[$vehicle['id']] = $vehicle['title'].' -'.'('.$vehicle['equipment_id_no'].')';
             }
@@ -199,5 +199,71 @@ class AssignVehiclesController extends AppController
             return $this->redirect(['controller'=>'Dashboard','action'=>'index']);
         }
 
+    }
+
+
+    // revenue temporary table crud operation
+    public function revenueList(){
+        $this->loadModel('EquipmentRevenues');
+        $revenueLists = $this->EquipmentRevenues->find('all')
+            ->contain(['FinancialYearEstimates'])
+            ->where(['EquipmentRevenues.status' => 1])
+            ->hydrate(false)
+            ->toArray();
+        $this->set(compact('revenueLists'));
+    }
+
+    public function revenueCreate(){
+        $user = $this->Auth->user();
+        $this->loadModel('FinancialYearEstimates');
+        $this->loadModel('EquipmentRevenues');
+        $equipmentRevenues = $this->EquipmentRevenues->newEntity();
+        if($this->request->is(['post'])){
+            $input = $this->request->data;
+            $input['status'] = 1;
+            $input['created_by']= $user['id'];
+            $input['created_date']=time();
+            $equipmentRevenue = $this->EquipmentRevenues->patchEntity($equipmentRevenues, $input);
+            if($this->EquipmentRevenues->save($equipmentRevenue)){
+                $this->Flash->success(__('আপনার তথ্য সংরক্ষণ করা হয়েছে'));
+                return $this->redirect(['action' => 'revenueList']);
+            }else{
+                $this->Flash->error('আপনার তথ্য সংরক্ষণ করা সম্ভব হয় নাই। আবার চেষ্টা করুন');
+            }
+        }
+        $fiscalYears = $this->FinancialYearEstimates->find('list', ['conditions' => ['status !=' => 99]]);
+        $this->set(compact('equipmentRevenues', 'fiscalYears'));
+    }
+
+    public function revenueEdit($id){
+        $this->loadModel('EquipmentRevenues');
+        $this->loadModel('FinancialYearEstimates');
+        $user = $this->Auth->user();
+        $equipmentRevenues = $this->EquipmentRevenues->get($id);
+        if($this->request->is(['post','patch','put'])){
+            $input = $this->request->data;
+            $input['updated_by']= $user['id'];
+            $input['updated_date']=time();
+            $equipmentRevenue = $this->EquipmentRevenues->patchEntity($equipmentRevenues, $input);
+            if($this->EquipmentRevenues->save($equipmentRevenue)){
+                $this->Flash->success(__('আপনার তথ্য সংরক্ষণ করা হয়েছে'));
+                return $this->redirect(['action' => 'revenueList']);
+            }else{
+                $this->Flash->error('আপনার তথ্য সংরক্ষণ করা সম্ভব হয় নাই। আবার চেষ্টা করুন');
+            }
+        }
+        $fiscalYears = $this->FinancialYearEstimates->find('list', ['conditions' => ['status !=' => 99]]);
+        $this->set(compact('equipmentRevenues', 'fiscalYears'));
+    }
+    public function revenueDelete($id){
+        $this->loadModel('EquipmentRevenues');
+        $equipmentRevenues = $this->EquipmentRevenues->get($id);
+        $equipmentRevenues['status'] = 99;
+        if($this->EquipmentRevenues->save($equipmentRevenues)){
+            $this->Flash->success(__('বাতিল করা হয়েছে'));
+            return $this->redirect(['action' => 'revenueList']);
+        }else{
+            $this->Flash->error('বাতিল করা সম্ভব হয় নাই। আবার চেষ্টা করুন');
+        }
     }
 }

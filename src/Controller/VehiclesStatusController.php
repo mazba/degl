@@ -161,33 +161,25 @@ class VehiclesStatusController extends AppController
      */
     public function edit($id = null)
     {
-
+        //pr($id);die;
         $vehiclesStatus = $this->VehiclesStatus->find('all', [
-            'where' => ['VehiclesStatus.vehicle_id ' => $id],
-            'conditions' => ['VehiclesStatus.status ' => 1],
-            'order' => ['id' => 'DESC'],
-        ]);
-        $vehiclesStatus=   $vehiclesStatus->first();
-
-//echo "<pre>";print_r($vehiclesStatus);die();
-//        unset($vehiclesStatus['end_date']);
-//        unset($vehiclesStatus['vehicle_location']);
-//        unset($vehiclesStatus['remark']);
-
-
+            'conditions' => [
+                'VehiclesStatus.vehicle_id' => $id,
+                'VehiclesStatus.status' => 1],
+        ])->first();
         if ($this->request->is(['patch', 'post', 'put'])) {
 
             $data = $this->request->data;
             $data['end_date']=strtotime( $data['end_date']);
 
-
+            //pr($data);die;
             $vehicle = TableRegistry::get('VehiclesStatus');
             $query = $vehicle->query();
             $query->update()
                 ->set(['vehicle_location'=>$data['vehicle_location'],'remark'=>$data['remark'],'end_date'=>$data['end_date'],'status' => 0])
                 ->where(['id' => $data['id']])
                 ->execute();
-
+                //pr($query);die;
             //echo "<pre>";print_r($data);die();
 //            $vehiclesStatus = $this->VehiclesStatus->patchEntity($vehiclesStatus, $data);
 //          echo "<pre>";print_r($vehiclesStatus);die();

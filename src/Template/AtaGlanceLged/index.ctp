@@ -9,9 +9,9 @@
     <h3 class="text-center">
         এক নজরে এলজিইডি এলজিইডি,উন্নয়নমূলক কাজের তথ্যাদি
     </h3>
-    <table class="table table-bordered table-responsive">
+    <table class="table table-bordered table-responsive" style="border: 0 !important; outline: 0px !important;">
         <thead>
-        <tr>
+        <tr style="border: 0 !important;">
             <th>ক্রমিক নং</th>
             <th>কৃত কাজের বিবরণ </th>
             <th>বিবরণ অনুযায়ী জবাব</th>

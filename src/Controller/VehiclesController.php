@@ -419,24 +419,32 @@ class VehiclesController extends AppController
             // Financial year info
             $finalcialYearData = $this->FinancialYearEstimates->find('all')->select(['name'])->where(['id' => $data['financial_year_estimate_id']])->first();
             // hire charges
-            $this->loadModel('HireCharges');
+            /*$this->loadModel('HireCharges');
             $hireChargeQuery = $this->HireCharges->find('all');
             $hireChargeResult = $hireChargeQuery
                 ->select(['total_amount' => $hireChargeQuery->func()->sum('total_amount')])
                 ->where(['financial_year_id' => $data['financial_year_estimate_id'], 'status !=' =>99])
                 ->group('financial_year_id')
+                ->first();*/
+            $this->loadModel('EquipmentRevenues');
+            $income = $this->EquipmentRevenues->find()
+                ->select(['month', 'income', 'expense   '])
+                ->where([
+                    'financial_year_estimate_id' => $data['financial_year_estimate_id'],
+                    'month' => $data['month']
+                ])
                 ->first();
 
             // cost charges
-            $this->loadModel('VehicleServicings');
+            /*$this->loadModel('VehicleServicings');
             $vehicleCostQuery = $this->VehicleServicings->find('all');
             $vehicleCostResult = $vehicleCostQuery
                 ->select(['service_charge' => $vehicleCostQuery->func()->sum('service_charge_approved')])
                 ->where(['financial_year_estimate_id' => $data['financial_year_estimate_id'], 'status !=' =>99])
                 ->group('financial_year_estimate_id')
-                ->first();
+                ->first();*/
 
-            $this->set(compact('mechanical_status','finalcialYearData','hireChargeResult','vehicleCostResult'));
+            $this->set(compact('mechanical_status','finalcialYearData','income'));
         }
         $finalcialYears = $this->FinancialYearEstimates->find('list')->where(['status !='=> 99])->toArray();
         $this->set(compact('finalcialYears'));
