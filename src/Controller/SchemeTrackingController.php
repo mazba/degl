@@ -35,23 +35,27 @@ class SchemeTrackingController extends AppController
                     ->where(['project_id' => $inputs['project_id']])
                     ->hydrate(false)
                     ->toArray();
-                $Project_scheme_ids = array_column($Project_scheme_ids, 'id');
+                if($Project_scheme_ids)
+                    $Project_scheme_ids = array_column($Project_scheme_ids, 'id');
                 // progress id find out
                 $this->loadModel('SchemeProgresses');
-                $progress_value_ids = $this->SchemeProgresses->find()
-                    ->select('scheme_id')
-                    ->where([
-                        'scheme_id IN' => $Project_scheme_ids,
-                        'status' => 1,
-                        'progress_value >' => 0
-                    ])->hydrate(false)->toArray();
-                $progress_value_ids = array_column($progress_value_ids, 'scheme_id');
+                if($Project_scheme_ids)
+                    $progress_value_ids = $this->SchemeProgresses->find()
+                        ->select('scheme_id')
+                        ->where([
+                            'scheme_id IN' => $Project_scheme_ids,
+                            'status' => 1,
+                            'progress_value >' => 0
+                        ])->hydrate(false)->toArray();
+                if($progress_value_ids)
+                    $progress_value_ids = array_column($progress_value_ids, 'scheme_id');
                 // general conditions
                 $start =  date("m/d/Y", strtotime('today - 30 days'));
                 $end =  date("m/d/Y", strtotime('today'));
                 $conditions['Schemes.proposed_start_date >='] = strtotime($start);
                 $conditions['Schemes.proposed_start_date <='] = strtotime($end);
-                $conditions['Schemes.id NOT IN'] = $progress_value_ids;
+                if($progress_value_ids)
+                    $conditions['Schemes.id NOT IN'] = $progress_value_ids;
             }
             if($inputs['type'] == 2){
                 $check = 2;
