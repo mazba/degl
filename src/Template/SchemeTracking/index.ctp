@@ -1,8 +1,10 @@
 <?php
-//pr($proposedStartDates);die;
-//pr($check);die;
+$month = [  '01' => 'January','02' => 'February','03' => 'March','04' => 'April','05' => 'May','06' => 'June','07'=>'July','08'=>'August','09'=>'September','10'=>'October','11'=>'November','12'=>'December'];
+//Date of Commencement Expired +++ প্রত্যাশিত শুরুর তারিখ
+//Performance Guaranty Expired +++ performance security
+//Date of Time Line Expired ++++ প্রত্যাশিত সমাপ্তির তারিখ
 $type = [
-    1 => 'Date of Commencement Expired',
+    1 => 'Work not started within 30 days of Contract',
     2 => 'Performance Guaranty Expired',
     3 => 'Date of Time Line Expired',
 ]
@@ -25,13 +27,16 @@ $type = [
             <div class="row">
                 <?= $this->Form->create(null, ['id' => 'contractor-report']) ?>
                 <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
-                    <?= $this->Form->input('type', ['required'=>'required','options' => $type, 'empty' => __('Select')]) ?>
+                    <?= $this->Form->input('type', ['required'=>'required','options' => $type, 'empty' => __('Select'), 'class' => 'form-control condition-type']) ?>
                 </div>
                 <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
                     <?= $this->Form->input('project_id', ['options' => $projects, 'empty' => __('Select')]) ?>
                 </div>
                 <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
                     <?=  $this->Form->input('financial_year_estimate_id', ['options' => $fiscal,'empty'=>__('Select')]); ?>
+                </div>
+                <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
+                    <?=  $this->Form->input('month_id', ['label' => 'মাস', 'options' => $month,'empty'=>__('Select')]); ?>
                 </div>
 
                 <div class="col-sm-offset-2 col-sm-6" style="margin-top: 15px">
@@ -214,6 +219,15 @@ $type = [
             changeMonth: true,
             changeYear: true,
             yearRange: "-50:+10"
+        });
+
+        $('.condition-type').on('change', function () {
+            var current_status = $(this).find(':selected').val();
+            if(current_status == 1){
+                $('#month-id').closest('.form-group').hide();
+            }else{
+                $('#month-id').closest('.form-group').show();
+            }
         });
     });
 </script>

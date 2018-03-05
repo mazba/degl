@@ -22,7 +22,6 @@ class SchemeTrackingController extends AppController
         if($this->request->is('post')){
 
             $inputs = $this->request->data;
-//            pr($inputs);die;
             $conditions = [
                 'Schemes.status' => 1,
             ];
@@ -30,19 +29,48 @@ class SchemeTrackingController extends AppController
             // specific condition
             if($inputs['type'] == 1){
                 $check = 1;
-                $lastMonth =  date("m/d/Y", strtotime("last month"));
-                $conditions['Schemes.proposed_start_date <='] = strtotime($lastMonth);
+                // scheme id find out
+                $Project_scheme_ids = $this->Schemes->find()
+                    ->select(['id'])
+                    ->where(['project_id' => $inputs['project_id']])
+                    ->hydrate(false)
+                    ->toArray();
+                $Project_scheme_ids = array_column($Project_scheme_ids, 'id');
+                // progress id find out
+                $this->loadModel('SchemeProgresses');
+                $progress_value_ids = $this->SchemeProgresses->find()
+                    ->select('scheme_id')
+                    ->where([
+                        'scheme_id IN' => $Project_scheme_ids,
+                        'status' => 1,
+                        'progress_value >' => 0
+                    ])->hydrate(false)->toArray();
+                $progress_value_ids = array_column($progress_value_ids, 'scheme_id');
+                // general conditions
+                $start =  date("m/d/Y", strtotime('today - 30 days'));
+                $end =  date("m/d/Y", strtotime('today'));
+                $conditions['Schemes.proposed_start_date >='] = strtotime($start);
+                $conditions['Schemes.proposed_start_date <='] = strtotime($end);
+                $conditions['Schemes.id NOT IN'] = $progress_value_ids;
             }
             if($inputs['type'] == 2){
                 $check = 2;
-                $today =  date("m/d/Y", strtotime("today"));
-                $conditions['scheme_payorders.expire_date <'] = strtotime($today);
+                if(isset($inputs['month_id']) && !empty($inputs['month_id'])) {
+                    $start = date("Y-" . $inputs['month_id'] . "-01");
+                    $end = date("Y-" . $inputs['month_id'] . "-t");
+                    $conditions['scheme_payorders.expire_date >='] = strtotime($start);
+                    $conditions['scheme_payorders.expire_date <='] = strtotime($end);
+                }
             }
 
             if($inputs['type'] == 3){
                 $check = 3;
-                $today =  date("m/d/Y", strtotime("today"));
-                $conditions['Schemes.expected_complete_date <='] = strtotime($today);
+                if(isset($inputs['month_id']) && !empty($inputs['month_id'])){
+                    $start = date("Y-".$inputs['month_id']."-01");
+                    $end =  date("Y-".$inputs['month_id']."-t");
+                    $conditions['Schemes.expected_complete_date >='] = strtotime($start);
+                    $conditions['Schemes.expected_complete_date <='] = strtotime($end);
+                }
             }
             // global conditions
             if(!empty($inputs['project_id'])){
