@@ -566,15 +566,13 @@ class MyFilesController extends AppController
                     $arr['action'] = $arr['action'] . '&nbsp;<span class="label label-danger">N</span>';
                 }
 
-
                 $arr['subject'] = $query['subject'];
+                $arr['media'] = $query['letter_media'];
                 $arr['created_date'] = date('d/m/Y', $query['created_date']);
                 $arr['sender_name'] = (($query['is_out_side'] == 1) ? $query['sender_name'] : $query['users']['name_en']);
                 $arr['sender_designation'] = (($query['is_out_side'] == 1) ? $query['sender_designation'] : $query['designations']['name_en']);
                 $my_files[] = $arr;
             }
-
-
             $this->response->body(json_encode($my_files));
             return $this->response;
         }
