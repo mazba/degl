@@ -104,20 +104,6 @@ use Cake\Core\Configure;
             </div>
         </div>
 
-        <div class="form-group input">
-            <label class="col-sm-3 control-label text-right"><?= __('Guard File') ?></label>
-
-            <div class="col-sm-9 container_description">
-                <input type="checkbox" name="is_guard_file" value="1">
-            </div>
-        </div>
-        <div class="form-group input">
-            <label class="col-sm-3 control-label text-right"><?= __('Resolution File') ?></label>
-
-            <div class="col-sm-9 container_description">
-                <input type="checkbox" name="is_resolution" value="1">
-            </div>
-        </div>
 
     </div>
     <div class="panel-body col-sm-6">
@@ -192,13 +178,7 @@ use Cake\Core\Configure;
         <?php
         echo $this->Form->input('number_of_pages', ['value' => 1]);
         ?>
-        <div class="form-group input">
-            <label class="col-sm-3 control-label text-right"><?= __('Attach File(s)') ?></label>
 
-            <div class="col-sm-9 container_attached_files">
-                <input type="file" name="attachments[]" multiple>
-            </div>
-        </div>
 
         <?= $this->Form->input('nothi_register_id',['options'=>$nothi,'empty'=>'Select Nothi']); ?>
     </div>
@@ -208,6 +188,15 @@ use Cake\Core\Configure;
 
             <div class="col-sm-11 container_description" style="width: 87.667%;">
                 <textarea name="description" id="ckeditor" cols="30" rows="10"><?= $letterIssueRegister->description; ?></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body col-sm-12">
+        <div class="form-group input">
+            <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('Summery') ?></label>
+
+            <div class="col-sm-11 container_summery" style="width: 87.667%;">
+                <textarea name="letter_summery" id="ckeditor2" cols="15" rows="5"><?= $letterIssueRegister->letter_summery; ?></textarea>
             </div>
         </div>
     </div>
@@ -252,6 +241,7 @@ use Cake\Core\Configure;
     });
 
     CKEDITOR.replace('ckeditor');
+    CKEDITOR.replace('ckeditor2');
 </script>
 
 
