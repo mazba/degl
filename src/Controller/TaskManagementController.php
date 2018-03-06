@@ -153,19 +153,47 @@ class TaskManagementController extends AppController
     public function complete($id = null)
     {
         $user = $this->Auth->user();
+        $this->loadModel('MessageRegisters');
+        $this->loadModel('VehicleHireLetterRegisters');
+        $this->loadModel('LabLetterRegisters');
         //check the user have the task
         $task = $this->TaskManagement->find('all', [
             'contain' => [],
-            'conditions' => ['user_id' => $user['id'], 'id' => $id]
+            'conditions' => ['id' => $id]
         ])
             ->first();
+        $receive_file_register_id = $task['receive_file_register_id'];
+        $temp = 0;
         if ($task) {
             // do complete
-            $data['updated_by'] = $user['id'];
+            /*$data['updated_by'] = $user['id'];
             $data['updated_date'] = time();
             $data['status'] = 0;
-            $taskManagement = $this->TaskManagement->patchEntity($task, $data);
-            if ($this->TaskManagement->save($taskManagement)) {
+            $taskManagement = $this->TaskManagement->patchEntity($task, $data);*/
+
+            // task table update
+            $this->TaskManagement->updateAll(
+                ['status' => 0],
+                ['receive_file_register_id' => $receive_file_register_id]
+            );
+            // message register
+            $this->MessageRegisters->updateAll(
+                ['status' => 0],
+                ['receive_file_register_id' => $receive_file_register_id]
+            );
+            // vehicle hire letter register
+            $this->VehicleHireLetterRegisters->updateAll(
+                ['status' => 0],
+                ['receive_file_register_id' => $receive_file_register_id]
+            );
+            // lab letter register
+            $this->LabLetterRegisters->updateAll(
+                ['status' => 0],
+                ['receive_file_register_id' => $receive_file_register_id]
+            );
+            // redirect
+            $temp = 1;
+            if($temp == 1){
                 $this->Flash->success(__('The task management has been saved.'));
                 return $this->redirect($this->referer());
             } else {
@@ -197,47 +225,47 @@ class TaskManagementController extends AppController
                 $arr['title'] = $query['title'];
                 $arr['media_type'] = $query['media_type'];
                 if ($query['priority'] == 'High') {
-                   $arr['priority']='<span class="label label-danger">'.__("High").'</span>';
+                    $arr['priority']='<span class="label label-danger">'.__("High").'</span>';
                 } elseif ($query['priority'] == 'Medium') {
                     $arr['priority']='<span class="label label-warning">'.__("Medium").'</span>';
                 } else {
                     $arr['priority']='<span class="label label-info">'.__("Normal").'</span>';
                 }
 
-                    $time_now = time();
-                    $start_time = $query['start_date_time'];
-                    $diff = '';
-                    if ($start_time > $time_now) {
-                        $datetime1 = new \DateTime();
-                        $datetime2 = new \DateTime(date('d-m-Y H:i:s', $start_time));
-                        $interval = $datetime1->diff($datetime2);
+                $time_now = time();
+                $start_time = $query['start_date_time'];
+                $diff = '';
+                if ($start_time > $time_now) {
+                    $datetime1 = new \DateTime();
+                    $datetime2 = new \DateTime(date('d-m-Y H:i:s', $start_time));
+                    $interval = $datetime1->diff($datetime2);
 
-                        if ($interval->m) {
-                            $diff .= $interval->m . ' Months ';
-                        }
-                        if ($interval->d) {
-                            $diff .= $interval->d . ' Days ';
-                        }
-                        if ($interval->h) {
-                            $diff .= $interval->h . ' Hours ';
-                        }
-                        if ($interval->i) {
-                            $diff .= $interval->i . ' Minutes';
-                        }
-                        $arr['diff'] = '<i class="icon-clock"></i><strong class="text-danger"> '.$diff.'</strong>';
-
-                    } else {
-                        $arr['diff'] = "<span class='label label-danger'>". __('Pending') ."</span>";
+                    if ($interval->m) {
+                        $diff .= $interval->m . ' Months ';
                     }
-                    $arr['venue'] = $query['venue'];
-                    $arr['created_date'] = date('d/m/Y',$query['created_date']);
-                    $my_tasks[] = $arr;
+                    if ($interval->d) {
+                        $diff .= $interval->d . ' Days ';
+                    }
+                    if ($interval->h) {
+                        $diff .= $interval->h . ' Hours ';
+                    }
+                    if ($interval->i) {
+                        $diff .= $interval->i . ' Minutes';
+                    }
+                    $arr['diff'] = '<i class="icon-clock"></i><strong class="text-danger"> '.$diff.'</strong>';
+
+                } else {
+                    $arr['diff'] = "<span class='label label-danger'>". __('Pending') ."</span>";
                 }
-
-
-                $this->response->body(json_encode($my_tasks));
-                return $this->response;
+                $arr['venue'] = $query['venue'];
+                $arr['created_date'] = date('d/m/Y',$query['created_date']);
+                $my_tasks[] = $arr;
             }
+
+
+            $this->response->body(json_encode($my_tasks));
+            return $this->response;
+        }
 
         if($action=='get_my_calendar_task_data'){
 
@@ -247,7 +275,7 @@ class TaskManagementController extends AppController
             ]);
 
             $result=[];
-$i=0;
+            $i=0;
             foreach($querys as $key=>$row){
                 if($row['start_date_time'] != $row['end_date_time']) {
 
@@ -295,6 +323,6 @@ $i=0;
 
 
 
-        }
-
     }
+
+}

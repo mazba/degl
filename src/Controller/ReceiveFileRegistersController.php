@@ -150,6 +150,7 @@ class ReceiveFileRegistersController extends AppController
                     }
 
                     $message_register_data['resource_id'] = $status['id'];
+                    $message_register_data['receive_file_register_id'] = $status['id'];
                     $message_register_data['attachment_type'] = Configure::read('attachment_type.4');
                     $message_register_data['created_date'] = time();
                     $message_register_data['created_by'] = $user['id'];

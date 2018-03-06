@@ -234,6 +234,223 @@ if(isset($schemes)){
                                             </tr>
                                             </tbody>
 
+
+                                            <!--UPHCSDP-->
+
+                                                <?php elseif($project['id'] == 17): ?>
+                                                    <thead>
+                                                    <tr>
+                                                        <th >Sl. No.</th>
+                                                        <th >Package No.</th>
+                                                        <th >Name of scheme</th>
+                                                        <th > Estimated Cost </th>
+                                                        <th >Name of Contractor</th>
+                                                        <th >Contract Amount</th>
+                                                        <th >Date of Contract</th>
+                                                        <th >Date of Completion</th>
+                                                        <th >Physical Progress (%)</th>
+                                                        <th >Payment (tk.)</th>
+                                                        <th >Remarks</th>
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                    <?php $estimated_cost =0;
+                                                    $contract_amount =0;
+                                                    $payment_road =0;
+                                                    foreach($schemes as $key => $scheme):
+                                                        $estimated_cost += $scheme['estimated_cost'];
+                                                        $contract_amount += $scheme['contract_amount'];
+                                                        $payment_road += $scheme['payment_road'];
+                                                        ?>
+                                                        <tr class="custom-table-width">
+                                                            <td><?= ++$key?></td>
+                                                            <td><?= $scheme['package_name']?></td>
+                                                            <td><p style="width:350px;"><?= $scheme['scheme_name']?></p></td>
+                                                            <td><?= $scheme['estimated_cost']?></td>
+                                                            <td><?= $scheme['contractor_title']?></td>
+                                                            <td><?= $scheme['contract_amount']?></td>
+                                                            <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
+                                                            <td><?= date('d-m-Y', $scheme['completion_date'])?></td>
+                                                            <td><?= $scheme['physical_progress']?></td>
+                                                            <td><?= $scheme['payment_road']?></td>
+                                                            <th><p contenteditable="true">&nbsp;</p></th>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                    <tr>
+                                                        <td>Total</td>
+                                                        <td colspan="2"></td>
+                                                        <td><?= $estimated_cost ?></td>
+                                                        <td colspan="1"></td>
+                                                        <td><?= $contract_amount ?></td>
+                                                        <td colspan="3"></td>
+                                                        <td><?= $payment_road ?></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    </tbody>
+
+                                            <!--LBC-->
+
+                                                <?php elseif($project['id'] == 6): ?>
+                                                    <thead>
+                                                    <tr>
+                                                        <th >Sl. No.</th>
+                                                        <th >Package No.</th>
+                                                        <th >Name of scheme</th>
+                                                        <th > Estimated Cost </th>
+                                                        <th >Name of Contractor</th>
+                                                        <th >Contract Amount</th>
+                                                        <th >Date of Contract</th>
+                                                        <th >Date of Completion</th>
+                                                        <th >Physical Progress (%)</th>
+                                                        <th >Payment (tk.)</th>
+                                                        <th >Remarks</th>
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                    <?php $estimated_cost =0;
+                                                    $contract_amount =0;
+                                                    $payment_road =0;
+                                                    foreach($schemes as $key => $scheme):
+                                                        $estimated_cost += $scheme['estimated_cost'];
+                                                        $contract_amount += $scheme['contract_amount'];
+                                                        $payment_road += $scheme['payment_road'];
+                                                        ?>
+                                                        <tr class="custom-table-width">
+                                                            <td><?= ++$key?></td>
+                                                            <td><?= $scheme['package_name']?></td>
+                                                            <td><p style="width:350px;"><?= $scheme['scheme_name']?></p></td>
+                                                            <td><?= $scheme['estimated_cost']?></td>
+                                                            <td><?= $scheme['contractor_title']?></td>
+                                                            <td><?= $scheme['contract_amount']?></td>
+                                                            <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
+                                                            <td><?= date('d-m-Y', $scheme['completion_date'])?></td>
+                                                            <td><?= $scheme['physical_progress']?></td>
+                                                            <td><?= $scheme['payment_road']?></td>
+                                                            <th><p contenteditable="true">&nbsp;</p></th>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                    <tr>
+                                                        <td>Total</td>
+                                                        <td colspan="2"></td>
+                                                        <td><?= $estimated_cost ?></td>
+                                                        <td colspan="1"></td>
+                                                        <td><?= $contract_amount ?></td>
+                                                        <td colspan="3"></td>
+                                                        <td><?= $payment_road ?></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    </tbody>
+
+                                            <!--PSSWRDP-->
+
+                                                <?php elseif($project['id'] == 16): ?>
+                                                    <thead>
+                                                    <tr>
+                                                        <th >Sl. No.</th>
+                                                        <th >Package No.</th>
+                                                        <th >Name of scheme</th>
+                                                        <th > Estimated Cost </th>
+                                                        <th >Name of Contractor</th>
+                                                        <th >Contract Amount</th>
+                                                        <th >Date of Contract</th>
+                                                        <th >Date of Completion</th>
+                                                        <th >Physical Progress (%)</th>
+                                                        <th >Payment (tk.)</th>
+                                                        <th >Remarks</th>
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                    <?php $estimated_cost =0;
+                                                    $contract_amount =0;
+                                                    $payment_road =0;
+                                                    foreach($schemes as $key => $scheme):
+                                                        $estimated_cost += $scheme['estimated_cost'];
+                                                        $contract_amount += $scheme['contract_amount'];
+                                                        $payment_road += $scheme['payment_road'];
+                                                        ?>
+                                                        <tr class="custom-table-width">
+                                                            <td><?= ++$key?></td>
+                                                            <td><?= $scheme['package_name']?></td>
+                                                            <td><p style="width:350px;"><?= $scheme['scheme_name']?></p></td>
+                                                            <td><?= $scheme['estimated_cost']?></td>
+                                                            <td><?= $scheme['contractor_title']?></td>
+                                                            <td><?= $scheme['contract_amount']?></td>
+                                                            <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
+                                                            <td><?= date('d-m-Y', $scheme['completion_date'])?></td>
+                                                            <td><?= $scheme['physical_progress']?></td>
+                                                            <td><?= $scheme['payment_road']?></td>
+                                                            <th><p contenteditable="true">&nbsp;</p></th>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                    <tr>
+                                                        <td>Total</td>
+                                                        <td colspan="2"></td>
+                                                        <td><?= $estimated_cost ?></td>
+                                                        <td colspan="1"></td>
+                                                        <td><?= $contract_amount ?></td>
+                                                        <td colspan="3"></td>
+                                                        <td><?= $payment_road ?></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    </tbody>
+
+                                            <!--PTI-->
+
+                                                <?php elseif($project['id'] == 18): ?>
+                                                    <thead>
+                                                    <tr>
+                                                        <th >Sl. No.</th>
+                                                        <th >Package No.</th>
+                                                        <th >Name of scheme</th>
+                                                        <th > Estimated Cost </th>
+                                                        <th >Name of Contractor</th>
+                                                        <th >Contract Amount</th>
+                                                        <th >Date of Contract</th>
+                                                        <th >Date of Completion</th>
+                                                        <th >Physical Progress (%)</th>
+                                                        <th >Payment (tk.)</th>
+                                                        <th >Remarks</th>
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                    <?php $estimated_cost =0;
+                                                    $contract_amount =0;
+                                                    $payment_road =0;
+                                                    foreach($schemes as $key => $scheme):
+                                                        $estimated_cost += $scheme['estimated_cost'];
+                                                        $contract_amount += $scheme['contract_amount'];
+                                                        $payment_road += $scheme['payment_road'];
+                                                        ?>
+                                                        <tr class="custom-table-width">
+                                                            <td><?= ++$key?></td>
+                                                            <td><?= $scheme['package_name']?></td>
+                                                            <td><p style="width:350px;"><?= $scheme['scheme_name']?></p></td>
+                                                            <td><?= $scheme['estimated_cost']?></td>
+                                                            <td><?= $scheme['contractor_title']?></td>
+                                                            <td><?= $scheme['contract_amount']?></td>
+                                                            <td><?= date('d-m-Y', $scheme['contract_date'])?></td>
+                                                            <td><?= date('d-m-Y', $scheme['completion_date'])?></td>
+                                                            <td><?= $scheme['physical_progress']?></td>
+                                                            <td><?= $scheme['payment_road']?></td>
+                                                            <th><p contenteditable="true">&nbsp;</p></th>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                    <tr>
+                                                        <td>Total</td>
+                                                        <td colspan="2"></td>
+                                                        <td><?= $estimated_cost ?></td>
+                                                        <td colspan="1"></td>
+                                                        <td><?= $contract_amount ?></td>
+                                                        <td colspan="3"></td>
+                                                        <td><?= $payment_road ?></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    </tbody>
+
                                             <!--NATA-->
 
                                         <?php elseif($project['id'] == 22): ?>
