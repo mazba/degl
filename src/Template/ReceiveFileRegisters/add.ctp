@@ -1,6 +1,7 @@
 <?php
 use Cake\Core\Configure;
 Configure::load('config_receive_file_registers', 'default');
+$letter_medium = Configure::read('letter_medium');
 ?>
 <div class="breadcrumb-line">
     <ul class="breadcrumb">
@@ -41,7 +42,7 @@ Configure::load('config_receive_file_registers', 'default');
                 <textarea name="description" id="ckeditor"></textarea>
             </div>
         </div>
-        <?= $this->Form->input('letter_media'); ?>
+        <?= $this->Form->input('letter_media', ['options' => $letter_medium, 'empty' => 'নির্বাচন করুন', 'required' => 'required']); ?>
         <div class="form-group input">
             <label class="col-sm-3 control-label text-right"><?= __('Attach File(s)') ?></label>
             <div class="col-sm-9 container_attached_files">

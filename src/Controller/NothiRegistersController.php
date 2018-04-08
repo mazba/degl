@@ -161,7 +161,13 @@ class NothiRegistersController extends AppController
                 ->order(['ReceiveFileRegisters.created_date' => 'asc'])
 //                ->hydrate(false)
                 ->toArray();
-//            pr($querys_data);die;
+            //pr($id);die;
+            $this->loadModel('LetterIssueRegisters');
+            $letterIssueRegisters = $this->LetterIssueRegisters->find()
+                ->where(['nothi_register_id' => $id, 'status' => 1])
+                ->hydrate(false)
+                ->toArray();
+            $this->set(compact('letterIssueRegisters'));
         }
 
         $nothi_related_project=$this->NothiAssigns->find('all')

@@ -145,8 +145,12 @@ class ReceiveFileRegistersController extends AppController
                     if (isset($inputs['description'])) {
                         $message_register_data['message_text'] = $inputs['description'];
                     }
+                    if (isset($inputs['letter_media'])) {
+                        $message_register_data['letter_media'] = $inputs['letter_media'];
+                    }
 
                     $message_register_data['resource_id'] = $status['id'];
+                    $message_register_data['receive_file_register_id'] = $status['id'];
                     $message_register_data['attachment_type'] = Configure::read('attachment_type.4');
                     $message_register_data['created_date'] = time();
                     $message_register_data['created_by'] = $user['id'];

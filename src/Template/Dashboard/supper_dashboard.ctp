@@ -188,6 +188,7 @@
             dataFields: [
                 {name: 'id', type: 'int'},
                 {name: 'sender_name', type: 'string'},
+                {name: 'media', type: 'string'},
                 {name: 'subject', type: 'string'},
                 {name: 'sender_designation', type: 'string'},
                 {name: 'created_date', type: 'string'},
@@ -213,11 +214,12 @@
                 altrows: true,
                 autoheight: true,
                 columns: [
-                    {text: '<?= __('Sender Name') ?>', dataField: 'sender_name', width: '20%'},
-                    {text: '<?= __('Sender Designation') ?>', dataField: 'sender_designation', width: '10%'},
-                    {text: '<?= __('Subject') ?>', dataField: 'subject', width: '35%'},
-                    {text: '<?= __('Date') ?>', dataField: 'created_date', width: '15%'},
-                    {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '20%'}
+                    {text: '<?= __('Sender Name') ?>', dataField: 'sender_name', width: '18%'},
+                    {text: '<?= __('Sender Designation') ?>', dataField: 'sender_designation', width: '9%'},
+                    {text: '<?= __('মাধ্যম') ?>', dataField: 'media', width: '10%'},
+                    {text: '<?= __('Subject') ?>', dataField: 'subject', width: '33%'},
+                    {text: '<?= __('Date') ?>', dataField: 'created_date', width: '13%'},
+                    {text: '<?= __('Actions') ?>', cellsalign: 'center', dataField: 'action', width: '17%'}
                 ]
             });
 

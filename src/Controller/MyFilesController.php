@@ -539,7 +539,7 @@ class MyFilesController extends AppController
             $querys = $this->MessageRegisters->find()
                 ->autoFields(true)
                 ->select(['designations.name_en', 'users.name_en'])
-                ->where(['MessageRegisters.attachment_type' => Configure::read('attachment_type.4')])
+                ->where(['MessageRegisters.attachment_type' => Configure::read('attachment_type.4'), 'MessageRegisters.status' => 1])
                 ->leftJoin('recipients', 'recipients.message_register_id=MessageRegisters.id')
                 ->where(['recipients.user_id' => $user_id])
                 ->leftJoin('users', 'users.id=MessageRegisters.sender_id')
@@ -566,15 +566,13 @@ class MyFilesController extends AppController
                     $arr['action'] = $arr['action'] . '&nbsp;<span class="label label-danger">N</span>';
                 }
 
-
                 $arr['subject'] = $query['subject'];
+                $arr['media'] = $query['letter_media'];
                 $arr['created_date'] = date('d/m/Y', $query['created_date']);
                 $arr['sender_name'] = (($query['is_out_side'] == 1) ? $query['sender_name'] : $query['users']['name_en']);
                 $arr['sender_designation'] = (($query['is_out_side'] == 1) ? $query['sender_designation'] : $query['designations']['name_en']);
                 $my_files[] = $arr;
             }
-
-
             $this->response->body(json_encode($my_files));
             return $this->response;
         }
@@ -588,13 +586,11 @@ class MyFilesController extends AppController
             $user = $this->Auth->user();
             $this->loadModel('MessageRegisters');
             $my_file = $this->MessageRegisters->get($id);
-
             $forward['is_forward'] = 1;
             $file_forward = $this->MessageRegisters->patchEntity($my_file, $forward);
             $this->MessageRegisters->save($file_forward);
 
             $inputs = $this->request->data;
-            //pr($inputs);die;
             $this->loadModel('ReceiveFileRegisters');
             $receive_file_register_id = $this->ReceiveFileRegisters->get($inputs['receive_file_register_id']);
 //            pr($receive_file_register_id['sarok_no']);die;
@@ -625,6 +621,7 @@ class MyFilesController extends AppController
                         $vehicle['work_description'] = $my_file['work_description'];
                     }
 
+                    $vehicle['receive_file_register_id'] = $my_file['receive_file_register_id'];
                     $vehicle['created_by'] = $user['id'];
                     $vehicle['created_date'] = time();
                     $vehicle['status'] = 1;
@@ -653,7 +650,7 @@ class MyFilesController extends AppController
                     if (!empty($my_file['work_description'])) {
                         $lab['work_description'] = $my_file['work_description'];
                     }
-
+                    $lab['receive_file_register_id'] = $my_file['receive_file_register_id'];
                     $lab['created_by'] = $user['id'];
                     $lab['created_date'] = time();
                     $lab['status'] = 1;
@@ -667,6 +664,7 @@ class MyFilesController extends AppController
             }
 
             if (isset($inputs['individual_msg'])) {
+                $arr['receive_file_register_id'] = $my_file['receive_file_register_id'];
                 $arr['sender_id'] = $user['id'];
                 $arr['subject'] = $inputs['subject'];
                 $arr['msg_type'] = "individual";
@@ -738,7 +736,7 @@ class MyFilesController extends AppController
             } else {
                 $data['thread_id'] = $my_file['resource_id'];
             }
-
+            $data['receive_file_register_id'] = $my_file['receive_file_register_id'];
             $data['status'] = 1;
 
             if (isset($inputs['reply_deadline'])) {
@@ -825,6 +823,7 @@ class MyFilesController extends AppController
                             }
                         }
                     }
+                    $task_data['receive_file_register_id'] = $my_file['receive_file_register_id'];
                     $task_data['status'] = 1;
                     $task_data['created_date'] = time();
                     $task_data['created_by'] = $user['id'];

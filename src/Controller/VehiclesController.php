@@ -20,7 +20,8 @@ class VehiclesController extends AppController
      */
     public function index()
     {
-
+            $user = $this->Auth->user();
+            //pr($user);die;
     }
 
     /**
@@ -132,6 +133,7 @@ class VehiclesController extends AppController
                 $vehicles = $this->Vehicles->find('all', [
                     'conditions' => ['Vehicles.status' => 1, 'Vehicles.office_id' => $user['office_id']]
                 ])->toArray();
+                //pr($vehicles);die;
             }
             foreach ($vehicles as &$vehicle) {
                 if ($vehicle['type'] != 'vehicles') {
@@ -289,6 +291,7 @@ class VehiclesController extends AppController
                     'equipment_type' => 'vt',
                     'equipment_engine_capacity' => '3.5',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active vt roller 7
@@ -300,6 +303,7 @@ class VehiclesController extends AppController
                     'equipment_type' => 'vt',
                     'equipment_engine_capacity' => '7',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active static roller 8-10
@@ -311,6 +315,7 @@ class VehiclesController extends AppController
                     'equipment_type' => 'static',
                     'equipment_engine_capacity' => '8-10',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active Tyre roller
@@ -321,6 +326,7 @@ class VehiclesController extends AppController
                     'type' => 'equipments',
                     'equipment_type' => 'tyre',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // deactivate Tyre roller
@@ -331,6 +337,7 @@ class VehiclesController extends AppController
                     'type' => 'equipments',
                     'equipment_type' => 'vt',
                     'vehicle_status ' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             $static_roller_damage = $this->vehicles->find()->select([
@@ -340,6 +347,7 @@ class VehiclesController extends AppController
                     'type' => 'equipments',
                     'equipment_type' => 'static',
                     'vehicle_status' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active vehicle zip
@@ -350,6 +358,7 @@ class VehiclesController extends AppController
                     'type' => 'vehicles',
                     'vehicle_type' => 'zip',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active vehicle pickup
@@ -360,6 +369,7 @@ class VehiclesController extends AppController
                     'type' => 'vehicles',
                     'vehicle_type' => 'pickup',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active Motor cycle
@@ -370,6 +380,7 @@ class VehiclesController extends AppController
                     'type' => 'vehicles',
                     'vehicle_type' => 'motorcycle',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active vehicle truck
@@ -380,6 +391,7 @@ class VehiclesController extends AppController
                     'type' => 'vehicles',
                     'vehicle_type' => 'truck',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active vehicle clunker
@@ -390,6 +402,7 @@ class VehiclesController extends AppController
                     'type' => 'vehicles',
                     'vehicle_type' => 'clunker',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // deactivated vehicle clunker
@@ -399,6 +412,7 @@ class VehiclesController extends AppController
                 ->where([
                     'type' => 'vehicles',
                     'vehicle_status ' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             $mechanical_status = [
@@ -419,24 +433,32 @@ class VehiclesController extends AppController
             // Financial year info
             $finalcialYearData = $this->FinancialYearEstimates->find('all')->select(['name'])->where(['id' => $data['financial_year_estimate_id']])->first();
             // hire charges
-            $this->loadModel('HireCharges');
+            /*$this->loadModel('HireCharges');
             $hireChargeQuery = $this->HireCharges->find('all');
             $hireChargeResult = $hireChargeQuery
                 ->select(['total_amount' => $hireChargeQuery->func()->sum('total_amount')])
                 ->where(['financial_year_id' => $data['financial_year_estimate_id'], 'status !=' =>99])
                 ->group('financial_year_id')
+                ->first();*/
+            $this->loadModel('EquipmentRevenues');
+            $income = $this->EquipmentRevenues->find()
+                ->select(['month', 'income', 'expense   '])
+                ->where([
+                    'financial_year_estimate_id' => $data['financial_year_estimate_id'],
+                    'month' => $data['month']
+                ])
                 ->first();
 
             // cost charges
-            $this->loadModel('VehicleServicings');
+            /*$this->loadModel('VehicleServicings');
             $vehicleCostQuery = $this->VehicleServicings->find('all');
             $vehicleCostResult = $vehicleCostQuery
                 ->select(['service_charge' => $vehicleCostQuery->func()->sum('service_charge_approved')])
                 ->where(['financial_year_estimate_id' => $data['financial_year_estimate_id'], 'status !=' =>99])
                 ->group('financial_year_estimate_id')
-                ->first();
+                ->first();*/
 
-            $this->set(compact('mechanical_status','finalcialYearData','hireChargeResult','vehicleCostResult'));
+            $this->set(compact('mechanical_status','finalcialYearData','income'));
         }
         $finalcialYears = $this->FinancialYearEstimates->find('list')->where(['status !='=> 99])->toArray();
         $this->set(compact('finalcialYears'));

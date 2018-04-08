@@ -67,20 +67,20 @@ Configure::load('config_receive_file_registers', 'default');
             </div>
         </div>
 
-        <div class="form-group input">
-            <label class="col-sm-3 control-label text-right"><?= __('Guard File') ?></label>
+        <!--<div class="form-group input">
+            <label class="col-sm-3 control-label text-right"><?/*= __('Guard File') */?></label>
 
             <div class="col-sm-9 container_description">
                 <input type="checkbox" name="is_guard_file" value="1">
             </div>
         </div>
         <div class="form-group input">
-            <label class="col-sm-3 control-label text-right"><?= __('Resolution File') ?></label>
+            <label class="col-sm-3 control-label text-right"><?/*= __('Resolution File') */?></label>
 
             <div class="col-sm-9 container_description">
                 <input type="checkbox" name="is_resolution" value="1">
             </div>
-        </div>
+        </div>-->
 
     </div>
     <div class="panel-body col-sm-6">
@@ -155,13 +155,13 @@ Configure::load('config_receive_file_registers', 'default');
         <?php
         echo $this->Form->input('number_of_pages', ['value' => 1]);
         ?>
-        <div class="form-group input">
-            <label class="col-sm-3 control-label text-right"><?= __('Attach File(s)') ?></label>
+        <!--<div class="form-group input">
+            <label class="col-sm-3 control-label text-right"><?php /*echo __('Attach File(s)') */?></label>
 
             <div class="col-sm-9 container_attached_files">
                 <input type="file" name="attachments[]" multiple>
             </div>
-        </div>
+        </div>-->
 
         <?php echo $this->Form->input('parent_id', ['label' => __('Nothi'), 'options' => $nothiRegisters, 'class' =>"form-control parent-id" ,'empty' => __('Select'), 'required', 'templates' => ['inputContainer' => '<div class="form-group nothi_register {{type}}{{required}}">{{content}}</div>']]); ?>
 
@@ -172,6 +172,15 @@ Configure::load('config_receive_file_registers', 'default');
 
             <div class="col-sm-11 container_description" style="width: 87.667%;">
                 <textarea name="description" id="ckeditor" cols="30" rows="10"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body col-sm-12">
+        <div class="form-group input">
+            <label class="col-sm-1 control-label text-right" style="width: 12.333%;"><?= __('Summery') ?></label>
+
+            <div class="col-sm-11 container_summery" style="width: 87.667%;">
+                <textarea name="letter_summery" id="ckeditor2" cols="15" rows="5"></textarea>
             </div>
         </div>
     </div>
@@ -239,5 +248,6 @@ Configure::load('config_receive_file_registers', 'default');
     });
 
     CKEDITOR.replace('ckeditor');
+    CKEDITOR.replace('ckeditor2');
 </script>
 

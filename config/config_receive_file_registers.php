@@ -8,5 +8,6 @@
 return [
     'letter_type'=>['OFFICE' => 'Office', 'INDIVIDUAL' => 'Individual'],
     'office_type'=>['OTHER' => 'Others', 'LGED' => 'LGED Office'],
-    'letter_nature'=>['NORMAL'=>'normal','QUERY'=>'query', 'ANSWER'=> 'answer','ORDER'=>'order','REPORT'=>'report']
+    'letter_nature'=>['NORMAL'=>'normal','QUERY'=>'query', 'ANSWER'=> 'answer','ORDER'=>'order','REPORT'=>'report'],
+    'letter_medium'=>['DAK'=>'DAK','EMAIL'=>'EMAIL', 'PHONE'=> 'PHONE','SMS'=>'SMS','VERBAL'=>'VERBAL']
 ];
