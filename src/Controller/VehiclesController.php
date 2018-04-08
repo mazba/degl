@@ -20,7 +20,8 @@ class VehiclesController extends AppController
      */
     public function index()
     {
-
+            $user = $this->Auth->user();
+            //pr($user);die;
     }
 
     /**
@@ -132,6 +133,7 @@ class VehiclesController extends AppController
                 $vehicles = $this->Vehicles->find('all', [
                     'conditions' => ['Vehicles.status' => 1, 'Vehicles.office_id' => $user['office_id']]
                 ])->toArray();
+                //pr($vehicles);die;
             }
             foreach ($vehicles as &$vehicle) {
                 if ($vehicle['type'] != 'vehicles') {
@@ -289,6 +291,7 @@ class VehiclesController extends AppController
                     'equipment_type' => 'vt',
                     'equipment_engine_capacity' => '3.5',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active vt roller 7
@@ -300,6 +303,7 @@ class VehiclesController extends AppController
                     'equipment_type' => 'vt',
                     'equipment_engine_capacity' => '7',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active static roller 8-10
@@ -311,6 +315,7 @@ class VehiclesController extends AppController
                     'equipment_type' => 'static',
                     'equipment_engine_capacity' => '8-10',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active Tyre roller
@@ -321,6 +326,7 @@ class VehiclesController extends AppController
                     'type' => 'equipments',
                     'equipment_type' => 'tyre',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // deactivate Tyre roller
@@ -331,6 +337,7 @@ class VehiclesController extends AppController
                     'type' => 'equipments',
                     'equipment_type' => 'vt',
                     'vehicle_status ' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             $static_roller_damage = $this->vehicles->find()->select([
@@ -340,6 +347,7 @@ class VehiclesController extends AppController
                     'type' => 'equipments',
                     'equipment_type' => 'static',
                     'vehicle_status' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active vehicle zip
@@ -350,6 +358,7 @@ class VehiclesController extends AppController
                     'type' => 'vehicles',
                     'vehicle_type' => 'zip',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active vehicle pickup
@@ -360,6 +369,7 @@ class VehiclesController extends AppController
                     'type' => 'vehicles',
                     'vehicle_type' => 'pickup',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active Motor cycle
@@ -370,6 +380,7 @@ class VehiclesController extends AppController
                     'type' => 'vehicles',
                     'vehicle_type' => 'motorcycle',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active vehicle truck
@@ -380,6 +391,7 @@ class VehiclesController extends AppController
                     'type' => 'vehicles',
                     'vehicle_type' => 'truck',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // active vehicle clunker
@@ -390,6 +402,7 @@ class VehiclesController extends AppController
                     'type' => 'vehicles',
                     'vehicle_type' => 'clunker',
                     'vehicle_status !=' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             // deactivated vehicle clunker
@@ -399,6 +412,7 @@ class VehiclesController extends AppController
                 ->where([
                     'type' => 'vehicles',
                     'vehicle_status ' => 'DAMAGE',
+                    'status !=' => '99',
                 ])->count();
 
             $mechanical_status = [

@@ -50,7 +50,7 @@ class VehiclesStatusController extends AppController
                     'employees.name_en','schemes.name_en'
                 ])
                     ->hydrate(false)
-                    ->where(['vehicles.office_id' => $user['office_id']])
+                    ->where(['vehicles.office_id' => $user['office_id'], 'vehicles.status' => 1 ])
                     ->leftJoin('vehicles_status', 'vehicles_status.vehicle_id = vehicles.id AND vehicles_status.status = 1')
                     ->leftJoin('vehicle_servicings', 'vehicle_servicings.vehicle_id = vehicles.id')
                     ->leftJoin('employees', 'employees.id = vehicles_status.employee_id')
