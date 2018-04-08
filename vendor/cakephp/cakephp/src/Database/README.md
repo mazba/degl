@@ -35,7 +35,7 @@ use Cake\Database\Driver\Mysql;
 
 $driver = new Mysql([
 	'database' => 'test',
-	'username' => 'root',
+	'login' => 'root',
 	'password' => 'secret'
 ]);
 $connection = new Connection([

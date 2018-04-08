@@ -15,7 +15,7 @@
 namespace Cake\View\Widget;
 
 use Cake\View\Form\ContextInterface;
-use Cake\View\Widget\BasicWidget;
+use Cake\View\Widget\WidgetInterface;
 use Traversable;
 
 /**
@@ -24,8 +24,25 @@ use Traversable;
  * This class is intended as an internal implementation detail
  * of Cake\View\Helper\FormHelper and is not intended for direct use.
  */
-class SelectBoxWidget extends BasicWidget
+class SelectBoxWidget implements WidgetInterface
 {
+
+    /**
+     * Template instance.
+     *
+     * @var \Cake\View\StringTemplate
+     */
+    protected $_templates;
+
+    /**
+     * Constructor
+     *
+     * @param \Cake\View\StringTemplate $templates Templates list.
+     */
+    public function __construct($templates)
+    {
+        $this->_templates = $templates;
+    }
 
     /**
      * Render a select box form input.
@@ -112,6 +129,9 @@ class SelectBoxWidget extends BasicWidget
             'val' => null,
         ];
 
+        if (empty($data['name'])) {
+            throw new \RuntimeException('Cannot make inputs with empty name attributes.');
+        }
         $options = $this->_renderContent($data);
         $name = $data['name'];
         unset($data['name'], $data['options'], $data['empty'], $data['val'], $data['escape']);
@@ -221,7 +241,6 @@ class SelectBoxWidget extends BasicWidget
             ];
             if (is_array($val) && isset($optAttrs['text'], $optAttrs['value'])) {
                 $optAttrs = $val;
-                $key = $optAttrs['value'];
             }
             if ($this->_isSelected($key, $selected)) {
                 $optAttrs['selected'] = true;
@@ -274,5 +293,13 @@ class SelectBoxWidget extends BasicWidget
         }
         $strict = !is_numeric($key);
         return in_array((string)$key, $disabled, $strict);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function secureFields(array $data)
+    {
+        return [$data['name']];
     }
 }

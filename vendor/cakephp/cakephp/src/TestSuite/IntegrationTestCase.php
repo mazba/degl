@@ -21,7 +21,6 @@ use Cake\Routing\DispatcherFactory;
 use Cake\Routing\Router;
 use Cake\TestSuite\Stub\Response;
 use Cake\TestSuite\TestCase;
-use Cake\Utility\Hash;
 
 /**
  * A test case class intended to make integration tests of
@@ -49,13 +48,6 @@ abstract class IntegrationTestCase extends TestCase
      * @var \Cake\Network\Response
      */
     protected $_response;
-
-    /**
-     * The exception being thrown if the case.
-     *
-     * @var \Cake\Core\Exception\Exception
-     */
-    protected $_exception;
 
     /**
      * Session data to use in the next request.
@@ -122,7 +114,6 @@ abstract class IntegrationTestCase extends TestCase
         $this->_session = [];
         $this->_cookie = [];
         $this->_response = null;
-        $this->_exception = null;
         $this->_controller = null;
         $this->_viewName = null;
         $this->_layoutName = null;
@@ -288,7 +279,6 @@ abstract class IntegrationTestCase extends TestCase
         } catch (\PHPUnit_Exception $e) {
             throw $e;
         } catch (\Exception $e) {
-            $this->_exception = $e;
             $this->_handleError($e);
         }
     }
@@ -365,7 +355,7 @@ abstract class IntegrationTestCase extends TestCase
         }
         $env['REQUEST_METHOD'] = $method;
         $props['environment'] = $env;
-        $props = Hash::merge($props, $this->_request);
+        $props += $this->_request;
         return new Request($props);
     }
 
@@ -454,11 +444,6 @@ abstract class IntegrationTestCase extends TestCase
             $this->fail('No response set, cannot assert status code.');
         }
         $status = $this->_response->statusCode();
-
-        if ($this->_exception && ($status < $min || $status > $max)) {
-            $this->fail($this->_exception);
-        }
-
         $this->assertGreaterThanOrEqual($min, $status, $message);
         $this->assertLessThanOrEqual($max, $status, $message);
     }

@@ -16,7 +16,6 @@ namespace Cake\Datasource;
 
 use Cake\Collection\Collection;
 use Cake\Utility\Inflector;
-use InvalidArgumentException;
 use Traversable;
 
 /**
@@ -100,8 +99,8 @@ trait EntityTrait
      * property name points to a boolean indicating its status. An empty array
      * means no properties are accessible
      *
-     * The special property '\*' can also be mapped, meaning that any other property
-     * not defined in the map will take its value. For example, `'\*' => true`
+     * The special property '*' can also be mapped, meaning that any other property
+     * not defined in the map will take its value. For example, `'*' => true`
      * means that any property not defined in the map will be accessible by default
      *
      * @var array
@@ -226,7 +225,7 @@ trait EntityTrait
         }
 
         if (!is_array($property)) {
-            throw new InvalidArgumentException('Cannot set an empty property');
+            throw new \InvalidArgumentException('Cannot set an empty property');
         }
         $options += ['setter' => true, 'guard' => $guard];
 
@@ -268,7 +267,7 @@ trait EntityTrait
     public function &get($property)
     {
         if (!strlen((string)$property)) {
-            throw new InvalidArgumentException('Cannot get an empty property');
+            throw new \InvalidArgumentException('Cannot get an empty property');
         }
 
         $value = null;
@@ -295,7 +294,7 @@ trait EntityTrait
     public function getOriginal($property)
     {
         if (!strlen((string)$property)) {
-            throw new InvalidArgumentException('Cannot get an empty property');
+            throw new \InvalidArgumentException('Cannot get an empty property');
         }
         if (isset($this->_original[$property])) {
             return $this->_original[$property];
@@ -754,7 +753,7 @@ trait EntityTrait
 
     /**
      * Stores whether or not a property value can be changed or set in this entity.
-     * The special property `*` can also be marked as accessible or protected, meaning
+     * The special property '*' can also be marked as accessible or protected, meaning
      * that any other property specified before will take its value. For example
      * `$entity->accessible('*', true)`  means that any property not specified already
      * will be accessible by default.

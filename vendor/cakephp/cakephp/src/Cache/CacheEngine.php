@@ -15,7 +15,6 @@
 namespace Cake\Cache;
 
 use Cake\Core\InstanceConfigTrait;
-use InvalidArgumentException;
 
 /**
  * Storage engine for CakePHP caching
@@ -246,7 +245,7 @@ abstract class CacheEngine
     {
         $key = $this->key($key);
         if (!$key) {
-            throw new InvalidArgumentException('An empty value is not valid as a cache key');
+            throw new \InvalidArgumentException('An empty value is not valid as a cache key');
         }
 
         return $this->_config['prefix'] . $key;

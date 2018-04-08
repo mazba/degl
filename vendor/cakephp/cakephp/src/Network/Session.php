@@ -16,8 +16,6 @@ namespace Cake\Network;
 
 use Cake\Core\App;
 use Cake\Utility\Hash;
-use InvalidArgumentException;
-use RuntimeException;
 use SessionHandlerInterface;
 
 /**
@@ -62,7 +60,7 @@ class Session
      *
      * @var bool
      */
-    protected $_isCLI = false;
+    protected $_isCli = false;
 
     /**
      * Returns a new instance of a session after building a configuration bundle for it.
@@ -219,7 +217,7 @@ class Session
         }
 
         $this->_lifetime = ini_get('session.gc_maxlifetime');
-        $this->_isCLI = PHP_SAPI === 'cli';
+        $this->_isCli = php_sapi_name() === 'cli';
         session_register_shutdown();
     }
 
@@ -252,14 +250,14 @@ class Session
 
         $className = App::className($class, 'Network/Session');
         if (!$className) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 sprintf('The class "%s" does not exist and cannot be used as a session engine', $class)
             );
         }
 
         $handler = new $className($options);
         if (!($handler instanceof SessionHandlerInterface)) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'The chosen SessionHandler does not implement SessionHandlerInterface, it cannot be used as an engine.'
             );
         }
@@ -273,9 +271,7 @@ class Session
      *
      * ### Example:
      *
-     * ```
-     * $session->options(['session.use_cookies' => 1]);
-     * ```
+     * `$session->options(['session.use_cookies' => 1]);`
      *
      * @param array $options Ini options to set.
      * @return void
@@ -289,7 +285,7 @@ class Session
 
         foreach ($options as $setting => $value) {
             if (ini_set($setting, $value) === false) {
-                throw new RuntimeException(
+                throw new \RuntimeException(
                     sprintf('Unable to configure the session, setting %s failed.', $setting)
                 );
             }
@@ -308,13 +304,13 @@ class Session
             return true;
         }
 
-        if ($this->_isCLI) {
+        if ($this->_isCli) {
             $_SESSION = [];
             return $this->_started = true;
         }
 
         if (session_status() === \PHP_SESSION_ACTIVE) {
-            throw new RuntimeException('Session was already started');
+            throw new \RuntimeException('Session was already started');
         }
 
         if (ini_get('session.use_cookies') && headers_sent($file, $line)) {
@@ -322,7 +318,7 @@ class Session
         }
 
         if (!session_start()) {
-            throw new RuntimeException('Could not start the session');
+            throw new \RuntimeException('Could not start the session');
         }
 
         $this->_started = true;
@@ -513,7 +509,7 @@ class Session
             $this->start();
         }
 
-        if (!$this->_isCLI && session_status() === PHP_SESSION_ACTIVE) {
+        if (!$this->_isCli && session_status() === PHP_SESSION_ACTIVE) {
             session_destroy();
         }
 
@@ -546,7 +542,7 @@ class Session
     {
         return !ini_get('session.use_cookies')
             || isset($_COOKIE[session_name()])
-            || $this->_isCLI;
+            || $this->_isCli;
     }
 
     /**
@@ -556,7 +552,7 @@ class Session
      */
     public function renew()
     {
-        if (!$this->_hasSession() || $this->_isCLI) {
+        if (!$this->_hasSession() || $this->_isCli) {
             return;
         }
 

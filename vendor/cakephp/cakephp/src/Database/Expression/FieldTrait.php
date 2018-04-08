@@ -14,6 +14,9 @@
  */
 namespace Cake\Database\Expression;
 
+use Cake\Database\ExpressionInterface;
+use Cake\Database\ValueBinder;
+
 /**
  * Contains the field property with a getter and a setter for it
  *

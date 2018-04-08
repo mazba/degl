@@ -18,8 +18,6 @@
  */
 namespace Cake\Validation;
 
-use InvalidArgumentException;
-
 /**
  * ValidationRule object. Represents a validation method, error message and
  * rules for applying such method to a field.
@@ -128,7 +126,7 @@ class ValidationRule
 
         if (!$isCallable) {
             $message = 'Unable to call method "%s" in "%s" provider for field "%s"';
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 sprintf($message, $this->_rule, $this->_provider, $context['field'])
             );
         }

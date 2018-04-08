@@ -14,7 +14,6 @@
 namespace Cake\Network\Http;
 
 use Cake\Network\Http\FormData\Part;
-use Countable;
 
 /**
  * Provides an interface for building
@@ -24,7 +23,7 @@ use Countable;
  * and files.
  *
  */
-class FormData implements Countable
+class FormData implements \Countable
 {
 
     /**

@@ -102,11 +102,7 @@ class DatabaseSession implements SessionHandlerInterface
             return false;
         }
 
-        if (is_string($result['data'])) {
-            return $result['data'];
-        }
-
-        return stream_get_contents($result['data']);
+        return $result['data'];
     }
 
     /**
@@ -125,7 +121,10 @@ class DatabaseSession implements SessionHandlerInterface
         $record = compact('data', 'expires');
         $record[$this->_table->primaryKey()] = $id;
         $result = $this->_table->save(new Entity($record));
-        return (bool)$result;
+        if ($result) {
+            return $result->toArray();
+        }
+        return false;
     }
 
     /**
@@ -136,7 +135,7 @@ class DatabaseSession implements SessionHandlerInterface
      */
     public function destroy($id)
     {
-        return (bool)$this->_table->delete(new Entity(
+        return $this->_table->delete(new Entity(
             [$this->_table->primaryKey() => $id],
             ['markNew' => false]
         ));
@@ -150,7 +149,6 @@ class DatabaseSession implements SessionHandlerInterface
      */
     public function gc($maxlifetime)
     {
-        $this->_table->deleteAll(['expires <' => time() - $maxlifetime]);
-        return true;
+        return $this->_table->deleteAll(['expires <' => time() - $maxlifetime]);
     }
 }

@@ -30,7 +30,7 @@ class SessionsFixture extends TestFixture
      */
     public $fields = [
         'id' => ['type' => 'string', 'length' => 128],
-        'data' => ['type' => 'binary', 'null' => true],
+        'data' => ['type' => 'text', 'null' => true],
         'expires' => ['type' => 'integer', 'length' => 11, 'null' => true],
         '_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]
     ];

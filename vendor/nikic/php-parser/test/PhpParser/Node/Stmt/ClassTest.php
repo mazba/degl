@@ -39,4 +39,28 @@ class ClassTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($methods, $class->getMethods());
     }
+
+    public function testGetMethod() {
+        $methodConstruct = new ClassMethod('__CONSTRUCT');
+        $methodTest = new ClassMethod('test');
+        $class = new Class_('Foo', array(
+            'stmts' => array(
+                new ClassConst(array()),
+                $methodConstruct,
+                new Property(0, array()),
+                $methodTest,
+            )
+        ));
+
+        $this->assertSame($methodConstruct, $class->getMethod('__construct'));
+        $this->assertSame($methodTest, $class->getMethod('test'));
+        $this->assertNull($class->getMethod('nonExisting'));
+    }
+
+    public function testDeprecatedTypeNode() {
+        $class = new Class_('Foo', array('type' => Class_::MODIFIER_ABSTRACT));
+        $this->assertTrue($class->isAbstract());
+        $this->assertSame(Class_::MODIFIER_ABSTRACT, $class->flags);
+        $this->assertSame(Class_::MODIFIER_ABSTRACT, $class->type);
+    }
 }

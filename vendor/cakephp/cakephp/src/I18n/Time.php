@@ -17,7 +17,6 @@ namespace Cake\I18n;
 use Carbon\Carbon;
 use IntlDateFormatter;
 use JsonSerializable;
-use RuntimeException;
 
 /**
  * Extends the built-in DateTime class to provide handy methods and locale-aware
@@ -246,8 +245,6 @@ class Time extends Carbon implements JsonSerializable
      */
     public function timeAgoInWords(array $options = [])
     {
-        $time = $this;
-        
         $timezone = null;
         $format = static::$wordFormat;
         $end = static::$wordEnd;
@@ -274,13 +271,8 @@ class Time extends Carbon implements JsonSerializable
             }
         }
 
-        if ($timezone) {
-            $time = clone $this;
-            $time->timezone($timezone);
-        }
-
         $now = $from->format('U');
-        $inSeconds = $time->format('U');
+        $inSeconds = $this->format('U');
         $backwards = ($inSeconds > $now);
 
         $futureTime = $now;
@@ -296,7 +288,7 @@ class Time extends Carbon implements JsonSerializable
         }
 
         if ($diff > abs($now - (new static($end))->format('U'))) {
-            return sprintf($absoluteString, $time->i18nFormat($format));
+            return sprintf($absoluteString, $this->i18nFormat($format));
         }
 
         // If more than a week, then take into account the length of months
@@ -586,16 +578,11 @@ class Time extends Carbon implements JsonSerializable
         $key = "{$locale}.{$dateFormat}.{$timeFormat}.{$timezone}.{$calendar}.{$pattern}";
 
         if (!isset(static::$_formatters[$key])) {
-            if ($timezone === '+00:00') {
-                $timezone = 'UTC';
-            } elseif ($timezone[0] === '+' || $timezone[0] === '-') {
-                $timezone = 'GMT' . $timezone;
-            }
             static::$_formatters[$key] = datefmt_create(
                 $locale,
                 $dateFormat,
                 $timeFormat,
-                $timezone,
+                $timezone === '+00:00' ? 'UTC' : $timezone,
                 $calendar,
                 $pattern
             );
@@ -719,7 +706,7 @@ class Time extends Carbon implements JsonSerializable
             static::$defaultLocale,
             $dateFormat,
             $timeFormat,
-            date_default_timezone_get(),
+            null,
             null,
             $pattern
         );

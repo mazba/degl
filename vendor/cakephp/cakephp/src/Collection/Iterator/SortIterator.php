@@ -59,11 +59,10 @@ class SortIterator extends Collection
      */
     public function __construct($items, $callback, $dir = SORT_DESC, $type = SORT_NUMERIC)
     {
-        if (is_array($items)) {
-            $items = new Collection($items);
+        if ($items instanceof CollectionInterface) {
+            $items = $items->toList();
         }
 
-        $items = iterator_to_array($items, false);
         $callback = $this->_propertyExtractor($callback);
         $results = [];
         foreach ($items as $key => $value) {

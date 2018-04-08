@@ -19,6 +19,7 @@ use Cake\Collection\CollectionInterface;
 use Cake\Collection\CollectionTrait;
 use InvalidArgumentException;
 use IteratorIterator;
+use JsonSerializable;
 
 /**
  * A collection is an immutable list of elements with a handful of functions to
@@ -47,18 +48,5 @@ class Collection extends IteratorIterator implements CollectionInterface
         }
 
         parent::__construct($items);
-    }
-
-    /**
-     * Returns an array that can be used to describe the internal state of this
-     * object.
-     *
-     * @return array
-     */
-    public function __debugInfo()
-    {
-        return [
-            'count' => iterator_count($this),
-        ];
     }
 }

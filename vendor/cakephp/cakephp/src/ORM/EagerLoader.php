@@ -21,7 +21,6 @@ use Cake\ORM\EagerLoadable;
 use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Closure;
-use InvalidArgumentException;
 
 /**
  * Exposes the methods for storing the associations that should be eager loaded
@@ -378,7 +377,7 @@ class EagerLoader
         $defaults = $this->_containOptions;
         $instance = $parent->association($alias);
         if (!$instance) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 sprintf('%s is not associated with %s', $parent->alias(), $alias)
             );
         }

@@ -20,11 +20,10 @@ specify a driver to use:
 ```php
 use Cake\Datasource\ConnectionManager;
 
-ConnectionManager::config('default', [
-	'className' => 'Cake\Database\Connection',
+ConnectionManager::create('default', [
 	'driver' => 'Cake\Database\Driver\Mysql',
 	'database' => 'test',
-	'username' => 'root',
+	'login' => 'root',
 	'password' => 'secret'
 ]);
 ```

@@ -17,7 +17,6 @@ namespace Cake\ORM;
 use ArrayObject;
 use BadMethodCallException;
 use Cake\Core\App;
-use Cake\Database\Connection;
 use Cake\Database\Schema\Table as Schema;
 use Cake\Database\Type;
 use Cake\Datasource\EntityInterface;
@@ -37,8 +36,7 @@ use Cake\ORM\Marshaller;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Rule\IsUnique;
 use Cake\Utility\Inflector;
-use Cake\Validation\ValidatorAwareTrait;
-use InvalidArgumentException;
+use Cake\Validation\Validator;
 use RuntimeException;
 
 /**
@@ -121,7 +119,6 @@ class Table implements RepositoryInterface, EventListenerInterface
 {
 
     use EventManagerTrait;
-    use ValidatorAwareTrait;
 
     /**
      * Name of default validation set.
@@ -129,13 +126,6 @@ class Table implements RepositoryInterface, EventListenerInterface
      * @var string
      */
     const DEFAULT_VALIDATOR = 'default';
-
-    /**
-     * The alias this object is assigned to validators as.
-     *
-     * @var string
-     */
-    const VALIDATOR_PROVIDER_NAME = 'table';
 
     /**
      * Name of the table as it can be found in the database
@@ -207,6 +197,13 @@ class Table implements RepositoryInterface, EventListenerInterface
      * @var string
      */
     protected $_registryAlias;
+
+    /**
+     * A list of validation objects indexed by name
+     *
+     * @var array
+     */
+    protected $_validators = [];
 
     /**
      * The domain rules to be applied to entities saved by this table
@@ -395,12 +392,11 @@ class Table implements RepositoryInterface, EventListenerInterface
      * @param \Cake\Database\Connection|null $conn The new connection instance
      * @return \Cake\Database\Connection
      */
-    public function connection(Connection $conn = null)
+    public function connection($conn = null)
     {
         if ($conn === null) {
             return $this->_connection;
         }
-
         return $this->_connection = $conn;
     }
 
@@ -872,6 +868,7 @@ class Table implements RepositoryInterface, EventListenerInterface
      * - limit
      * - offset
      * - page
+     * - order
      * - group
      * - having
      * - contain
@@ -966,22 +963,6 @@ class Table implements RepositoryInterface, EventListenerInterface
             $options['keyField'] = $options['idField'];
             unset($options['idField']);
             trigger_error('Option "idField" is deprecated, use "keyField" instead.', E_USER_WARNING);
-        }
-
-        if (!$query->clause('select') &&
-            !is_object($options['keyField']) &&
-            !is_object($options['valueField']) &&
-            !is_object($options['groupField'])
-        ) {
-            $fields = array_merge(
-                (array)$options['keyField'],
-                (array)$options['valueField'],
-                (array)$options['groupField']
-            );
-            $columns = $this->schema()->columns();
-            if (count($fields) === count(array_intersect($fields, $columns))) {
-                $query->select($fields);
-            }
         }
 
         $options = $this->_setFieldMatchers(
@@ -1082,7 +1063,7 @@ class Table implements RepositoryInterface, EventListenerInterface
     /**
      * {@inheritDoc}
      *
-     * @throws \Cake\Datasource\Exception\InvalidPrimaryKeyException When $primaryKey has an
+     * @throws Cake\Datasource\Exception\InvalidPrimaryKeyException When $primaryKey has an
      *      incorrect number of elements.
      */
     public function get($primaryKey, $options = [])
@@ -1176,6 +1157,77 @@ class Table implements RepositoryInterface, EventListenerInterface
         $statement = $query->execute();
         $statement->closeCursor();
         return $statement->rowCount();
+    }
+
+    /**
+     * Returns the validation rules tagged with $name. It is possible to have
+     * multiple different named validation sets, this is useful when you need
+     * to use varying rules when saving from different routines in your system.
+     *
+     * There are two different ways of creating and naming validation sets: by
+     * creating a new method inside your own Table subclass, or by building
+     * the validator object yourself and storing it using this method.
+     *
+     * For example, if you wish to create a validation set called 'forSubscription',
+     * you will need to create a method in your Table subclass as follows:
+     *
+     * ```
+     * public function validationForSubscription($validator)
+     * {
+     *  return $validator
+     *  ->add('email', 'valid-email', ['rule' => 'email'])
+     *  ->add('password', 'valid', ['rule' => 'notEmpty'])
+     *  ->requirePresence('username');
+     * }
+     * ```
+     *
+     * Otherwise, you can build the object by yourself and store it in the Table object:
+     *
+     * ```
+     * $validator = new \Cake\Validation\Validator($table);
+     * $validator
+     *  ->add('email', 'valid-email', ['rule' => 'email'])
+     *  ->add('password', 'valid', ['rule' => 'notEmpty'])
+     *  ->allowEmpty('bio');
+     * $table->validator('forSubscription', $validator);
+     * ```
+     *
+     * You can implement the method in `validationDefault` in your Table subclass
+     * should you wish to have a validation set that applies in cases where no other
+     * set is specified.
+     *
+     * @param string $name the name of the validation set to return
+     * @param \Cake\Validation\Validator|null $validator The validator instance to store,
+     *   use null to get a validator.
+     * @return \Cake\Validation\Validator
+     */
+    public function validator($name = self::DEFAULT_VALIDATOR, Validator $validator = null)
+    {
+        if ($validator === null && isset($this->_validators[$name])) {
+            return $this->_validators[$name];
+        }
+
+        if ($validator === null) {
+            $validator = new Validator();
+            $validator = $this->{'validation' . ucfirst($name)}($validator);
+            $this->dispatchEvent('Model.buildValidator', compact('validator', 'name'));
+        }
+
+        $validator->provider('table', $this);
+        return $this->_validators[$name] = $validator;
+    }
+
+    /**
+     * Returns the default validator object. Subclasses can override this function
+     * to add a default validation set to the validator object.
+     *
+     * @param \Cake\Validation\Validator $validator The validator that can be modified to
+     * add some rules to it.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationDefault(Validator $validator)
+    {
+        return $validator;
     }
 
     /**
@@ -1429,13 +1481,13 @@ class Table implements RepositoryInterface, EventListenerInterface
                 'Cannot insert row in "%s" table, it has no primary key.',
                 $this->table()
             );
-            throw new RuntimeException($msg);
+            throw new \RuntimeException($msg);
         }
         $keys = array_fill(0, count($primary), null);
         $id = (array)$this->_newId($primary) + $keys;
         $primary = array_combine($primary, $id);
         $filteredKeys = array_filter($primary, 'strlen');
-        $data = $data + $filteredKeys;
+        $data = $filteredKeys + $data;
 
         if (count($primary) > 1) {
             $schema = $this->schema();
@@ -1447,7 +1499,7 @@ class Table implements RepositoryInterface, EventListenerInterface
                         implode(', ', $filteredKeys + $entity->extract(array_keys($primary))),
                         implode(', ', array_keys($primary))
                     );
-                    throw new RuntimeException($msg);
+                    throw new \RuntimeException($msg);
                 }
             }
         }
@@ -1519,7 +1571,7 @@ class Table implements RepositoryInterface, EventListenerInterface
 
         if (!$entity->has($primaryColumns)) {
             $message = 'All primary key value(s) are needed for updating';
-            throw new InvalidArgumentException($message);
+            throw new \InvalidArgumentException($message);
         }
 
         $query = $this->query();
@@ -1617,7 +1669,7 @@ class Table implements RepositoryInterface, EventListenerInterface
         $primaryKey = (array)$this->primaryKey();
         if (!$entity->has($primaryKey)) {
             $msg = 'Deleting requires all primary key values.';
-            throw new InvalidArgumentException($msg);
+            throw new \InvalidArgumentException($msg);
         }
 
         if ($options['checkRules'] && !$this->checkRules($entity, RulesChecker::DELETE, $options)) {
@@ -1733,7 +1785,7 @@ class Table implements RepositoryInterface, EventListenerInterface
                 ));
             }
             foreach ($fields as $field) {
-                $conditions[$this->aliasField($field)] = array_shift($args);
+                $conditions[$field] = array_shift($args);
             }
             return $conditions;
         };
@@ -1798,7 +1850,7 @@ class Table implements RepositoryInterface, EventListenerInterface
     {
         $association = $this->_associations->get($property);
         if (!$association) {
-            throw new RuntimeException(sprintf(
+            throw new \RuntimeException(sprintf(
                 'Table "%s" is not associated with "%s"',
                 get_class($this),
                 $property

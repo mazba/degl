@@ -287,9 +287,7 @@ class Shell
      *
      * With a string command:
      *
-     * ```
-     * return $this->dispatchShell('schema create DbAcl');
-     * ```
+     *  `return $this->dispatchShell('schema create DbAcl');`
      *
      * Avoid using this form if you have string arguments, with spaces in them.
      * The dispatched will be invoked incorrectly. Only use this form for simple
@@ -297,9 +295,7 @@ class Shell
      *
      * With an array command:
      *
-     * ```
-     * return $this->dispatchShell('schema', 'create', 'i18n', '--dry');
-     * ```
+     * `return $this->dispatchShell('schema', 'create', 'i18n', '--dry');`
      *
      * @return mixed The return of the other shell.
      * @link http://book.cakephp.org/3.0/en/console-and-shells.html#invoking-other-shells-from-your-shell

@@ -14,7 +14,6 @@
  */
 namespace Cake\Network;
 
-use ArrayAccess;
 use BadMethodCallException;
 use Cake\Core\Configure;
 use Cake\Network\Exception\MethodNotAllowedException;
@@ -29,7 +28,7 @@ use Cake\Utility\Hash;
  *
  * `$request['controller']` or `$request->controller`.
  */
-class Request implements ArrayAccess
+class Request implements \ArrayAccess
 {
 
     /**
@@ -792,10 +791,8 @@ class Request implements ArrayAccess
      * Callback detectors allow you to provide a callable to handle the check.
      * The callback will receive the request object as its only parameter.
      *
-     * ```
-     * addDetector('custom', function ($request) { //Return a boolean });
-     * addDetector('custom', ['SomeClass', 'somemethod']);
-     * ```
+     * e.g `addDetector('custom', function ($request) { //Return a boolean });`
+     * e.g `addDetector('custom', ['SomeClass', 'somemethod']);`
      *
      * ### Environment value comparison
      *
@@ -808,18 +805,14 @@ class Request implements ArrayAccess
      *
      * Pattern value comparison allows you to compare a value fetched from `env()` to a regular expression.
      *
-     * ```
-     * addDetector('iphone', ['env' => 'HTTP_USER_AGENT', 'pattern' => '/iPhone/i']);
-     * ```
+     * e.g `addDetector('iphone', ['env' => 'HTTP_USER_AGENT', 'pattern' => '/iPhone/i']);`
      *
      * ### Option based comparison
      *
      * Option based comparisons use a list of options to create a regular expression. Subsequent calls
      * to add an already defined options detector will merge the options.
      *
-     * ```
-     * addDetector('mobile', ['env' => 'HTTP_USER_AGENT', 'options' => ['Fennec']]);
-     * ```
+     * e.g `addDetector('mobile', ['env' => 'HTTP_USER_AGENT', 'options' => ['Fennec']]);`
      *
      * ### Request parameter detectors
      *
@@ -1002,15 +995,11 @@ class Request implements ArrayAccess
      *
      * #### Get all types:
      *
-     * ```
-     * $this->request->accepts();
-     * ```
+     * `$this->request->accepts();`
      *
      * #### Check for a single type:
      *
-     * ```
-     * $this->request->accepts('application/json');
-     * ```
+     * `$this->request->accepts('application/json');`
      *
      * This method will order the returned content types by the preference values indicated
      * by the client.
@@ -1137,17 +1126,13 @@ class Request implements ArrayAccess
      *
      * ### Reading values.
      *
-     * ```
-     * $request->data('Post.title');
-     * ```
+     * `$request->data('Post.title');`
      *
      * When reading values you will get `null` for keys/values that do not exist.
      *
      * ### Writing values
      *
-     * ```
-     * $request->data('Post.title', 'New post!');
-     * ```
+     * `$request->data('Post.title', 'New post!');`
      *
      * You can write to any value, even paths/keys that do not exist, and the arrays
      * will be created for you.
@@ -1194,15 +1179,11 @@ class Request implements ArrayAccess
      *
      * Getting input with a decoding function:
      *
-     * ```
-     * $this->request->input('json_decode');
-     * ```
+     * `$this->request->input('json_decode');`
      *
      * Getting input using a decoding function, and additional params:
      *
-     * ```
-     * $this->request->input('Xml::build', ['return' => 'DOMDocument']);
-     * ```
+     * `$this->request->input('Xml::build', ['return' => 'DOMDocument']);`
      *
      * Any additional parameters are applied to the callback in the order they are given.
      *

@@ -21,7 +21,6 @@ use Cake\Database\Expression\ValuesExpression;
 use Cake\Database\Statement\CallbackStatement;
 use Cake\Database\ValueBinder;
 use IteratorAggregate;
-use RuntimeException;
 
 /**
  * This class represents a Relational database SQL Query. A query can be of
@@ -1209,7 +1208,7 @@ class Query implements ExpressionInterface, IteratorAggregate
     public function insert(array $columns, array $types = [])
     {
         if (empty($columns)) {
-            throw new RuntimeException('At least 1 column is required to perform an insert.');
+            throw new \RuntimeException('At least 1 column is required to perform an insert.');
         }
         $this->_dirty();
         $this->_type = 'insert';

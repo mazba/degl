@@ -29,11 +29,10 @@ class SqlserverSchema extends BaseSchema
      */
     public function listTablesSql($config)
     {
-        $sql = "SELECT TABLE_NAME
+        $sql = 'SELECT TABLE_NAME
             FROM INFORMATION_SCHEMA.TABLES
             WHERE TABLE_SCHEMA = ?
-            AND TABLE_TYPE = 'BASE TABLE'
-            ORDER BY TABLE_NAME";
+            ORDER BY TABLE_NAME';
         $schema = empty($config['schema']) ? static::DEFAULT_SCHEMA_NAME : $config['schema'];
         return [$sql, [$schema]];
     }

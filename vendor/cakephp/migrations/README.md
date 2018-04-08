@@ -1,8 +1,21 @@
-# cakephp/migrations [![Build Status](https://travis-ci.org/cakephp/migrations.svg?branch=master)](https://travis-ci.org/cakephp/migrations) [![License](https://poser.pugx.org/cakephp/migrations/license.svg)](https://packagist.org/packages/cakephp/migrations)
+# cakephp/migrations
+
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.txt)
+[![Build Status](https://img.shields.io/travis/cakephp/migrations/master.svg?style=flat-square)](https://travis-ci.org/cakephp/migrations)
+[![Coverage Status](https://img.shields.io/coveralls/cakephp/migrations/master.svg?style=flat-square)](https://coveralls.io/r/cakephp/migrations?branch=master)
+[![Total Downloads](https://img.shields.io/packagist/dt/cakephp/migrations.svg?style=flat-square)](https://packagist.org/packages/cakephp/migrations)
 
 This is a Database Migrations system for CakePHP 3.0.
 
 The plugin consists of a wrapper for the [phinx](http://phinx.org) migrations library.
+
+Full documentation of the plugin can be found on the [CakePHP Cookbook](http://book.cakephp.org/3.0/en/migrations.html).
+
+## Special notes
+
+This is the last release of the plugin compatible with the CakePHP 3.0.X release cycle.
+Be aware that, due to a defect in our main dependency, if you use the SQLite database provider and update indexes in an existing table, the table may be dropped during migrations. The bug has been fixed for later versions of the plugin.
+Also note that if you run the test suites of this version of the plugin, it will fail.
 
 ## Installation
 
@@ -52,6 +65,10 @@ bin/cake migrations status -c my_datasource
 # The following will mark targeted migration as marked without actually running it.
 # The expected argument is the migration version number
 bin/cake migrations mark_migrated 20150417223600
+
+# Since Migrations 1.3.1, a new `all` special value for the version argumentwas added.
+# The following will mark all migrations found as migrated.
+bin/cake migrations mark_migrated all
 ```
 
 ### Creating Migrations
@@ -125,6 +142,29 @@ $table->addColumn('id', 'char', ['limit' => 36])
 ```
 
 > Phinx automatically creates an auto-increment `id` field for *every* table. This will hopefully be fixed in the future.
+
+#### Collations
+
+If you need to create a table with a different collation than the database default one, you can define it
+with the ``table`` method, as an option : 
+
+```php
+$table = $this
+    ->table('categories', [
+        'collation' => 'latin1_german1_ci'
+    ])
+    ->addColumn('title', 'string', [
+        'default' => null,
+        'limit' => 255,
+        'null' => false,
+    ])
+    ->create();
+```
+
+Note however this can only be done on table creation : there is currently
+no way of adding a column to an existing table with a different collation than the table or
+the database.
+Only MySQL and SqlServer supports this configuration key for the time being.
 
 #### Generating Migrations from the CLI
 

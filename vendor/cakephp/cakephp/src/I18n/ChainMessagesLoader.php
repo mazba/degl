@@ -15,7 +15,6 @@
 namespace Cake\I18n;
 
 use Aura\Intl\Package;
-use RuntimeException;
 
 /**
  * Wraps multiple message loaders calling them one after another until
@@ -54,7 +53,7 @@ class ChainMessagesLoader
     {
         foreach ($this->_loaders as $k => $loader) {
             if (!is_callable($loader)) {
-                throw new RuntimeException(sprintf(
+                throw new \RuntimeException(sprintf(
                     'Loader "%s" in the chain is not a valid callable',
                     $k
                 ));
@@ -66,7 +65,7 @@ class ChainMessagesLoader
             }
 
             if (!($package instanceof Package)) {
-                throw new RuntimeException(sprintf(
+                throw new \RuntimeException(sprintf(
                     'Loader "%s" in the chain did not return a valid Package object',
                     $k
                 ));

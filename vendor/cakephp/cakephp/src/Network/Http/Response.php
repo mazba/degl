@@ -14,7 +14,6 @@
 namespace Cake\Network\Http;
 
 use Cake\Network\Http\Message;
-use RuntimeException;
 
 /**
  * Implements methods for HTTP responses.
@@ -27,38 +26,28 @@ use RuntimeException;
  * Header names are case-insensitive, but normalized to Title-Case
  * when the response is parsed.
  *
- * ```
- * $val = $response->header('content-type');
- * ```
+ * `$val = $response->header('content-type');`
  *
  * Will read the Content-Type header. You can get all set
  * headers using:
  *
- * ```
- * $response->header();
- * ```
+ * `$response->header();`
  *
  * You can also get at the headers using object access. When getting
  * headers with object access, you have to use case-sensitive header
  * names:
  *
- * ```
- * $val = $response->headers['Content-Type'];
- * ```
+ * `$val = $response->headers['Content-Type'];`
  *
  * ### Get the response body
  *
  * You can access the response body using:
  *
- * ```
- * $content = $response->body();
- * ```
+ * `$content = $response->body();`
  *
  * You can also use object access:
  *
- * ```
- * $content = $response->body;
- * ```
+ * `$content = $response->body;`
  *
  * If your response body is in XML or JSON you can use
  * special content type specific accessors to read the decoded data.
@@ -78,15 +67,11 @@ use RuntimeException;
  *
  * You can access the response status code using:
  *
- * ```
- * $content = $response->statusCode();
- * ```
+ * `$content = $response->statusCode();`
  *
  * You can also use object access:
  *
- * ```
- * $content = $response->code;
- * ```
+ * `$content = $response->code;`
  */
 class Response extends Message
 {
@@ -115,7 +100,7 @@ class Response extends Message
     /**
      * Cached decoded JSON data.
      *
-     * @var array
+     * @var \SimpleXMLElement
      */
     protected $_json;
 
@@ -161,7 +146,7 @@ class Response extends Message
     protected function _decodeGzipBody($body)
     {
         if (!function_exists('gzinflate')) {
-            throw new RuntimeException('Cannot decompress gzip response body without gzinflate()');
+            throw new \RuntimeException('Cannot decompress gzip response body without gzinflate()');
         }
         $offset = 0;
         // Look for gzip 'signature'
@@ -362,9 +347,7 @@ class Response extends Message
      *
      * For example to get the json data as an object:
      *
-     * ```
-     * $body = $response->body('json_decode');
-     * ```
+     * `$body = $response->body('json_decode');`
      *
      * @param callable|null $parser The callback to use to decode
      *   the response body.

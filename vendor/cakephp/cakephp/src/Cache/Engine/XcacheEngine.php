@@ -58,12 +58,11 @@ class XcacheEngine extends CacheEngine
      */
     public function init(array $config = [])
     {
-        if (PHP_SAPI === 'cli' || !extension_loaded('xcache')) {
-            return false;
+        if (php_sapi_name() !== 'cli') {
+            parent::init($config);
+            return function_exists('xcache_info');
         }
-
-        parent::init($config);
-        return true;
+        return false;
     }
 
     /**

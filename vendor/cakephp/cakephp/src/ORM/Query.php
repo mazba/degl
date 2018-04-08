@@ -22,7 +22,6 @@ use Cake\ORM\EagerLoader;
 use Cake\ORM\ResultSet;
 use Cake\ORM\Table;
 use JsonSerializable;
-use RuntimeException;
 
 /**
  * Extends the base Query class to provide new methods related to association
@@ -477,28 +476,16 @@ class Query extends DatabaseQuery implements JsonSerializable
      */
     public function cleanCopy()
     {
-        return clone $this;
-    }
-
-    /**
-     * Object clone hook.
-     *
-     * Destroys the clones inner iterator and clones the value binder, and eagerloader instances.
-     *
-     * @return void
-     */
-    public function __clone()
-    {
-        $this->_iterator = null;
-        $this->triggerBeforeFind();
-        $this->eagerLoader(clone $this->eagerLoader());
-        $this->valueBinder(clone $this->valueBinder());
-        $this->autoFields(false);
-        $this->limit(null);
-        $this->order([], true);
-        $this->offset(null);
-        $this->mapReduce(null, null, true);
-        $this->formatResults(null, true);
+        $query = clone $this;
+        $query->triggerBeforeFind();
+        $query->autoFields(false);
+        $query->eagerLoader(clone $this->eagerLoader());
+        $query->limit(null);
+        $query->order([], true);
+        $query->offset(null);
+        $query->mapReduce(null, null, true);
+        $query->formatResults(null, true);
+        return $query;
     }
 
     /**
@@ -588,7 +575,7 @@ class Query extends DatabaseQuery implements JsonSerializable
     public function cache($key, $config = 'default')
     {
         if ($this->_type !== 'select' && $this->_type !== null) {
-            throw new RuntimeException('You cannot cache the results of non-select queries.');
+            throw new \RuntimeException('You cannot cache the results of non-select queries.');
         }
         return $this->_cache($key, $config);
     }
@@ -601,7 +588,7 @@ class Query extends DatabaseQuery implements JsonSerializable
     public function all()
     {
         if ($this->_type !== 'select' && $this->_type !== null) {
-            throw new RuntimeException(
+            throw new \RuntimeException(
                 'You cannot call all() on a non-select query. Use execute() instead.'
             );
         }
@@ -749,7 +736,7 @@ class Query extends DatabaseQuery implements JsonSerializable
      */
     public function update($table = null)
     {
-        $table = $table ?: $this->repository()->table();
+        $table = $this->repository()->table();
         return parent::update($table);
     }
 

@@ -15,7 +15,6 @@
 namespace Cake\Database\Type;
 
 use Cake\Database\Driver;
-use Cake\Database\Type;
 use PDO;
 
 /**
@@ -23,7 +22,7 @@ use PDO;
  *
  * Use to convert float/decimal data between PHP and the database types.
  */
-class FloatType extends Type
+class FloatType extends \Cake\Database\Type
 {
 
     /**

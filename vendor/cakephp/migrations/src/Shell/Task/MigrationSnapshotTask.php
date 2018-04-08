@@ -19,14 +19,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Filesystem\Folder;
-use Cake\ORM\AssociationCollection;
-use Cake\ORM\Association\BelongsTo;
-use Cake\ORM\Association\BelongsToMany;
-use Cake\ORM\Association\HasMany;
-use Cake\ORM\Association\HasOne;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Inflector;
-use Migrations\Shell\Task\SimpleMigrationTask;
 
 /**
  * Task class for generating migration snapshot files.
@@ -91,17 +84,18 @@ class MigrationSnapshotTask extends SimpleMigrationTask
         $fileName = pathinfo($path, PATHINFO_FILENAME);
         list($version, ) = explode('_', $fileName, 2);
 
-        $argv = $_SERVER['argv'];
-        $_SERVER['argv'] = [
-            '',
-            'migrations',
-            'mark_migrated',
-            $version
-        ];
+
+        $dispatchCommand = 'migrations mark_migrated ' . $version;
+        if (!empty($this->params['connection'])) {
+            $dispatchCommand .= ' -c ' . $this->params['connection'];
+        }
+
+        if (!empty($this->params['plugin'])) {
+            $dispatchCommand .= ' -p ' . $this->params['plugin'];
+        }
 
         $this->_io->out('Marking the snapshot ' . $fileName . ' as migrated...');
-        $result = $this->dispatchShell('migrations', 'mark_migrated', $version);
-        $_SERVER['argv'] = $argv;
+        $this->dispatchShell($dispatchCommand);
     }
 
     /**
@@ -148,6 +142,12 @@ class MigrationSnapshotTask extends SimpleMigrationTask
                 }
             }
         }
+
+        $autoId = true;
+        if (isset($this->params['disable-autoid'])) {
+            $autoId = !$this->params['disable-autoid'];
+        }
+
         return [
             'plugin' => $this->plugin,
             'pluginPath' => $pluginPath,
@@ -156,6 +156,7 @@ class MigrationSnapshotTask extends SimpleMigrationTask
             'tables' => $tables,
             'action' => 'create_table',
             'name' => $this->BakeTemplate->viewVars['name'],
+            'autoId' => $autoId
         ];
     }
 
@@ -163,7 +164,7 @@ class MigrationSnapshotTask extends SimpleMigrationTask
      * Get a collection from a database
      *
      * @param string $connection Database connection name.
-     * @return obj schemaCollection
+     * @return \Cake\Database\Schema\Collection
      */
     public function getCollection($connection)
     {
@@ -277,6 +278,10 @@ class MigrationSnapshotTask extends SimpleMigrationTask
             'boolean' => true,
             'default' => false,
             'help' => 'If require-table is set to true, check also that the table class exists.'
+        ])->addOption('disable-autoid', [
+            'boolean' => true,
+            'default' => false,
+            'help' => 'Disable phinx behavior of automatically adding an id field.'
         ]);
 
         return $parser;

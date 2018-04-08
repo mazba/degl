@@ -39,6 +39,7 @@ class DashboardController extends AppController
 
     public function index()
     {
+        //pr('success');die;
         $user = $this->Auth->user();
         if ($user) {
             $this->get_tasks();

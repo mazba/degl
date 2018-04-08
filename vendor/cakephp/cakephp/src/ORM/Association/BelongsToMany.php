@@ -20,8 +20,6 @@ use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
-use InvalidArgumentException;
-use RuntimeException;
 
 /**
  * Represents an M - N relationship where there exists a junction - or join - table
@@ -314,7 +312,7 @@ class BelongsToMany extends Association
 
         foreach ($fetchQuery->all() as $result) {
             if (!isset($result[$property])) {
-                throw new RuntimeException(sprintf(
+                throw new \RuntimeException(sprintf(
                     '"%s" is missing from the belongsToMany results. Results cannot be created.',
                     $property
                 ));
@@ -395,7 +393,7 @@ class BelongsToMany extends Association
         }
         if (!in_array($strategy, [self::SAVE_APPEND, self::SAVE_REPLACE])) {
             $msg = sprintf('Invalid save strategy "%s"', $strategy);
-            throw new InvalidArgumentException($msg);
+            throw new \InvalidArgumentException($msg);
         }
         return $this->_saveStrategy = $strategy;
     }
@@ -474,7 +472,7 @@ class BelongsToMany extends Association
         if (!(is_array($entities) || $entities instanceof \Traversable)) {
             $name = $this->property();
             $message = sprintf('Could not save %s, it cannot be traversed', $name);
-            throw new InvalidArgumentException($message);
+            throw new \InvalidArgumentException($message);
         }
 
         $table = $this->target();
@@ -723,7 +721,7 @@ class BelongsToMany extends Association
 
         if (count(array_filter($primaryValue, 'strlen')) !== count($primaryKey)) {
             $message = 'Could not find primary key value for source entity';
-            throw new InvalidArgumentException($message);
+            throw new \InvalidArgumentException($message);
         }
 
         return $this->junction()->connection()->transactional(
@@ -804,9 +802,6 @@ class BelongsToMany extends Association
         $primary = (array)$target->primaryKey();
         $jointProperty = $this->_junctionProperty;
         foreach ($targetEntities as $k => $entity) {
-            if (!($entity instanceof EntityInterface)) {
-                continue;
-            }
             $key = array_values($entity->extract($primary));
             foreach ($present as $i => $data) {
                 if ($key === $data && !$entity->get($jointProperty)) {
@@ -839,13 +834,13 @@ class BelongsToMany extends Association
     {
         if ($sourceEntity->isNew()) {
             $error = 'Source entity needs to be persisted before proceeding';
-            throw new InvalidArgumentException($error);
+            throw new \InvalidArgumentException($error);
         }
 
         foreach ($targetEntities as $entity) {
             if ($entity->isNew()) {
                 $error = 'Cannot link not persisted entities';
-                throw new InvalidArgumentException($error);
+                throw new \InvalidArgumentException($error);
             }
         }
 
@@ -876,9 +871,6 @@ class BelongsToMany extends Association
         $missing = [];
 
         foreach ($targetEntities as $entity) {
-            if (!($entity instanceof EntityInterface)) {
-                continue;
-            }
             $joint = $entity->get($jointProperty);
 
             if (!$joint || !($joint instanceof EntityInterface)) {

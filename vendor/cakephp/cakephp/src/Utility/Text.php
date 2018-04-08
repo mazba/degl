@@ -26,9 +26,6 @@ class Text
     /**
      * Generate a random UUID version 4
      *
-     * Warning: This method should not be used as a random seed for any cryptographic operations.
-     * Instead you should use the openssl or mcrypt extensions.
-     *
      * @see http://www.ietf.org/rfc/rfc4122.txt
      * @return string RFC 4122 UUID
      * @copyright Matt Farina MIT License https://github.com/lootils/uuid/blob/master/LICENSE
@@ -135,10 +132,7 @@ class Text
     /**
      * Replaces variable placeholders inside a $str with any given $data. Each key in the $data array
      * corresponds to a variable placeholder name in $str.
-     * Example:
-     * ```
-     * Text::insert(':name is :age years old.', ['name' => 'Bob', '65']);
-     * ```
+     * Example: `Text::insert(':name is :age years old.', ['name' => 'Bob', '65']);`
      * Returns: Bob is 65 years old.
      *
      * Available $options are:
@@ -592,13 +586,7 @@ class Text
                 }
             }
             $truncate = mb_substr($truncate, 0, $spacepos);
-
-            // If truncate still empty, then we don't need to count ellipsis in the cut.
-            if (mb_strlen($truncate) === 0) {
-                $truncate = mb_substr($text, 0, $length);
-            }
         }
-
         $truncate .= $ellipsis;
 
         if ($html) {

@@ -13,10 +13,8 @@ namespace Migrations\Command;
 
 use Migrations\ConfigurationTrait;
 use Phinx\Console\Command\AbstractCommand;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class MarkMigrated extends AbstractCommand
@@ -25,13 +23,36 @@ class MarkMigrated extends AbstractCommand
     use ConfigurationTrait;
 
     /**
+     * The console output instance
+     *
+     * @var \Symfony\Component\Console\Output\OutputInterface
+     */
+    protected $output;
+
+    /**
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @return mixed
+     */
+    public function output(OutputInterface $output = null)
+    {
+        if ($output !== null) {
+            $this->output = $output;
+        }
+        return $this->output;
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
     {
         $this->setName('mark_migrated')
             ->setDescription('Mark a migration as migrated')
-            ->addArgument('version', InputArgument::REQUIRED, 'What is the version of the migration?')
+            ->addArgument(
+                'version',
+                InputArgument::REQUIRED,
+                'What is the version of the migration? Use the special value `all` to mark all migrations as migrated.'
+            )
             ->setHelp(sprintf(
                 '%sMark a migration migrated based on its version number%s',
                 PHP_EOL,
@@ -44,57 +65,89 @@ class MarkMigrated extends AbstractCommand
 
     /**
      * Mark a migration migrated
+     * If the `version` argument has the value `all`, all migrations found will be marked as
+     * migrated
      *
-     * @param Symfony\Component\Console\Input\Inputnterface $input the input object
-     * @param Symfony\Component\Console\Input\OutputInterface $output the output object
+     * @param \Symfony\Component\Console\Input\InputInterface $input the input object
+     * @param \Symfony\Component\Console\Output\OutputInterface $output the output object
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->setInput($input);
         $this->bootstrap($input, $output);
+        $this->output($output);
 
         $path = $this->getConfig()->getMigrationPath();
         $version = $input->getArgument('version');
 
-        $migrationFile = glob($path . DS . $version . '*');
-        if (!empty($migrationFile)) {
-            $migrationFile = $migrationFile[0];
-            $className = $this->getMigrationClassName($migrationFile);
-            require_once $migrationFile;
-            $Migration = new $className($version);
+        if ($version === 'all' || $version === '*') {
+            $this->markAllMigrated($path);
+            return;
+        }
 
-            $time = date('Y-m-d H:i:s', time());
-
-            try {
-                $this->getManager()->getEnvironment('default')->getAdapter()->migrated($Migration, 'up', $time, $time);
-                $output->writeln('<info>Migration successfully marked migrated !</info>');
-            } catch (Exception $e) {
-                $output->writeln('<error>An error occurred : ' . $e->getMessage() . '</error>');
-            }
-        } else {
+        if ($this->getManager()->isMigrated($version)) {
             $output->writeln(
-                '<error>A migration file matching version number `' . $version . '` could not be found</error>'
+                sprintf(
+                    '<info>The migration with version number `%s` has already been marked as migrated.</info>',
+                    $version
+                )
             );
+            return;
+        }
+
+        try {
+            $this->getManager()->markMigrated($version, $path);
+            $output->writeln('<info>Migration successfully marked migrated !</info>');
+        } catch (\Exception $e) {
+            $output->writeln(sprintf('<error>An error occurred : %s</error>', $e->getMessage()));
         }
     }
 
     /**
-     * Resolves a migration class name based on $path
+     * Mark all migrations found in $path as migrated
      *
-     * @param string $path Path to the migration file of which we want the class name
-     * @return string Migration class name
+     * It will start a transaction and rollback in case one of the operation raises an exception
+     *
+     * @param string $path Path where to look for migrations
+     * @return void
      */
-    protected function getMigrationClassName($path)
+    protected function markAllMigrated($path)
     {
-        $class = preg_replace('/^[0-9]+_/', '', basename($path));
-        $class = str_replace('_', ' ', $class);
-        $class = ucwords($class);
-        $class = str_replace(' ', '', $class);
-        if (strpos($class, '.') !== false) {
-            $class = substr($class, 0, strpos($class, '.'));
+        $manager = $this->getManager();
+        $adapter = $manager->getEnvironment('default')->getAdapter();
+        $migrations = $manager->getMigrations();
+        $output = $this->output();
+
+        if (empty($migrations)) {
+            $output->writeln('<info>No migrations were found. Nothing to mark as migrated.</info>');
+            return;
         }
 
-        return $class;
+        $adapter->beginTransaction();
+        foreach ($migrations as $version => $migration) {
+            if ($manager->isMigrated($version)) {
+                $output->writeln(sprintf('<info>Skipping migration `%s` (already migrated).</info>', $version));
+            } else {
+                try {
+                    $this->getManager()->markMigrated($version, $path);
+                    $output->writeln(
+                        sprintf('<info>Migration `%s` successfully marked migrated !</info>', $version)
+                    );
+                } catch (\Exception $e) {
+                    $adapter->rollbackTransaction();
+                    $output->writeln(
+                        sprintf(
+                            '<error>An error occurred while marking migration `%s` as migrated : %s</error>',
+                            $version,
+                            $e->getMessage()
+                        )
+                    );
+                    $output->writeln('<error>All marked migrations during this process were unmarked.</error>');
+                    return;
+                }
+            }
+        }
+        $adapter->commitTransaction();
     }
 }

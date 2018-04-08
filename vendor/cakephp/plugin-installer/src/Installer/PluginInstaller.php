@@ -119,7 +119,12 @@ class PluginInstaller extends LibraryInstaller
         $vendorDir = realpath($config->get('vendor-dir'));
 
         $packages = $composer->getRepositoryManager()->getLocalRepository()->getPackages();
-        $pluginsDir = dirname($vendorDir) . DIRECTORY_SEPARATOR . 'plugins';
+        $extra = $event->getComposer()->getPackage()->getExtra();
+        if (empty($extra['plugin-paths'])) {
+            $pluginsDir = dirname($vendorDir) . DIRECTORY_SEPARATOR . 'plugins';
+        } else {
+            $pluginsDir = $extra['plugin-paths'];
+        }
 
         $plugins = static::determinePlugins($packages, $pluginsDir, $vendorDir);
 
@@ -134,7 +139,7 @@ class PluginInstaller extends LibraryInstaller
      * in the plugins directory to a plugin-name indexed array of paths
      *
      * @param array $packages an array of \Composer\Package\PackageInterface objects
-     * @param string $pluginsDir the path to the plugins dir
+     * @param string|array $pluginsDir the path to the plugins dir
      * @param string $vendorDir the path to the vendor dir
      * @return array plugin-name indexed paths to plugins
      */
@@ -152,20 +157,48 @@ class PluginInstaller extends LibraryInstaller
             $plugins[$ns] = $path;
         }
 
-        if (is_dir($pluginsDir)) {
-            $dir = new \DirectoryIterator($pluginsDir);
-            foreach ($dir as $info) {
-                if (!$info->isDir() || $info->isDot()) {
-                    continue;
-                }
+        foreach ((array)$pluginsDir as $path) {
+            $path = static::fullpath($path, $vendorDir);
+            if (is_dir($path)) {
+                $dir = new \DirectoryIterator($path);
+                foreach ($dir as $info) {
+                    if (!$info->isDir() || $info->isDot()) {
+                        continue;
+                    }
 
-                $name = $info->getFilename();
-                $plugins[$name] = $pluginsDir . DIRECTORY_SEPARATOR . $name;
+                    $name = $info->getFilename();
+                    if ($name{0} === '.') {
+                        continue;
+                    }
+
+                    $plugins[$name] = $path . DIRECTORY_SEPARATOR . $name;
+                }
             }
         }
 
         ksort($plugins);
+
         return $plugins;
+    }
+
+    /**
+     * Turns relative paths in full paths.
+     *
+     * @param string $path Path
+     * @param string $vendorDir The path to the vendor dir
+     * @return string
+     */
+    protected static function fullpath($path, $vendorDir)
+    {
+        if (preg_match('{^(?:/|[a-z]:|[a-z0-9.]+://)}i', $path)) {
+            return rtrim($path, '/');
+        }
+
+        if (substr($path, 0, 2) === './') {
+            $path = substr($path, 2);
+        }
+
+        return rtrim(dirname($vendorDir) . DIRECTORY_SEPARATOR . $path);
     }
 
     /**
@@ -173,23 +206,24 @@ class PluginInstaller extends LibraryInstaller
      *
      * @param string $configFile the path to the config file
      * @param array $plugins of plugins
+     * @param string|null $root The root directory. Defaults to a value generated from $configFile
      * @return void
      */
-    public static function writeConfigFile($configFile, $plugins)
+    public static function writeConfigFile($configFile, $plugins, $root = null)
     {
-        $root = dirname(dirname($configFile));
+        $root = $root ?: dirname(dirname($configFile));
 
         $data = [];
         foreach ($plugins as $name => $pluginPath) {
+            // Normalize to *nix paths.
+            $pluginPath = str_replace('\\', '/', $pluginPath);
+            $pluginPath .= '/';
+
             $pluginPath = str_replace(
                 DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR,
                 DIRECTORY_SEPARATOR,
                 $pluginPath
             );
-
-            // Normalize to *nix paths.
-            $pluginPath = str_replace('\\', '/', $pluginPath);
-            $pluginPath .= '/';
 
             // Namespaced plugins should use /
             $name = str_replace('\\', '/', $name);
@@ -199,16 +233,23 @@ class PluginInstaller extends LibraryInstaller
 
         $data = implode(",\n", $data);
 
-        $contents = <<<PHP
+        $contents = <<<'PHP'
 <?php
-\$baseDir = dirname(dirname(__FILE__));
+$baseDir = dirname(dirname(__file__));
 return [
     'plugins' => [
-$data
+%s
     ]
 ];
-
 PHP;
+        $contents = sprintf($contents, $data);
+
+        // Gross hacks to work around composer smashing `__FILE__` in this
+        // PHP file when it runs the code through eval()
+        $uppercase = function ($matches) {
+            return strtoupper($matches[0]);
+        };
+        $contents = preg_replace_callback('/__file__/', $uppercase, $contents);
 
         $root = str_replace(
             DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR,
@@ -219,6 +260,7 @@ PHP;
         // Normalize to *nix paths.
         $root = str_replace('\\', '/', $root);
         $contents = str_replace('\'' . $root, '$baseDir . \'', $contents);
+
         file_put_contents($configFile, $contents);
     }
 
@@ -280,6 +322,7 @@ PHP;
                 )
             );
         }
+
         return trim($primaryNs, '\\');
     }
 
@@ -374,6 +417,7 @@ PHP;
                 'ERROR - `vendor/cakephp-plugins.php` file is invalid. ' .
                 'Plugin path configuration not updated.'
             );
+
             return;
         }
         if (!isset($config['plugins'])) {
@@ -382,19 +426,10 @@ PHP;
         if ($path == null) {
             unset($config['plugins'][$name]);
         } else {
-            $path = str_replace(
-                DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR,
-                DIRECTORY_SEPARATOR,
-                $path
-            );
-
-            // Normalize to *nix paths.
-            $path = str_replace('\\', '/', $path);
-            $path .= '/';
-
             $config['plugins'][$name] = $path;
         }
-        $this->_writeConfig($configFile, $config);
+        $root = dirname($this->vendorDir);
+        static::writeConfigFile($configFile, $config['plugins'], $root);
     }
 
     /**
@@ -411,6 +446,7 @@ PHP;
             if ($this->io->isVerbose()) {
                 $this->io->write('vendor/cakephp-plugins.php exists.');
             }
+
             return;
         }
 
@@ -420,51 +456,18 @@ PHP;
             if ($this->io->isVerbose()) {
                 $this->io->write('config/plugins.php found and copied to vendor/cakephp-plugins.php.');
             }
+
             return;
         }
 
-        $contents = <<<'PHP'
-<?php
-$baseDir = dirname(dirname(__FILE__));
-return [
-    'plugins' => []
-];
-PHP;
         if (!is_dir(dirname($path))) {
             mkdir(dirname($path));
         }
-        file_put_contents($path, $contents);
+        $root = dirname($this->vendorDir);
+        static::writeConfigFile($path, [], $root);
 
         if ($this->io->isVerbose()) {
             $this->io->write('Created vendor/cakephp-plugins.php');
         }
-    }
-
-    /**
-     * Dump the generate configuration out to a file.
-     *
-     * @param string $path The path to write.
-     * @param array $config The config data to write.
-     * @return void
-     */
-    protected function _writeConfig($path, $config)
-    {
-        $root = dirname($this->vendorDir);
-        $data = '';
-        foreach ($config['plugins'] as $name => $pluginPath) {
-            $data .= sprintf("        '%s' => '%s',\n", $name, $pluginPath);
-        }
-        $contents = <<<PHP
-<?php
-\$baseDir = dirname(dirname(__FILE__));
-return [
-    'plugins' => [
-$data
-    ]
-];
-
-PHP;
-        $contents = str_replace('\'' . $root, '$baseDir . \'', $contents);
-        file_put_contents($path, $contents);
     }
 }

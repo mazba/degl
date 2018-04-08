@@ -964,7 +964,17 @@ class View
         }
         list($plugin, $name) = $this->pluginSplit($name);
 
-        $layoutPaths = $this->_getSubPaths('Layout' . DS . $subDir);
+        $layoutPaths = ['Layout' . DS . $subDir];
+        if (!empty($this->request->params['prefix'])) {
+            $prefixPath = array_map(
+                'Cake\Utility\Inflector::camelize',
+                explode('/', $this->request->params['prefix'])
+            );
+            array_unshift(
+                $layoutPaths,
+                implode('/', $prefixPath) . DS . $layoutPaths[0]
+            );
+        }
 
         foreach ($this->_paths($plugin) as $path) {
             foreach ($layoutPaths as $layoutPath) {
@@ -990,46 +1000,12 @@ class View
         list($plugin, $name) = $this->pluginSplit($name);
 
         $paths = $this->_paths($plugin);
-        $elementPaths = $this->_getSubPaths('Element');
-
         foreach ($paths as $path) {
-            foreach ($elementPaths as $elementPath) {
-                if (file_exists($path . $elementPath . DS . $name . $this->_ext)) {
-                    return $path . $elementPath . DS . $name . $this->_ext;
-                }
+            if (file_exists($path . 'Element' . DS . $name . $this->_ext)) {
+                return $path . 'Element' . DS . $name . $this->_ext;
             }
         }
         return false;
-    }
-
-    /**
-     * Find all sub templates path, based on $basePath
-     * If a prefix is defined in the current request, this method will prepend
-     * the prefixed template path to the $basePath, cascading up in case the prefix
-     * is nested.
-     * This is essentially used to find prefixed template paths for elements
-     * and layouts.
-     *
-     * @param string $basePath Base path on which to get the prefixed one.
-     * @return array Array with all the templates paths.
-     */
-    protected function _getSubPaths($basePath)
-    {
-        $paths = [$basePath];
-        if (!empty($this->request->params['prefix'])) {
-            $prefixPath = explode('/', $this->request->params['prefix']);
-            $path = '';
-            foreach ($prefixPath as $prefixPart) {
-                $path .= Inflector::camelize($prefixPart) . DS;
-
-                array_unshift(
-                    $paths,
-                    $path . $basePath
-                );
-            }
-        }
-
-        return $paths;
     }
 
     /**

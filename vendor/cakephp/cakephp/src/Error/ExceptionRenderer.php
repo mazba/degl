@@ -325,7 +325,7 @@ class ExceptionRenderer
         $this->controller->subDir = null;
         $this->controller->viewPath = 'Error';
         $this->controller->layout = 'error';
-        $this->controller->helpers = ['Form', 'Html'];
+        $this->controller->helpers = ['Form', 'Html', 'Session'];
 
         $view = $this->controller->createView();
         $this->controller->response->body($view->render($template, 'error'));

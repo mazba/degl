@@ -42,12 +42,8 @@ class WincacheEngine extends CacheEngine
      */
     public function init(array $config = [])
     {
-        if (!extension_loaded('wincache')) {
-            return false;
-        }
-
         parent::init($config);
-        return true;
+        return function_exists('wincache_ucache_info');
     }
 
     /**

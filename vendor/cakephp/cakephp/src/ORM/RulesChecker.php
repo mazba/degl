@@ -354,7 +354,7 @@ class RulesChecker
             }
         }
 
-        $errorField = is_string($field) ? $field : current($field);
+        $errorField = $field;
         return $this->_addError(new ExistsIn($field, $table), '_existsIn', compact('errorField', 'message'));
     }
 
@@ -376,24 +376,19 @@ class RulesChecker
 
         return function ($entity, $scope) use ($rule, $name, $options) {
             $pass = $rule($entity, $options + $scope);
-            if ($pass === true || empty($options['errorField'])) {
-                return $pass === true;
+
+            if ($pass || empty($options['errorField'])) {
+                return $pass;
             }
 
-            $message = 'invalid';
-            if (isset($options['message'])) {
-                $message = $options['message'];
-            }
-            if (is_string($pass)) {
-                $message = $pass;
-            }
+            $message = isset($options['message']) ? $options['message'] : 'invalid';
             if ($name) {
                 $message = [$name => $message];
             } else {
-                $message = [$message];
+                $message = (array)$message;
             }
             $entity->errors($options['errorField'], $message);
-            return $pass === true;
+            return $pass;
         };
     }
 }

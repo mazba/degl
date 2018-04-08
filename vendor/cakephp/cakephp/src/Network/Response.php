@@ -69,7 +69,6 @@ class Response
         415 => 'Unsupported Media Type',
         416 => 'Requested range not satisfiable',
         417 => 'Expectation Failed',
-        429 => 'Too Many Requests',
         500 => 'Internal Server Error',
         501 => 'Not Implemented',
         502 => 'Bad Gateway',
@@ -552,35 +551,21 @@ class Response
      * Returns the complete list of buffered headers
      *
      * ### Single header
-     * ```
-     * header('Location', 'http://example.com');
-     * ```
+     * e.g `header('Location', 'http://example.com');`
      *
      * ### Multiple headers
-     * ```
-     * header(['Location' => 'http://example.com', 'X-Extra' => 'My header']);
-     * ```
+     * e.g `header(['Location' => 'http://example.com', 'X-Extra' => 'My header']);`
      *
      * ### String header
-     * ```
-     * header('WWW-Authenticate: Negotiate');
-     * ```
+     * e.g `header('WWW-Authenticate: Negotiate');`
      *
      * ### Array of string headers
-     * ```
-     * header(['WWW-Authenticate: Negotiate', 'Content-type: application/pdf']);
-     * ```
+     * e.g `header(['WWW-Authenticate: Negotiate', 'Content-type: application/pdf']);`
      *
      * Multiple calls for setting the same header name will have the same effect as setting the header once
      * with the last value sent for it
-     * ```
-     * header('WWW-Authenticate: Negotiate');
-     * header('WWW-Authenticate: Not-Negotiate');
-     * ```
-     * will have the same effect as only doing
-     * ```
-     * header('WWW-Authenticate: Not-Negotiate');
-     * ```
+     *  e.g `header('WWW-Authenticate: Negotiate'); header('WWW-Authenticate: Not-Negotiate');`
+     * will have the same effect as only doing `header('WWW-Authenticate: Not-Negotiate');`
      *
      * @param string|array|null $header An array of header strings or a single header string
      *  - an associative array of "header name" => "header value" is also accepted
@@ -718,27 +703,19 @@ class Response
      *
      * ### Setting the content type
      *
-     * ```
-     * type('jpg');
-     * ```
+     * e.g `type('jpg');`
      *
      * ### Returning the current content type
      *
-     * ```
-     * type();
-     * ```
+     * e.g `type();`
      *
      * ### Storing content type definitions
      *
-     * ```
-     * type(['keynote' => 'application/keynote', 'bat' => 'application/bat']);
-     * ```
+     * e.g `type(['keynote' => 'application/keynote', 'bat' => 'application/bat']);`
      *
      * ### Replacing a content type definition
      *
-     * ```
-     * type(['jpg' => 'text/plain']);
-     * ```
+     * e.g `type(['jpg' => 'text/plain']);`
      *
      * @param string|null $contentType Content type key.
      * @return mixed Current content type or false if supplied an invalid content type
@@ -1308,29 +1285,19 @@ class Response
      * This method allow multiple ways to setup the domains, see the examples
      *
      * ### Full URI
-     * ```
-     * cors($request, 'http://www.cakephp.org');
-     * ```
+     * e.g `cors($request, 'http://www.cakephp.org');`
      *
      * ### URI with wildcard
-     * ```
-     * cors($request, 'http://*.cakephp.org');
-     * ```
+     * e.g `cors($request, 'http://*.cakephp.org');`
      *
      * ### Ignoring the requested protocol
-     * ```
-     * cors($request, 'www.cakephp.org');
-     * ```
+     * e.g `cors($request, 'www.cakephp.org');`
      *
      * ### Any URI
-     * ```
-     * cors($request, '*');
-     * ```
+     * e.g `cors($request, '*');`
      *
      * ### Whitelist of URIs
-     * ```
-     * cors($request, ['http://www.cakephp.org', '*.google.com', 'https://myproject.github.io']);
-     * ```
+     * e.g `cors($request, ['http://www.cakephp.org', '*.google.com', 'https://myproject.github.io']);`
      *
      * @param \Cake\Network\Request $request Request object
      * @param string|array $allowedDomains List of allowed domains, see method description for more details

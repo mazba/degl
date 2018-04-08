@@ -17,6 +17,7 @@ namespace Cake\Core\Configure\Engine;
 use Cake\Core\Configure\ConfigEngineInterface;
 use Cake\Core\Configure\FileConfigTrait;
 use Cake\Core\Exception\Exception;
+use Cake\Core\Plugin;
 
 /**
  * JSON engine allows Configure to load configuration values from
