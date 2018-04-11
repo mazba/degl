@@ -198,6 +198,7 @@ class ProcessedRaBillsController extends AppController
         $purtoBill = $this->ProcessedRaBills->find('all')
             ->select([
                 'id' => 'ProcessedRaBills.id',
+                'contractor' => 'contractors.contractor_title',
                 'scheme_id' => 'ProcessedRaBills.scheme_id',
                 'bill_amount' => 'ProcessedRaBills.bill_amount',
                 'security' => 'ProcessedRaBills.security',
@@ -236,16 +237,7 @@ class ProcessedRaBillsController extends AppController
             ->where(['ProcessedRaBills.id' => $id])
             ->hydrate(false)
             ->first();
-//        pr($purtoBill);die;
-/*        $purtoBill = $this->ProcessedRaBills->get($id, ['contain' => [
-            'Schemes.SchemeContractors.Contractors',
-            'Schemes',
-            'Schemes.Districts',
-            'Schemes.Upazilas',
-            'Schemes.Packages',
-            'Schemes.ProposedRaBills',
-            'ProcessedReports'
-        ]]);*/
+        //pr($purtoBill);die;
         $this->set(compact('purtoBill'));
     }
 }

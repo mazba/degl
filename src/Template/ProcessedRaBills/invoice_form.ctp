@@ -86,22 +86,22 @@
                                     <td colspan="3">
                                         <table class="text-center">
                                             <tr>
-                                                <td class="border"><?= $this->Number->format('5') ?></td>
+                                                <td class="border"></td>
                                                 <td>--</td>
-                                                <td class="border"><?= $this->Number->format('3') ?></td>
-                                                <td class="border"><?= $this->Number->format('7') ?></td>
-                                                <td class="border"><?= $this->Number->format('3') ?></td>
-                                                <td class="border"><?= $this->Number->format('1') ?></td>
+                                                <td class="border"></td>
+                                                <td class="border"></td>
+                                                <td class="border"></td>
+                                                <td class="border"></td>
                                                 <td>--</td>
-                                                <td class="border"><?= $this->Number->format('8') ?></td>
-                                                <td class="border"><?= $this->Number->format('0') ?></td>
-                                                <td class="border"><?= $this->Number->format('4') ?></td>
-                                                <td class="border"><?= $this->Number->format('8') ?></td>
+                                                <td class="border"></td>
+                                                <td class="border"></td>
+                                                <td class="border"></td>
+                                                <td class="border"></td>
                                                 <td>--</td>
-                                                <td class="border">x</td>
-                                                <td class="border">x</td>
-                                                <td class="border">x</td>
-                                                <td class="border">x</td>
+                                                <td class="border"></td>
+                                                <td class="border"></td>
+                                                <td class="border"></td>
+                                                <td class="border"></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -159,67 +159,68 @@
                                 <tr>
                                     <td>&nbsp;</td>
                                     <td><?= $purtoBill['scheme_name'] ?></td>
-                                    <td><?= $this->Number->format('0') ?></td>
+                                    <td><?= $this->Number->format($purtoBill['bill_amount']) ?></td>
                                     <td>&nbsp;</td>
                                 </tr>
                                 <?php if (isset($purtoBill['security'])) { ?>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td><?= __('Security') ?></td>
-                                        <td><?= $this->Number->format($purtoBill['security']) ?></td>
+                                        <td><?= __('Security') ?> = <?= $this->Number->format($purtoBill['security']) ?></td>
+                                        <td> </td>
                                         <td>&nbsp;</td>
                                     </tr>
                                 <?php } ?>
                                 <?php if (isset($purtoBill['vat'])) { ?>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td><?= __('Vat') ?></td>
-                                        <td><?= $this->Number->format($purtoBill['vat']) ?></td>
+                                        <td><?= __('Vat') ?> = <?= $this->Number->format($purtoBill['vat']) ?></td>
+                                        <td></td>
                                         <td>&nbsp;</td>
                                     </tr>
                                 <?php } ?>
                                 <?php if (isset($purtoBill['income_tex'])) { ?>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td><?= __('Income Tax') ?></td>
-                                        <td><?= $this->Number->format($purtoBill['income_tex']) ?></td>
+                                        <td><?= __('Income Tax') ?> = <?= $this->Number->format($purtoBill['income_tex']) ?></td>
+                                        <td></td>
                                         <td>&nbsp;</td>
                                     </tr>
                                 <?php } ?>
                                 <?php if (isset($purtoBill['hire_charge'])) { ?>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td><?= __('Roller Charge') ?></td>
-                                        <td><?= $this->Number->format($purtoBill['hire_charge']) ?></td>
+                                        <td><?= __('Roller Charge') ?> = <?= $this->Number->format($purtoBill['hire_charge']) ?></td>
+                                        <td></td>
                                         <td>&nbsp;</td>
                                     </tr>
                                 <?php } ?>
                                 <?php if (isset($purtoBill['lab_fee'])) { ?>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td><?= __('Lab Fee') ?></td>
-                                        <td><?= $this->Number->format($purtoBill['lab_fee']) ?></td>
+                                        <td><?= __('Lab Fee') ?> = <?= $this->Number->format($purtoBill['lab_fee']) ?></td>
+                                        <td></td>
                                         <td>&nbsp;</td>
                                     </tr>
                                 <?php } ?>
                                 <?php if (isset($purtoBill['fine'])) { ?>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td><?= __('Fine') ?></td>
-                                        <td><?= $this->Number->format($purtoBill['fine']) ?></td>
+                                        <td><?= __('Fine') ?> = <?= $this->Number->format($purtoBill['fine']) ?></td>
+                                        <td></td>
                                         <td>&nbsp;</td>
                                     </tr>
                                 <?php } ?>
                                 <tr>
                                     <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td> <?php echo __('মোট কর্তন')?></td>
+                                    <?php $total_cut = $purtoBill['security'] + $purtoBill['vat'] + $purtoBill['income_tex'] + $purtoBill['hire_charge'] + $purtoBill['lab_fee'] + $purtoBill['fine']?>
+                                    <td><?= $this->Number->format($total_cut)?></td>
                                     <td></td>
                                 </tr>
                                 <?php if (isset($purtoBill['net_payable'])) { ?>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td><?= __('Net Taka') ?></td>
+                                        <td><?= __('নীট টাকা') ?></td>
                                         <td><?= $this->Number->format($purtoBill['net_payable']) ?></td>
                                         <td>&nbsp;</td>
                                     </tr>
@@ -797,22 +798,22 @@
                                         <td colspan="3">
                                             <table class="text-center">
                                                 <tr>
-                                                    <td class="border"><?= $this->Number->format('5') ?></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('7') ?></td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('4') ?></td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('9') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -859,8 +860,8 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td><?php  //$purtoBill->contractor->comntractor_title ?></td>
-                                        <td><?= $purtoBill['id'] ?>
+                                        <td><?php echo  $purtoBill['contractor'] ?></td>
+                                        <td><?= $this->Number->format($purtoBill['id']) ?>
                                             কাজের <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের অবশিষ্ঠ অংশ সহ জামানত কর্তন</td>
                                         <td>বুক ট্রান্সফার</td>
                                         <td><?= $this->Number->format($purtoBill['security']) ?></td>
@@ -941,22 +942,22 @@
                                         <td colspan="3">
                                             <table class="text-center">
                                                 <tr>
-                                                    <td class="border"><?= $this->Number->format('5') ?></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('7') ?></td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('4') ?></td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -1018,8 +1019,8 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td><?= $purtoBill['scheme_name'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের অবশিষ্ঠ অংশের ভ্যাট কর্তন</td>
+                                        <td>&nbsp;<?= $purtoBill['contractor'] ?></td>
+                                        <td><?= $purtoBill['scheme_name'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের ভ্যাট কর্তন</td>
                                         <td>&nbsp;</td>
                                         <td><?= $this->Number->format($purtoBill['vat']) ?></td>
                                         <td>&nbsp;</td>
@@ -1099,22 +1100,22 @@
                                         <td colspan="3">
                                             <table class="text-center">
                                                 <tr>
-                                                    <td class="border"><?= $this->Number->format('5') ?></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('7') ?></td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('4') ?></td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -1177,8 +1178,8 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td><?= $purtoBill['scheme_name'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের অবশিষ্ঠ অংশের আয়কর কর্তন</td>
+                                        <td>&nbsp;<?= $purtoBill['contractor']?></td>
+                                        <td><?= $purtoBill['scheme_name'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের আয়কর কর্তন</td>
                                         <td>&nbsp;</td>
                                         <td><?= $this->Number->format($purtoBill['income_tex']) ?></td>
                                         <td>&nbsp;</td>
@@ -1258,22 +1259,22 @@
                                         <td colspan="3">
                                             <table class="text-center">
                                                 <tr>
-                                                    <td class="border"><?= $this->Number->format('5') ?></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('7') ?></td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('4') ?></td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('2') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -1336,8 +1337,8 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td><?= $purtoBill['scheme_name'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের অবশিষ্ঠ অংশের রোলার ভাড়া  কর্তন</td>
+                                        <td>&nbsp;<?= $purtoBill['contractor']?></td>
+                                        <td><?= $purtoBill['scheme_name'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের রোলার ভাড়া  কর্তন</td>
                                         <td>&nbsp;</td>
                                         <td><?= $this->Number->format($purtoBill['hire_charge']) ?></td>
                                         <td>&nbsp;</td>
@@ -1417,22 +1418,22 @@
                                         <td colspan="3">
                                             <table class="text-center">
                                                 <tr>
-                                                    <td class="border"><?= $this->Number->format('5') ?></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('7') ?></td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('4') ?></td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('2') ?></td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
-                                                    <td class="border"><?= $this->Number->format('7') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -1495,8 +1496,8 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td><?= $purtoBill['scheme_name'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের অবশিষ্ঠ অংশের ল্যাব  কর্তন</td>
+                                        <td>&nbsp;<?= $purtoBill['contractor']?></td>
+                                        <td><?= $purtoBill['scheme_name'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের ল্যাব  কর্তন</td>
                                         <td>&nbsp;</td>
                                         <td><?= $this->Number->format($purtoBill['lab_fee']) ?></td>
                                         <td>&nbsp;</td>
@@ -1576,22 +1577,22 @@
                                         <td colspan="3">
                                             <table class="text-center">
                                                 <tr>
-                                                    <td class="border"><?= $this->Number->format('5') ?></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('7') ?></td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('4') ?></td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
-                                                    <td class="border"><?= $this->Number->format('9') ?></td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -1654,8 +1655,8 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td><?= $purtoBill['scheme_name'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের অবশিষ্ঠ অংশের জরিমানা  কর্তন</td>
+                                        <td>&nbsp;<?= $purtoBill['contractor']?></td>
+                                        <td><?= $purtoBill['scheme_name'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের জরিমানা  কর্তন</td>
                                         <td>&nbsp;</td>
                                         <td><?= $this->Number->format($purtoBill['fine']) ?></td>
                                         <td>&nbsp;</td>
@@ -1735,22 +1736,22 @@
                                         <td colspan="3">
                                             <table class="text-center">
                                                 <tr>
-                                                    <td class="border"><?= $this->Number->format('5') ?></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('7') ?></td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('4') ?></td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
-                                                    <td class="border"><?= $this->Number->format('9') ?></td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -1813,8 +1814,8 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td><?= $purtoBill['name_bn'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের অবশিষ্ঠ অংশের জরিমানা  কর্তন</td>
+                                        <td>&nbsp;<?= $purtoBill['contractor']?></td>
+                                        <td><?= $purtoBill['name_bn'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের জরিমানা  কর্তন</td>
                                         <td>&nbsp;</td>
                                         <td><?= $this->Number->format($purtoBill['cost_of_material']) ?></td>
                                         <td>&nbsp;</td>
@@ -1894,22 +1895,22 @@
                                         <td colspan="3">
                                             <table class="text-center">
                                                 <tr>
-                                                    <td class="border"><?= $this->Number->format('5') ?></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('7') ?></td>
-                                                    <td class="border"><?= $this->Number->format('3') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('4') ?></td>
-                                                    <td class="border"><?= $this->Number->format('8') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                     <td>--</td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
-                                                    <td class="border"><?= $this->Number->format('9') ?></td>
-                                                    <td class="border"><?= $this->Number->format('0') ?></td>
-                                                    <td class="border"><?= $this->Number->format('1') ?></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
+                                                    <td class="border"></td>
                                                 </tr>
                                             </table>
                                         </td>
@@ -1972,8 +1973,8 @@
                                     </tr>
                                     <tr>
                                         <td>&nbsp;</td>
-                                        <td>&nbsp;</td>
-                                        <td><?= $purtoBill['scheme_name'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের অবশিষ্ঠ অংশের জরিমানা  কর্তন</td>
+                                        <td>&nbsp;<?= $purtoBill['contractor']?></td>
+                                        <td><?= $purtoBill['scheme_name'] ?> <?= $purtoBill['bill_type']?$purtoBill['bill_type']:'' ?> বিলের জরিমানা  কর্তন</td>
                                         <td>&nbsp;</td>
                                         <td><?= $this->Number->format($purtoBill['etc_fee']) ?></td>
                                         <td>&nbsp;</td>
