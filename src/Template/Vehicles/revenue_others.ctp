@@ -1,5 +1,5 @@
 <?php
-
+//pr($income);die;
 $month = [1 => 'January',2 => 'February',3 => 'March',4 => 'April',5 => 'May',6 => 'June',7=>'July',8=>'August',9=>'September',10=>'October',11=>'November',12=>'December'];
 
 ?>
@@ -92,8 +92,8 @@ $month = [1 => 'January',2 => 'February',3 => 'March',4 => 'April',5 => 'May',6 
                                 ' ট্রাক- '.$this->Common->EngToBanglaNum($mechanical_status['active_truck']).'টি';
                                 ?></td>
                             <td class="text-center"><?= $this->Common->EngToBanglaNum($mechanical_status['deactivated_vehicle']).'টি' ?></td>
-                            <td class="text-center"><?php ?><?= $income['income']?$this->Number->format($income['income']):0 ?></td>
                             <td class="text-center"><?php ?><?= $income['expense']?$this->Number->format($income['expense']):0 ?></td>
+                            <td class="text-center"><?php ?><?= $income['income']?$this->Number->format($income['income']):0 ?></td>
                             <td class="text-center"><?php ?></td>
                         </tr>
                         </tbody>
