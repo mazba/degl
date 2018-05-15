@@ -28,6 +28,7 @@ $month = [1 => 'January',2 => 'February',3 => 'March',4 => 'April',5 => 'May',6 
                         <th><?= __('অর্থবছর') ?></th>
                         <th><?= __('মাস') ?></th>
                         <th><?= __('আয়') ?></th>
+                        <th><?= __('পূর্তকাজের মোট ব্যয়') ?></th>
                         <th><?= __('ব্যয়') ?></th>
                         <th><?= __('পদক্ষেপ') ?></th>
                     </tr>
@@ -42,6 +43,7 @@ $month = [1 => 'January',2 => 'February',3 => 'March',4 => 'April',5 => 'May',6 
                             <td><?= h($revenueList['financial_year_estimate']['name']) ?></td>
                             <td><?= h($month[$revenueList['month']]) ?></td>
                             <td><?= h($revenueList['income']) ?></td>
+                            <td><?= $revenueList['total_expense'] ?></td>
                             <td><?= h($revenueList['expense']) ?></td>
                             <td class="actions">
                                 <?php

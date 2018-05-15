@@ -442,7 +442,7 @@ class VehiclesController extends AppController
                 ->first();*/
             $this->loadModel('EquipmentRevenues');
             $income = $this->EquipmentRevenues->find()
-                ->select(['month', 'income', 'expense'])
+                ->select(['month', 'income', 'expense','total_expense'])
                 ->where([
                     'financial_year_estimate_id' => $data['financial_year_estimate_id'],
                     'month' => $data['month'],

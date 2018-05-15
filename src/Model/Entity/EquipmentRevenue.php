@@ -15,15 +15,8 @@ class EquipmentRevenue extends Entity
      * @var array
      */
     protected $_accessible = [
-        'financial_year_estimate_id' => true,
-        'month' => true,
-        'income' => true,
-        'expense' => true,
-        'status' => true,
-        'created_by' => true,
-        'created_date' => true,
-        'updated_by' => true,
-        'updated_date' => true,
-        'financial_year_estimate' => true,
+
+        '*' => true,
+        'id' => false
     ];
 }

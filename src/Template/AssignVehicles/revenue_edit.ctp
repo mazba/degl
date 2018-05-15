@@ -24,6 +24,7 @@ $month = [1 => 'January',2 => 'February',3 => 'March',4 => 'April',5 => 'May',6 
             echo $this->Form->input('financial_year_estimate_id', ['options' => $fiscalYears, 'empty' => 'নির্বাচন করুন', 'required' => 'required']);
             echo $this->Form->input('month', ['label' => 'মাস', 'options' => $month,  'empty' => 'নির্বাচন করুন', 'required' => 'required']);
             echo $this->Form->input('income', ['type' => 'number', 'label' => 'আয়', 'required' => 'required']);
+            echo $this->Form->input('total_expense', ['type' => 'number', 'label' => 'পূর্তকাজের মোট ব্যয়', 'required' => 'required']);
             echo $this->Form->input('expense', ['type' => 'number', 'label' => 'ব্যয়', 'required' => 'required']);
             ?>
         </div>
