@@ -63,8 +63,8 @@ $month = [1 => 'January',2 => 'February',3 => 'March',4 => 'April',5 => 'May',6 
                             <th colspan="2"  style="vertical-align: top;" class="third-width text-center"><?= 'মোট অচল রোলার এর সংখ্যা' ?></th>
                             <th rowspan="2"  style="vertical-align: top" class="text-center"><?= 'সচল যানবাহনের (জিপ, পিকআপ, ট্রাক,মোটরসাইকেল) সংখ্যা' ?></th>
                             <th rowspan="2"  style="vertical-align: top" class="text-center"><?= 'অচল যানবাহনের (জিপ, পিকআপ, ট্রাক,মোটরসাইকেল) সংখ্যা' ?></th>
-                            <th rowspan="2"  style="vertical-align: top" class="text-center"><?= 'নির্মাণ যন্ত্রপাতি থেকে আয় (লক্ষ টাকায়)' ?></th>
                             <th rowspan="2"  style="vertical-align: top; width: 160px !important;" class="text-center"> পূর্তকাজের মোট ব্যয় (লক্ষ টাকায়) (ব্রীজ, কালভার্ট, সড়ক, হাট-বাজার)</th>
+                            <th rowspan="2"  style="vertical-align: top" class="text-center"><?= 'নির্মাণ যন্ত্রপাতি থেকে আয় (লক্ষ টাকায়)' ?></th>
                             <th rowspan="2"  style="vertical-align: top" class="text-center"><?= 'নির্মাণ যন্ত্রপাতি থেকে ব্যয় (লক্ষ টাকায়)' ?></th>
                             <th rowspan="2"  style="vertical-align: top" class="text-center"><?= 'মন্তব্য' ?></th>
                         </tr>
@@ -93,8 +93,8 @@ $month = [1 => 'January',2 => 'February',3 => 'March',4 => 'April',5 => 'May',6 
                                 ' ট্রাক- '.$this->Common->EngToBanglaNum($mechanical_status['active_truck']).'টি';
                                 ?></td>
                             <td class="text-center"><?= $this->Common->EngToBanglaNum($mechanical_status['deactivated_vehicle']).'টি' ?></td>
-                            <td class="text-center"><?php ?><?= $income['income']?$this->Number->format($income['income']):0 ?></td>
                             <td class="text-center"><?php ?><?= $income['total_expense']?$this->Number->format($income['total_expense']):0 ?></td>
+                            <td class="text-center"><?php ?><?= $income['income']?$this->Number->format($income['income']):0 ?></td>
                             <td class="text-center"><?php ?><?= $income['expense']?$this->Number->format($income['expense']):0 ?></td>
                             <td class="text-center"><?php ?></td>
                         </tr>
