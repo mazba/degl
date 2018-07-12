@@ -199,7 +199,7 @@ class SchemesController extends AppController {
     $scheme = $this->Schemes->get($id);
     if ($this->request->is(['patch', 'post', 'put'])) {
       $data = $this->request->data;
-
+        //pr($data);die;
       // echo "<pre>";print_r($data);die();
       $newspaper = array();
       for ($i = 0; $i < count($data['newspaper']); $i++) {
@@ -795,7 +795,6 @@ class SchemesController extends AppController {
     //echo "<pre>",print_r($scheme),"<pre>";die();
     if ($this->request->is(['patch', 'post', 'put'])) {
       $data = $this->request->data;
-//      pr($data);die;
       $newspaper = array();
       for ($i = 0; $i < count($data['newspaper']); $i++) {
         $newspaper[$i]['name'] = $data['newspaper'][$i];
@@ -858,6 +857,17 @@ class SchemesController extends AppController {
       if(empty($data['tender_date'])){
         unset($data['tender_date']);
       }
+      if(isset($data['app_sent']) && !empty($data['app_sent']))
+          $data['app_sent'] = strtotime($data['app_sent']);
+
+      if(isset($data['app_approved']) && !empty($data['app_approved']))
+          $data['app_approved'] = strtotime($data['app_approved']);
+
+      if(isset($data['noa_date']) && !empty($data['noa_date']))
+          $data['noa_date'] = strtotime($data['noa_date']);
+
+      if(isset($data['insurance_date']) && !empty($data['insurance_date']))
+          $data['insurance_date'] = strtotime($data['insurance_date']);
 
       $x = strtotime($data['work_order_date']);
       if ($x !== FALSE) {

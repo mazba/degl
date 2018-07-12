@@ -12,7 +12,6 @@ class MonthlyReportsController extends AppController
 
     public function index()
     {
-        ini_set('memory_limit', '-1');
         $this->loadModel('Schemes');
         if($this->request->is('post')){
             $inputs = $this->request->data;
@@ -39,7 +38,6 @@ class MonthlyReportsController extends AppController
                     'payment_road' => 'Schemes.payment_road',
                 ];
             }
-
            //Landless mukti
             elseif($inputs['project_id'] == 8){
                 $scheme_select_fields = [
@@ -199,81 +197,8 @@ class MonthlyReportsController extends AppController
             }
 
             // start new report from here
-            //PMP
-            elseif($inputs['project_id'] == 13){
-                $scheme_select_fields = [
-                    'upazila_name' => 'upazilas.name_bn',
-                    'package_name' => 'packages.name_bn',
-                    'scheme_name' => 'Schemes.name_bn',
-                    'estimated_cost' => 'Schemes.estimated_cost',
-                    'contractor_title' => 'contractors.contractor_title',
-                    'contract_amount' => 'Schemes.contract_amount',
-                    'contract_date' => 'Schemes.contract_date',
-                    'completion_date' => 'Schemes.completion_date',
-                    'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
-                    'payment_road' => 'Schemes.payment_road',
-
-                ];
-            }
-            //GDP-3
-            elseif($inputs['project_id'] == 29){
-                $scheme_select_fields = [
-                    //'upazila_name' => 'upazilas.name_bn',
-                    'package_name' => 'packages.name_bn',
-                    'scheme_name' => 'Schemes.name_bn',
-                    'estimated_cost' => 'Schemes.estimated_cost',
-                    'tender_date' => 'Schemes.tender_date',
-                    'noa_date' => 'Schemes.noa_date',
-                    'contract_amount' => 'Schemes.contract_amount',
-                    'contractor_title' => 'contractors.contractor_title',
-                    'contract_date' => 'Schemes.contract_date',
-                    'proposed_start_date' => 'Schemes.proposed_start_date',
-                    'completion_date' => 'Schemes.completion_date',
-                    'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
-                    'payment_road' => 'Schemes.payment_road',
-
-                ];
-            }
-            //TULO
-            elseif($inputs['project_id'] == 26){
-                $scheme_select_fields = [
-                    //'upazila_name' => 'upazilas.name_bn',
-                    'package_name' => 'packages.name_bn',
-                    'scheme_name' => 'Schemes.name_bn',
-                    'estimated_cost' => 'Schemes.estimated_cost',
-                    'tender_date' => 'Schemes.tender_date',
-                    'noa_date' => 'Schemes.noa_date',
-                    'contract_amount' => 'Schemes.contract_amount',
-                    'contractor_title' => 'contractors.contractor_title',
-                    'contract_date' => 'Schemes.contract_date',
-                    'proposed_start_date' => 'Schemes.proposed_start_date',
-                    'completion_date' => 'Schemes.completion_date',
-                    'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
-                    'payment_road' => 'Schemes.payment_road',
-
-                ];
-            }
-            //Construction of   Muktijoddah  Memorials Project
-            elseif($inputs['project_id'] == 25){
-                $scheme_select_fields = [
-                    //'upazila_name' => 'upazilas.name_bn',
-                    'package_name' => 'packages.name_bn',
-                    'scheme_name' => 'Schemes.name_bn',
-                    'estimated_cost' => 'Schemes.estimated_cost',
-                    'tender_date' => 'Schemes.tender_date',
-                    'noa_date' => 'Schemes.noa_date',
-                    'contract_amount' => 'Schemes.contract_amount',
-                    'contractor_title' => 'contractors.contractor_title',
-                    'contract_date' => 'Schemes.contract_date',
-                    'proposed_start_date' => 'Schemes.proposed_start_date',
-                    'completion_date' => 'Schemes.completion_date',
-                    'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
-                    'payment_road' => 'Schemes.payment_road',
-
-                ];
-            }
             //PTI
-            elseif($inputs['project_id'] == 24){
+            elseif($inputs['project_id'] == 18){
                 $scheme_select_fields = [
                     'upazila_name' => 'upazilas.name_bn',
                     'package_name' => 'packages.name_bn',
@@ -289,65 +214,6 @@ class MonthlyReportsController extends AppController
                 ];
             }
 
-            //BSA
-            elseif($inputs['project_id'] == 23){
-                $scheme_select_fields = [
-                    //'upazila_name' => 'upazilas.name_bn',
-                    'package_name' => 'packages.name_bn',
-                    'scheme_name' => 'Schemes.name_bn',
-                    'estimated_cost' => 'Schemes.estimated_cost',
-                    'tender_date' => 'Schemes.tender_date',
-                    'noa_date' => 'Schemes.noa_date',
-                    'contract_amount' => 'Schemes.contract_amount',
-                    'contractor_title' => 'contractors.contractor_title',
-                    'contract_date' => 'Schemes.contract_date',
-                    'proposed_start_date' => 'Schemes.proposed_start_date',
-                    'completion_date' => 'Schemes.completion_date',
-                    'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
-                    'payment_road' => 'Schemes.payment_road',
-
-                ];
-            }
-            //GOB Maintaince
-            elseif($inputs['project_id'] == 15){
-                $scheme_select_fields = [
-                    'upazila_name' => 'upazilas.name_bn',
-                    'package_name' => 'packages.name_bn',
-                    'scheme_name' => 'Schemes.name_bn',
-                    'road_length' => 'Schemes.road_length',
-                    'structure_length' => 'Schemes.structure_length',
-                    'cost_road' => 'Schemes.estimated_road',
-                    'cost_structure' => 'Schemes.estimated_structure',
-                    'cost_total' => 'Schemes.estimated_cost',
-                    'tender_date' => 'Schemes.tender_date',
-                    'contractor_title' => 'contractors.contractor_title',
-                    'contract_date' => 'Schemes.contract_date',
-                    'contract_amount' => 'Schemes.contract_amount',
-                    'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
-                    'actual_complete_date' => 'Schemes.actual_complete_date',
-                    'payment_road' => 'Schemes.payment_road',
-                ];
-            }
-            //safary
-            elseif($inputs['project_id'] == 30){
-                $scheme_select_fields = [
-                    'upazila_name' => 'upazilas.name_bn',
-                    'package_name' => 'packages.name_bn',
-                    'scheme_name' => 'Schemes.name_bn',
-                    'road_length' => 'Schemes.road_length',
-                    'structure_length' => 'Schemes.structure_length',
-                    'cost_road' => 'Schemes.estimated_road',
-                    'cost_structure' => 'Schemes.estimated_structure',
-                    'cost_total' => 'Schemes.estimated_cost',
-                    'tender_date' => 'Schemes.tender_date',
-                    'contractor_title' => 'contractors.contractor_title',
-                    'contract_date' => 'Schemes.contract_date',
-                    'contract_amount' => 'Schemes.contract_amount',
-                    'physical_progress' => '(SELECT `progress_value` FROM `scheme_progresses`  WHERE `scheme_id` = `Schemes`.`id` ORDER BY `id` DESC LIMIT 1)',
-                    'actual_complete_date' => 'Schemes.actual_complete_date',
-                    'payment_road' => 'Schemes.payment_road',
-                ];
-            }
             else{
                 $scheme_select_fields = [];
             }
